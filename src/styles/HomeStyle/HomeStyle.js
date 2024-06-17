@@ -10,7 +10,7 @@ export default HomeStyle = (Colors) => StyleSheet.create({
     paddingHorizontal: SW(20),
   },
   HomeCommonTitle: {
-    color: Colors.theme_backgound,
+    color: Colors.theme_backgound_second,
     fontSize: SF(17),
     fontFamily: Fonts.RobotoCondensed_Regular
   },
@@ -196,7 +196,7 @@ export default HomeStyle = (Colors) => StyleSheet.create({
     alignItems: 'center',
   },
   userTitle: {
-    color: Colors.theme_backgound,
+    color: Colors.theme_backgound_second,
     fontSize: SF(17),
     fontFamily: Fonts.RobotoCondensed_Regular,
     paddingHorizontal: SW(10)
@@ -210,7 +210,7 @@ export default HomeStyle = (Colors) => StyleSheet.create({
 
   },
   heading: {
-    color: Colors.theme_backgound,
+    color: Colors.theme_backgound_second,
     fontSize: SF(19),
     fontFamily: Fonts.RobotoCondensed_Bold,
   },

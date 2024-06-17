@@ -66,13 +66,6 @@ export default Authentication = (Colors) => StyleSheet.create({
   setbgMainView: {
     flex: 1,
   },
-  setbgimageView: {
-    height: SH(350),
-    position: 'relative',
-    backgroundColor: Colors.theme_backgound,
-    overflow: "hidden",
-    borderBottomEndRadius: SW(100),
-  },
   setbgimage: {
     height: '100%',
     position: 'relative',
@@ -81,17 +74,21 @@ export default Authentication = (Colors) => StyleSheet.create({
     paddingHorizontal: SW(20)
   },
   loginSignUpTextView: {
-    marginBottom: SH(40)
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: SH(10),
   },
   imageText: {
-    fontSize: SF(30),
+    fontSize: SF(24),
+    marginRight: 5,
     color: Colors.white_text_color,
     fontFamily: Fonts.RobotoCondensed_Regular
   },
   loginSignUpTab: {
-    marginTop: SH(30),
+    marginTop: SH(300),
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   loginSignUpText: {
@@ -106,7 +103,8 @@ export default Authentication = (Colors) => StyleSheet.create({
     borderBottomWidth: SW(2),
   },
   inputView: {
-    paddingHorizontal: SH(30)
+    paddingHorizontal: SH(30),
+    color: Colors.white,
   },
   forgotText: {
     color: Colors.black_text_color,
@@ -170,7 +168,8 @@ export default Authentication = (Colors) => StyleSheet.create({
   PassWordStyle: {
     paddingBottom: SH(0),
     marginBottom: SH(0),
-    height: SH(80)
+    height: SH(80),
+    color: Colors.white
   },
   // Start Otp Screen style
   MinFlexView: {

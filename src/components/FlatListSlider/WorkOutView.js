@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { HomeStyle } from '../../styles';
 import { Spacing } from '../../components';
@@ -11,6 +11,10 @@ const HomeScreen = (props) => {
   const HomeStyles = useMemo(() => HomeStyle(Colors), [Colors]);
   const { onPress, item } = props;
   const { t } = useTranslation();
+
+  useEffect(()=>{
+    console.log("item:--------",item)
+  }, [item])
   return (
     <TouchableOpacity onPress={() => onPress()} style={HomeStyles.RecentAllViewBox}>
       <View style={HomeStyles.viewImageBox}>

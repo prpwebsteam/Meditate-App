@@ -1,5 +1,8 @@
 const images = {
     splashScreenIcon: require('./lottieAnimation/logo1.png'),
+    mainBG: require('./home_bg.jpg'),
+    loginBG: require('./login_bg.jpg'),
+    logo: require('./lottieAnimation/logo-2.png'), 
     slide1: require('./lottieAnimation/logo.png'),
     slide2: require('./lottieAnimation/slide2.json'),
     slide3: require('./lottieAnimation/slide3.json'),
@@ -45,5 +48,6 @@ const images = {
     category5: require('./hundred.png'),
     category6: require('./hundred.png'),
     success: require('./lottieAnimation/success.json'),
+    wishlist: require('./heart.png'),
 }
 export default images;

@@ -37,7 +37,7 @@ const RootNavigator = props => {
 
   return (
     <NavigationContainer theme={colorValue}>
-      <Stack.Navigator initialRouteName={RouteName.HOME_SCREEN} screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={RouteName.LOGIN_SCREEN} screenOptions={{ headerShown: false }}>
         <Stack.Screen name={RouteName.SPLSH_SCREEN} component={SplashScreen} />
         <Stack.Screen name={RouteName.GET_STARTED_SLIDER_SCREEN} component={GetstartedSliderscreen} />
         <Stack.Screen name={RouteName.ABOUT_SELF_SCREEN} component={AboutSelfScreen} />
