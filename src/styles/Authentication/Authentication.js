@@ -107,19 +107,19 @@ export default Authentication = (Colors) => StyleSheet.create({
     color: Colors.white,
   },
   forgotText: {
-    color: Colors.black_text_color,
+    color: Colors.white,
     alignSelf: 'flex-end',
     fontSize: SF(16),
-    paddingTop: SH(10),
     fontFamily: Fonts.Poppins_Medium,
     paddingRight: SW(15)
   },
   verificationInputView: {
     paddingHorizontal: SH(30),
-    marginTop: SH(50)
+    width: '100%',
+    marginTop: SH(150)
   },
   verificationTextTitle: {
-    color: Colors.theme_backgound,
+    color: Colors.white,
     fontSize: SF(25),
     fontFamily: Fonts.RobotoCondensed_Bold
   },

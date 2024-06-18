@@ -4,7 +4,7 @@ import { Authentication } from '../../../styles';
 import { Button, Container, Spacing, Input } from '../../../components';
 import images from '../../../index';
 import { RouteName } from '../../../routes';
-import { SH } from '../../../utils';
+import { SH, SF } from '../../../utils';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import axios from 'axios';
@@ -61,11 +61,13 @@ const LoginScreen = (props) => {
               <Text style={Authentications.loginSignUpText}>{t("Sign_Up")}</Text>
             </TouchableOpacity>
           </View>
-          <View style={Authentications.loginSignUpTextView}>
+          <Spacing space={SH(20)} />
+          {/* <View style={Authentications.loginSignUpTextView}>
             <Text style={Authentications.imageText}>{t("Welcome_Back")}</Text>
             <Text style={[Authentications.imageText]}>{t("Sign_In")}</Text>
-          </View>
+          </View> */}
           <View style={Authentications.inputView}>
+            <Spacing space={SH(20)} />
             <Input
               title={t("Name")}
               placeholder={t("Name")}
@@ -73,26 +75,24 @@ const LoginScreen = (props) => {
               value={inputName}
               keyboardType='default'
               autoCompleteType="name"
-              containerStyle={Authentications.PassWordStyle}
+              inputStyle={{ fontSize: SF(12) }}
             />
-            <Spacing space={SH(20)} />
             <Input
               title={t("Password_Text")}
               placeholder={t("Password_Text")}
               onChangeText={setInputpassword}
               value={inputPassword}
               secureTextEntry={true}
-              containerStyle={Authentications.PassWordStyle}
+              inputStyle={{ fontSize: SF(12) }}
             />
-            <Spacing space={SH(5)} />
             <TouchableOpacity onPress={() => navigation.navigate(RouteName.FORGOT_PASSWORD_SCREEN)}>
               <Text style={Authentications.forgotText}>{t("Forgot_Password")}</Text>
             </TouchableOpacity>
-            <Spacing space={SH(20)} />
+            <Spacing space={SH(5)} />
             <View style={Authentications.buttonView}>
               <Button
                 title={loading ? t("Logging_In") : t("Login_Text")}
-                buttonStyle={Authentications.nextButton}
+                buttonStyle={{ ...Authentications.nextButton, width: '100%' }}
                 onPress={handleLogin}
                 disabled={loading}
               />

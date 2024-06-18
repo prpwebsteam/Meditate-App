@@ -4,7 +4,7 @@ import { Authentication } from '../../../styles';
 import { Button, Container, Spacing, Input } from '../../../components';
 import images from '../../../index';
 import { RouteName } from '../../../routes';
-import { SH } from '../../../utils';
+import { SH, SF } from '../../../utils';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import axios from 'axios';
@@ -64,10 +64,10 @@ const SignUpScreen = (props) => {
               <Text style={[Authentications.loginSignUpText, Authentications.activeBorder]}>{t("Sign_Up")}</Text>
             </TouchableOpacity>
           </View>
-          <View style={Authentications.loginSignUpTextView}>
+          {/* <View style={Authentications.loginSignUpTextView}>
             <Text style={Authentications.imageText}>{t("Welcome_Back")}</Text>
             <Text style={[Authentications.imageText, Authentications.TextBold]}>{t("Sign_Up")}</Text>
-          </View>
+          </View> */}
           <View style={Authentications.inputView}>
             <Spacing space={SH(30)} />
             <Input
@@ -78,6 +78,7 @@ const SignUpScreen = (props) => {
               keyboardType='default'
               autoCompleteType="name"
               containerStyle={Authentications.PassWordStyle}
+              inputStyle={{ fontSize: SF(12) }}
             />
             <Spacing space={SH(20)} />
             <Input
@@ -88,6 +89,7 @@ const SignUpScreen = (props) => {
               keyboardType='email-address'
               autoCompleteType="email"
               containerStyle={Authentications.PassWordStyle}
+              inputStyle={{ fontSize: SF(12) }}
             />
             <Spacing space={SH(20)} />
             <Input
@@ -97,12 +99,13 @@ const SignUpScreen = (props) => {
               value={inputPassword}
               secureTextEntry={true}
               containerStyle={Authentications.PassWordStyle}
+              inputStyle={{ fontSize: SF(12) }}
             />
-            <Spacing space={SH(50)} />
+            <Spacing space={SH(30)} />
             <View style={Authentications.buttonView}>
               <Button
                 title={loading ? t("Signing_Up") : t("Sign_Up")}
-                buttonStyle={Authentications.nextButton}
+                buttonStyle={{ ...Authentications.nextButton, width: '100%' }}
                 onPress={handleSignUp}
                 disabled={loading}
               />
