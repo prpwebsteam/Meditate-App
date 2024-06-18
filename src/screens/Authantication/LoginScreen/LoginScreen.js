@@ -23,7 +23,7 @@ const LoginScreen = (props) => {
     setLoading(true);
     try {
       const response = await axios.post('https://chitraguptp85.sg-host.com/wp-json/jwt-auth/v1/token', {
-        username: inputName,
+        username: inputEmail,
         password: inputPassword,
       });
 
@@ -53,28 +53,21 @@ const LoginScreen = (props) => {
         <ScrollView
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={Authentications.ScrollViewStyles}>
-          <View style={Authentications.loginSignUpTab}>
+          <View style={Authentications.loginTab}>
             <TouchableOpacity>
               <Text style={[Authentications.loginSignUpText, Authentications.activeBorder]}>{t("Login_Text")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate(RouteName.SIGNUP_SCREEN)}>
-              <Text style={Authentications.loginSignUpText}>{t("Sign_Up")}</Text>
-            </TouchableOpacity>
           </View>
           <Spacing space={SH(20)} />
-          {/* <View style={Authentications.loginSignUpTextView}>
-            <Text style={Authentications.imageText}>{t("Welcome_Back")}</Text>
-            <Text style={[Authentications.imageText]}>{t("Sign_In")}</Text>
-          </View> */}
           <View style={Authentications.inputView}>
             <Spacing space={SH(20)} />
             <Input
-              title={t("Name")}
-              placeholder={t("Name")}
-              onChangeText={setInputName}
-              value={inputName}
+              title={t("Email")}
+              placeholder={t("Email")}
+              onChangeText={setInputEmail}
+              value={inputEmail}
               keyboardType='default'
-              autoCompleteType="name"
+              autoCompleteType="email"
               inputStyle={{ fontSize: SF(12) }}
             />
             <Input
@@ -88,7 +81,7 @@ const LoginScreen = (props) => {
             <TouchableOpacity onPress={() => navigation.navigate(RouteName.FORGOT_PASSWORD_SCREEN)}>
               <Text style={Authentications.forgotText}>{t("Forgot_Password")}</Text>
             </TouchableOpacity>
-            <Spacing space={SH(5)} />
+            <Spacing space={SH(30)} />
             <View style={Authentications.buttonView}>
               <Button
                 title={loading ? t("Logging_In") : t("Login_Text")}
@@ -97,6 +90,13 @@ const LoginScreen = (props) => {
                 disabled={loading}
               />
             </View>
+            <Spacing space={SH(25)} />
+            <TouchableOpacity onPress={() => navigation.navigate(RouteName.SIGNUP_SCREEN)}>
+              <Text style={{ textAlign: 'center', ...Authentications.signupText }}>
+                {t("Don't have an account?")}{' '}
+                <Text style={{ color: Colors.theme_backgound, fontWeight: 'bold' }}>{t("Sign Up")}</Text>
+              </Text>
+            </TouchableOpacity>
           </View>
           <Spacing space={SH(25)} />
         </ScrollView>

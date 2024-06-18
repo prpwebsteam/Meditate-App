@@ -1,13 +1,14 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { View, Text, FlatList, ScrollView, Image, ImageBackground, StyleSheet } from 'react-native';
+import React, { useMemo, useState, useEffect, useContext } from 'react';
+import { View, Text, FlatList, ScrollView, Image, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
 import { HomeStyle } from '../../styles';
-import { Container, Spacing, BottomTabMenu, WorkOutView } from '../../components';
+import { Container, Spacing, BottomTabMenu, WorkOutView, WorkOutView2 } from '../../components';
 import images from '../../index';
 import { RouteName } from '../../routes';
 import { SH, SW, SF } from '../../utils';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import axios from 'axios';
+import { SoundContext } from '../../utils/SoundContext';
 
 const HomeScreen = (props) => {
   const { Colors } = useTheme();
@@ -15,20 +16,27 @@ const HomeScreen = (props) => {
   const { navigation } = props;
   const { t } = useTranslation();
 
+  const { isPlaying, currentTrack, pauseTrack, resumeTrack } = useContext(SoundContext);
+
   const [workoutData, setWorkoutData] = useState([]);
+  const [recentlyPlayed, setRecentlyPlayed] = useState([]);
+
+  useEffect(() => {
+    console.log("workoutData:", workoutData);
+  }, [workoutData]);
 
   const fetchCategories = async () => {
     try {
       const response = await axios.get('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/categories');
       console.log('API Response:', response);
-  
+
       if (response.status === 200) {
-        // Check if response data is an array and has expected properties
         if (Array.isArray(response.data) && response.data.length > 0) {
-          setWorkoutData(response.data.map((category, index) => ({
-            id: index.toString(),
+          setWorkoutData(response.data.map((category) => ({
+            id: category.id.toString(),
             title: category.name,
-            imageUrl: '',
+            imageUrl: category.thumbnail,
+            description: category.description,
           })));
         } else {
           console.error('Empty or invalid response data:', response.data);
@@ -40,17 +48,26 @@ const HomeScreen = (props) => {
       console.error('Error fetching categories:', error);
     }
   };
-  
 
-  useEffect(()=>{
-    console.log("workoutData:--------",workoutData)
-  }, [workoutData])
+  const fetchRecentlyPlayed = async () => {
+    const recentData = [
+      { id: '1', title: 'Workout 1', imageUrl: '' },
+      { id: '2', title: 'Workout 2', imageUrl: '' },
+      { id: '3', title: 'Workout 3', imageUrl: '' },
+      { id: '1', title: 'Workout 1', imageUrl: '' },
+      { id: '2', title: 'Workout 2', imageUrl: '' },
+      { id: '3', title: 'Workout 3', imageUrl: '' },
+    ];
+    setRecentlyPlayed(recentData);
+  };
+
   useEffect(() => {
     fetchCategories();
+    fetchRecentlyPlayed();
   }, []);
 
-  const onpressHandle = (id) => {
-    navigation.navigate(RouteName.WORKOUT_DETAIL_SCREEN);
+  const onpressHandle = (id, title) => {
+    navigation.navigate(RouteName.WORKOUT_DETAIL_SCREEN, { categoryId: id, categoryName: title });
   };
 
   const styles = useMemo(() =>
@@ -103,6 +120,44 @@ const HomeScreen = (props) => {
         borderTopRightRadius: SH(10),
         padding: SH(10),
       },
+      musicBar: {
+        position: 'absolute',
+        bottom: '13%',
+        width: '95%',
+        padding: SH(10),
+        marginLeft: SH(10),
+        marginRight: SH(10),
+        backgroundColor: 'rgba(217, 217, 214, 0.6)',
+        borderRadius: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      musicBarThumbnail: {
+        width: 40,
+        height: 40,
+        borderRadius: 10,
+        marginRight: 10,
+      },
+      musicBarTextContainer: {
+        flex: 1,
+        justifyContent: 'center',
+      },
+      musicBarText: {
+        color: Colors.black,
+        fontSize: SF(14),
+        fontWeight: 'bold',
+      },
+      musicBarButton: {
+        padding: SH(5),
+      },
+      playViewIconCenter: {
+        width: SW(20),
+        height: SH(20),
+      },
+      playViewIconCenterPause: {
+        width: SW(20),
+        height: SH(20),
+      },
     }), [Colors]);
 
   return (
@@ -114,12 +169,10 @@ const HomeScreen = (props) => {
           <View style={HomeStyles.textcenterview}>
             <Spacing space={SH(20)} />
             <View style={HomeStyles.userIconView}>
-              <View style={HomeStyles.userIconBox}>
-                <Image source={images.userIcon} style={HomeStyles.userIcon} resizeMode='cover' />
-              </View>
-              <Text style={HomeStyles.userTitle}>{t("Hey_Pinal")}</Text>
+              
+              <Text style={HomeStyles.userTitle}>{t("Hey Bhairav, Good Afternoon")}</Text>
             </View>
-            <Spacing space={SH(10)} />
+            <Spacing space={SH(20)} />
             <View style={styles.reportContainer}>
               <View style={styles.yourReport}><Text style={styles.reportTitle}>Your Report</Text></View>
               <View style={styles.reportContent}>
@@ -154,7 +207,7 @@ const HomeScreen = (props) => {
                 data={workoutData}
                 renderItem={({ item }) => (
                   <WorkOutView
-                    onPress={() => onpressHandle(item.id)}
+                    onPress={() => onpressHandle(item.id, item.title)}
                     item={item}
                   />
                 )}
@@ -163,9 +216,60 @@ const HomeScreen = (props) => {
                 numColumns={2}
               />
             </View>
+            <Spacing space={SH(20)} />
+            <View style={HomeStyles.HomeCommonView}>
+              <Text style={HomeStyles.HomeCommonTitle}>{t("Recently Played")}</Text>
+            </View>
+            <Spacing space={SH(20)} />
+            <FlatList
+              data={workoutData}
+              renderItem={({ item }) => (
+                <WorkOutView
+                  onPress={() => onpressHandle(item.id, item.title)}
+                  item={item}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              horizontal={true}
+            />
+            <Spacing space={SH(20)} />
+            <View style={HomeStyles.HomeCommonView}>
+              <Text style={HomeStyles.HomeCommonTitle}>{t("Your Favorites")}</Text>
+            </View>
+            <Spacing space={SH(20)} />
+            <FlatList
+              data={workoutData}
+              renderItem={({ item }) => (
+                <WorkOutView
+                  onPress={() => onpressHandle(item.id, item.title)}
+                  item={item}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              horizontal={true}
+            />
           </View>
         </ScrollView>
         <Spacing space={SH(80)} />
+        {currentTrack && (
+          <View style={styles.musicBar}>
+            {currentTrack.thumbnail && (
+              <Image source={{ uri: currentTrack.thumbnail }} style={styles.musicBarThumbnail} />
+            )}
+            <View style={styles.musicBarTextContainer}>
+              <Text style={styles.musicBarText}>{currentTrack.title}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.musicBarButton}
+              onPress={isPlaying ? pauseTrack : resumeTrack}
+            >
+              <Image
+                source={isPlaying ? images.pause : images.play}
+                style={isPlaying ? styles.playViewIconCenterPause : styles.playViewIconCenter}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
       </ImageBackground>
     </Container>
   );

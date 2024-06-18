@@ -25,23 +25,25 @@ const styles = StyleSheet.create({
   imageBackground: {
     width: '100%',
     height: SH(150),
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
   },
   overlay: {
-    width: '100%',
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: SH(10),
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   title: {
     color: 'white',
     fontSize: SF(16),
     fontWeight: 'bold',
-    textAlign: 'left',
+    textAlign: 'center',
   },
   description: {
     color: 'white',
     fontSize: SF(12),
-    textAlign: 'left',
+    textAlign: 'center',
     marginTop: SH(5),
   },
 });

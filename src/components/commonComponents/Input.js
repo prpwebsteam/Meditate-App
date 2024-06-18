@@ -40,7 +40,7 @@ function Inputs({
         input_style: {
           width: '100%',
           borderColor: Colors.gray_text_color,
-          fontSize: SF(17),
+          fontSize: SF(15),
           fontWeight: '600',
           marginBottom: SH(0),
           fontFamily: Fonts.Poppins_Medium,
@@ -53,7 +53,7 @@ function Inputs({
         },
         labelStyle: {
           width: '100%',
-          fontSize: SF(18),
+          fontSize: SF(15),
           color: Colors.white,
           fontFamily: Fonts.Poppins_Medium,
           paddingHorizontal: SW(5),

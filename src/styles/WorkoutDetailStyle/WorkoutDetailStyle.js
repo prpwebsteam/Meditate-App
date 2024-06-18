@@ -46,7 +46,7 @@ export default WorkoutDetailStyle = (Colors) => StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginLeft: SW(-20)
+    paddingTop: 30,
   },
   leftArrow: {
     width: SW(60)
@@ -105,7 +105,8 @@ export default WorkoutDetailStyle = (Colors) => StyleSheet.create({
     // paddingHorizontal:SW(20),
   },
   imageStyle: {
-    width: SW(200)
+    width: SW(200),
+    height: 200,
   },
   boxText: {
     color: Colors.theme_backgound,
@@ -113,11 +114,17 @@ export default WorkoutDetailStyle = (Colors) => StyleSheet.create({
     fontFamily: Fonts.RobotoCondensed_Regular,
     paddingHorizontal: SW(10)
   },
+  trackThumbnail: {
+    width: 50,
+    height: 50,
+    borderRadius: 10,
+    marginRight: 10,
+  },
   centerMainView: {
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: 'rgba(217, 217, 214, 0.2)',
     width: "100%",
     alignSelf: 'center',
     borderRadius: SW(20),
@@ -152,6 +159,12 @@ export default WorkoutDetailStyle = (Colors) => StyleSheet.create({
   },
   playViewIconCenter: {
     marginRight: SW(15),
+    width: SW(20),
+    height: SH(20),
+    marginHorizontal: SW(20)
+  },
+  playViewIconCenterPause: {
+    marginRight: SW(20),
     width: SW(20),
     height: SH(20),
     marginHorizontal: SW(20)
@@ -212,12 +225,12 @@ export default WorkoutDetailStyle = (Colors) => StyleSheet.create({
   },
   trackTitle: {
     marginRight: SH(10),
-    color: Colors.text,
+    color: Colors.white,
     flex: 1,
     paddingLeft: 10,
   },
   trackIcon: {
-    width: SH(20),
+    width: SH(15),
     height: SH(20),
   },
 });

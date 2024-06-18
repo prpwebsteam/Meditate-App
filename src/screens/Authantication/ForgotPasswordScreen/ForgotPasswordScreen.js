@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, ImageBackground, StyleSheet } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Authentication } from '../../../styles/Authentication';
 import { Button, Container, Spacing, Input, SweetAlertModal } from '../../../components';
 import { RouteName } from '../../../routes';
@@ -14,51 +14,67 @@ const OtpVerifyScreen = (props) => {
   const { navigation } = props;
   const { t } = useTranslation();
   const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [email, setEmail] = useState('');
 
   const onPressHandle = () => {
     setSuccessModalVisible(false);
-    navigation.navigate(RouteName.LOGIN_SCREEN);
-  }
+    navigation.navigate(RouteName.RESET_PASSWORD_SCREEN);
+  };
 
-  const [email, setEmail] = useState('');
+  const sendCode = async () => {
+    try {
+      const response = await fetch('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/send-code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      const result = await response.json();
+
+      if (response.ok) {
+        setSuccessModalVisible(true);
+      } else {
+        Alert.alert('Error', result.message || 'Something went wrong, please try again.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to send the code. Please check your network and try again.');
+    }
+  };
 
   return (
     <Container>
       <ImageBackground source={images.loginBG} resizeMode='cover' style={Authentications.setbgMainView}>
-        <View style={Authentications.verifyMainView}>
-          <View style={Authentications.verificationInputView}>
-            <Text style={[styles.forgotPasswordText, Authentications.verificationTextTitle]}>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={Authentications.ScrollViewStyles}>
+          <View style={Authentications.verifyMainView}>
+            <Text style={[styles.forgotPasswordText, Authentications.verificationInputView, Authentications.verificationTextTitle]}>
               {t("Forgot_Password_TWO")}
             </Text>
-            {/* <Spacing space={SH(15)} />
-            <Text style={Authentications.verificationText}>{t("We_Well_Sand_Message")}</Text> */}
-          </View>
-          <Input
-            title={t("Enter_Email")}
-            placeholder={t("Enter_Email")}
-            onChangeText={(e) => setEmail(e)}
-            value={email}
-            keyboardType={'email-address'}
-            inputStyle={{ fontSize: SF(12) }}
-          />
-          <View style={Authentications.buttonMainView}>
-            {/* <View style={Authentications.buttonView}>
-                <Button title="" LeftArraow={true} buttonStyle={Authentications.PrevButton} onPress={() => navigation.navigate(RouteName.LOGIN_SCREEN)} />
-              </View> */}
+            <Input
+              title={t("Enter_Email")}
+              placeholder={t("Enter_Email")}
+              onChangeText={(e) => setEmail(e)}
+              value={email}
+              keyboardType={'email-address'}
+              inputStyle={{ fontSize: SF(12) }}
+            />
             <View style={Authentications.buttonView}>
-              <Button title={t("Send_Text")} buttonStyle={Authentications.nextButton} onPress={() => setSuccessModalVisible(true)} />
+              <Button title={t("Send_Text")}
+                buttonStyle={{ ...Authentications.nextButton, width: '100%' }} onPress={sendCode} />
             </View>
+            <Spacing space={SH(250)} />
+            <SweetAlertModal
+              message={t("Email_Successfull")}
+              modalVisible={successModalVisible}
+              setModalVisible={setSuccessModalVisible}
+              onPress={onPressHandle}
+              success={true}
+              buttonText={t("Ok")}
+            />
           </View>
-          <Spacing space={SH(350)} />
-          <SweetAlertModal
-            message={t("Email_Successfull")}
-            modalVisible={successModalVisible}
-            setModalVisible={setSuccessModalVisible}
-            onPress={() => onPressHandle()}
-            success={true}
-            buttonText={t("Ok")}
-          />
-        </View>
+        </ScrollView>
       </ImageBackground>
     </Container>
   );

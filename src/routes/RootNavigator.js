@@ -14,7 +14,9 @@ import { Colors } from '../utils';
 import SideNavigator from './SideNavigator';
 const Stack = createNativeStackNavigator();
 import { useSelector } from "react-redux";
-import HomeScreen from '../screens/HomeScreen'; 
+import HomeScreen from '../screens/HomeScreen';
+import { SoundProvider } from '../utils/SoundContext';
+import ResetPasswordScreen from '../screens/Authantication/ResetPasswordScreen/ResetPasswordScreen';
 
 const RootNavigator = props => {
   const { colorrdata } = useSelector(state => state.commonReducer) || {};
@@ -36,21 +38,24 @@ const RootNavigator = props => {
   }, [colorrdata, Colors])
 
   return (
-    <NavigationContainer theme={colorValue}>
-      <Stack.Navigator initialRouteName={RouteName.LOGIN_SCREEN} screenOptions={{ headerShown: false }}>
-        <Stack.Screen name={RouteName.SPLSH_SCREEN} component={SplashScreen} />
-        <Stack.Screen name={RouteName.GET_STARTED_SLIDER_SCREEN} component={GetstartedSliderscreen} />
-        <Stack.Screen name={RouteName.ABOUT_SELF_SCREEN} component={AboutSelfScreen} />
-        <Stack.Screen name={RouteName.AGE_SCREEN} component={AgeScreen} />
-        <Stack.Screen name={RouteName.LOGIN_SCREEN} component={LoginScreen} />
-        <Stack.Screen name={RouteName.FORGOT_PASSWORD_SCREEN} component={ForgotPasswordScreen} />
-        <Stack.Screen name={RouteName.SIGNUP_SCREEN} component={SignUpScreen} />
-        <Stack.Screen name={RouteName.OTP_VERYFY_SCREEN} component={OtpVerifyScreen} />
-        <Stack.Screen name={RouteName.WORKOUT_DETAIL_SCREEN} component={WorkoutDetailScreen} />
-        <Stack.Screen name={RouteName.HOME_SCREEN} component={SideNavigator} />
-        <Stack.Screen name={RouteName.TRLANSTION_SCREEN} component={TranslationScreen} />
-      </Stack.Navigator>
-    </NavigationContainer >
+    <SoundProvider>
+      <NavigationContainer theme={colorValue}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name={RouteName.SPLSH_SCREEN} component={SplashScreen} />
+          <Stack.Screen name={RouteName.GET_STARTED_SLIDER_SCREEN} component={GetstartedSliderscreen} />
+          <Stack.Screen name={RouteName.ABOUT_SELF_SCREEN} component={AboutSelfScreen} />
+          <Stack.Screen name={RouteName.AGE_SCREEN} component={AgeScreen} />
+          <Stack.Screen name={RouteName.LOGIN_SCREEN} component={LoginScreen} />
+          <Stack.Screen name={RouteName.RESET_PASSWORD_SCREEN} component={ResetPasswordScreen} />
+          <Stack.Screen name={RouteName.FORGOT_PASSWORD_SCREEN} component={ForgotPasswordScreen} />
+          <Stack.Screen name={RouteName.SIGNUP_SCREEN} component={SignUpScreen} />
+          <Stack.Screen name={RouteName.OTP_VERYFY_SCREEN} component={OtpVerifyScreen} />
+          <Stack.Screen name={RouteName.WORKOUT_DETAIL_SCREEN} component={WorkoutDetailScreen} />
+          <Stack.Screen name={RouteName.HOME_SCREEN} component={SideNavigator} />
+          <Stack.Screen name={RouteName.TRLANSTION_SCREEN} component={TranslationScreen} />
+        </Stack.Navigator>
+      </NavigationContainer >
+    </SoundProvider>
   );
 }
 

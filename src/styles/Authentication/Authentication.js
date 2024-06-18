@@ -85,8 +85,14 @@ export default Authentication = (Colors) => StyleSheet.create({
     color: Colors.white_text_color,
     fontFamily: Fonts.RobotoCondensed_Regular
   },
-  loginSignUpTab: {
+  loginTab: {
     marginTop: SH(300),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  SignUpTab: {
+    marginTop: SH(50),
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -105,18 +111,26 @@ export default Authentication = (Colors) => StyleSheet.create({
   inputView: {
     paddingHorizontal: SH(30),
     color: Colors.white,
+    marginBottom: 50
   },
   forgotText: {
     color: Colors.white,
     alignSelf: 'flex-end',
-    fontSize: SF(16),
+    fontSize: SF(12),
     fontFamily: Fonts.Poppins_Medium,
-    paddingRight: SW(15)
+    paddingRight: SW(15),
+    marginTop: -20, 
+  },
+  signupText: {
+    color: Colors.white,
+    fontSize: SF(12),
+    fontFamily: Fonts.Poppins_Medium,
+    paddingRight: SW(15),
+    marginTop: -20, 
   },
   verificationInputView: {
-    paddingHorizontal: SH(30),
-    width: '100%',
-    marginTop: SH(150)
+    marginTop: SH(300),
+    marginBottom: SH(30)
   },
   verificationTextTitle: {
     color: Colors.white,
@@ -140,7 +154,9 @@ export default Authentication = (Colors) => StyleSheet.create({
   },
 
   buttonMainView: {
+    flex: 1,
     flexDirection: 'row',
+    width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
