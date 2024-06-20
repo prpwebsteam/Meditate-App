@@ -26,5 +26,7 @@ const RouteName = {
     MEDITATION_SCREEN: "MeditationScreen",   
     FORGOT_PASSWORD_SCREEN: "ForgotPasswordScreen",   
     RESET_PASSWORD_SCREEN: "ResetPasswordScreen", 
+    ABOUT_US_SCREEN: "AboutUsScreen",
+    WISHLIST_SCREEN: 'WishlistScreen',
 }
 export default RouteName;

@@ -19,14 +19,14 @@ function BottomTabMenu(props) {
     {
       id: '2',
       name: '',
-      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="yoga" color={Colors.white} size={SF(25)} />,
-      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="yoga" color={Colors.white} size={SF(25)} />
+      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="flower-tulip" color={Colors.white} size={SF(25)} />,
+      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="flower-tulip" color={Colors.white} size={SF(25)} />
     },
     {
       id: '3',
       name: '',
-      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="flower-tulip" color={Colors.white} size={SF(25)} />,
-      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="flower-tulip" color={Colors.white} size={SF(25)} />
+      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="yoga" color={Colors.white} size={SF(25)} />,
+      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="yoga" color={Colors.white} size={SF(25)} />
     },
     {
       id: '4',

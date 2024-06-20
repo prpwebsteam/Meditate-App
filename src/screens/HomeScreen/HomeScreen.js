@@ -16,14 +16,54 @@ const HomeScreen = (props) => {
   const { navigation } = props;
   const { t } = useTranslation();
 
-  const { isPlaying, currentTrack, pauseTrack, resumeTrack } = useContext(SoundContext);
+  const { isPlaying, currentTrack, pauseTrack, resumeTrack, currentTime, duration } = useContext(SoundContext);
 
   const [workoutData, setWorkoutData] = useState([]);
+  const [tagData, setTagData] = useState([]);
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
+  const [greeting, setGreeting] = useState('');
 
   useEffect(() => {
     console.log("workoutData:", workoutData);
-  }, [workoutData]);
+    console.log("tagData:", tagData);
+  }, [workoutData,tagData]);
+
+  const fetchTags = async () => {
+    try {
+      const response = await axios.get('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/tags');
+      console.log('Tags API Response:', response);
+
+      const defaultImage = 'http://chitraguptp85.sg-host.com/wp-content/uploads/2024/06/Birthday-Bash-Dilliwaali-Zaalim-Girlfriend-128-Kbps-mp3-image.jpg';
+
+      if (response.status === 200) {
+        if (Array.isArray(response.data) && response.data.length > 0) {
+          setTagData(response.data.map((tag) => ({
+            id: tag.id.toString(),
+            title: tag.name,
+            description: tag.description,
+            imageUrl: defaultImage,
+          })));
+        } else {
+          console.error('Empty or invalid tags response data:', response.data);
+        }
+      } else {
+        console.error('Failed to fetch tags. Status:', response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching tags:', error);
+    }
+  };
+
+  useEffect(() => {
+    const hours = new Date().getHours();
+    if (hours < 12) {
+      setGreeting(t("Good Morning"));
+    } else if (hours < 18) {
+      setGreeting(t("Good Afternoon"));
+    } else {
+      setGreeting(t("Good Evening"));
+    }
+  }, [t]);
 
   const fetchCategories = async () => {
     try {
@@ -63,6 +103,7 @@ const HomeScreen = (props) => {
 
   useEffect(() => {
     fetchCategories();
+    fetchTags();
     fetchRecentlyPlayed();
   }, []);
 
@@ -147,6 +188,11 @@ const HomeScreen = (props) => {
         fontSize: SF(14),
         fontWeight: 'bold',
       },
+      text: {
+        color: Colors.black,
+        fontSize: SF(12),
+        marginTop: -4,
+      },
       musicBarButton: {
         padding: SH(5),
       },
@@ -158,7 +204,21 @@ const HomeScreen = (props) => {
         width: SW(20),
         height: SH(20),
       },
+      progressBarContainer: {
+        height: SH(4),
+        width: '97%',
+        backgroundColor: Colors.black,
+        borderRadius: SH(2),
+        overflow: 'hidden',
+        marginTop: SH(5),
+      },
+      progressBar: {
+        height: '100%',
+        backgroundColor: Colors.theme_backgound,
+      },
     }), [Colors]);
+
+  const progress = (currentTime / (duration || 1)) * 100;
 
   return (
     <Container>
@@ -169,36 +229,32 @@ const HomeScreen = (props) => {
           <View style={HomeStyles.textcenterview}>
             <Spacing space={SH(20)} />
             <View style={HomeStyles.userIconView}>
-              
-              <Text style={HomeStyles.userTitle}>{t("Hey Bhairav, Good Afternoon")}</Text>
+              <Text style={HomeStyles.userTitle}>{t("Hey Bhairav, ")}{greeting}</Text>
             </View>
             <Spacing space={SH(20)} />
-            <View style={styles.reportContainer}>
-              <View style={styles.yourReport}><Text style={styles.reportTitle}>Your Report</Text></View>
-              <View style={styles.reportContent}>
-                <View style={styles.reportItem}>
-                  <Text style={styles.reportValue}>40 mins</Text>
-                  <Text style={styles.reportLabel}>Today</Text>
-                </View>
-                <View style={styles.reportDivider} />
-                <View style={styles.reportItem}>
-                  <Text style={styles.reportValue}>2.2 hours</Text>
-                  <Text style={styles.reportLabel}>This Week</Text>
-                </View>
-                <View style={styles.reportDivider} />
-                <View style={styles.reportItem}>
-                  <Text style={styles.reportValue}>30 hours</Text>
-                  <Text style={styles.reportLabel}>Total</Text>
-                </View>
-              </View>
-            </View>
             <Spacing space={SH(30)} />
             <View style={HomeStyles.textView}>
               <Text style={HomeStyles.heading}>{t("your_mood")}</Text>
             </View>
             <Spacing space={SH(40)} />
             <View style={HomeStyles.HomeCommonView}>
-              <Text style={HomeStyles.HomeCommonTitle}>{t("Latest_Practices")}</Text>
+              <Text style={HomeStyles.HomeCommonTitle}>{t("Select Tag")}</Text>
+            </View>
+            <Spacing space={SH(20)} />
+            <FlatList
+              data={tagData}
+              renderItem={({ item }) => (
+                <WorkOutView
+                  onPress={() => onpressHandle(item.id, item.title)}
+                  item={item}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              horizontal={true}
+            />
+            <Spacing space={SH(20)} />
+            <View style={HomeStyles.HomeCommonView}>
+              <Text style={HomeStyles.HomeCommonTitle}>{t("Latest Categories")}</Text>
               <Text style={[HomeStyles.HomeCommonTitle, HomeStyles.viewAllColor]}>{t("View_All")}</Text>
             </View>
             <Spacing space={SH(20)} />
@@ -258,6 +314,10 @@ const HomeScreen = (props) => {
             )}
             <View style={styles.musicBarTextContainer}>
               <Text style={styles.musicBarText}>{currentTrack.title}</Text>
+              <Text style={styles.text}>Unknown Artist</Text>
+              <View style={styles.progressBarContainer}>
+                <View style={[styles.progressBar, { width: `${progress}%` }]} />
+              </View>
             </View>
             <TouchableOpacity
               style={styles.musicBarButton}

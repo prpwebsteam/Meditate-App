@@ -9,17 +9,19 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Text } from 'react-native';
 import VectorIcon from '../components/commonComponents/VectoreIcons';
 import { useTranslation } from "react-i18next";
+import { useToggle } from '../utils/ToggleContext';
 
-const SideNavigator = props => {
+const SideNavigator = () => {
   const { t } = useTranslation();
   const Drawer = createDrawerNavigator();
+  const { isEnabled } = useToggle();
   const styleArray = {
     headerTintColor: Colors.white_text_color,
     headerStyle: {
       backgroundColor: Colors.theme_backgound_second,
     },
     headerShown: true,
-    headerRight: (props) => <ColorPicker {...props} />,
+    headerRight: (props) => isEnabled && <ColorPicker {...props} />,
     drawerActiveTintColor: Colors.theme_backgound,
     drawerInactiveTintColor: Colors.white,
     drawerLabelStyle: { color: Colors.theme_backgound, fontSize: SF(18), fontFamily: Fonts.RobotoCondensed_Regular },
@@ -47,74 +49,74 @@ const SideNavigator = props => {
     <Drawer.Navigator screenOptions={{
       headerShown: false,
       drawerStyle: {
-        backgroundColor: Colors.white,
+        backgroundColor: 'rgba(217, 217, 214, 1.9)',
       }
     }} >
       <Drawer.Screen
         name={RouteName.HOME_SCREEN} component={HomeScreen}
-        options={{
-          headerTitle: (props) => <AppHeader {...props} headerTitle={t("Home_Text")} />,
+        options={({ navigation }) => ({
+          headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Home_Text")} />,
           ...styleArray,
           drawerIcon: ({ focused }) => drawerIcon(focused, "home"),
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Home_Text"))
-        }}
-
-      />
-      <Drawer.Screen
-        name={RouteName.YOGA_SCREEN} component={YogaScreen}
-        options={{
-          headerTitle: (props) => <AppHeader {...props} headerTitle={t("Yoga_Text")} />,
-          ...styleArray,
-          drawerIcon: ({ focused }) => drawerIcon(focused, "yoga"),
-          drawerLabel: ({ focused }) => drawerTitle(focused, t("Yoga_Text"))
-        }}
+        })}
       />
       <Drawer.Screen
         name={RouteName.MEDITATION_SCREEN} component={MeditationScreen}
-        options={{
-          headerTitle: (props) => <AppHeader {...props} headerTitle={t("Meditation_Text")} />,
+        options={({ navigation }) => ({
+          headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Meditation_Text")} />,
           ...styleArray,
           drawerIcon: ({ focused }) => drawerIcon(focused, "flower-tulip"),
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Meditation_Text"))
-        }}
+        })}
+      />
+      <Drawer.Screen
+        name={RouteName.YOGA_SCREEN} component={YogaScreen}
+        options={({ navigation }) => ({
+          headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Yoga_Text")} />,
+          ...styleArray,
+          drawerIcon: ({ focused }) => drawerIcon(focused, "yoga"),
+          drawerLabel: ({ focused }) => drawerTitle(focused, t("Yoga_Text"))
+        })}
       />
       <Drawer.Screen
         name={RouteName.CATEGORY_SCREEN} component={CategoryScreen}
-        options={{
-          headerTitle: (props) => <AppHeader {...props} headerTitle={t("Category_Text")} />,
+        options={({ navigation }) => ({
+          headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Category_Text")} />,
           ...styleArray,
           drawerIcon: ({ focused }) => drawerIcon(focused, "shape"),
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Category_Text"))
-        }}
+        })}
       />
       <Drawer.Screen
         name={RouteName.EDIT_PROFILE_SCREEN} component={EditProfileScreen}
-        options={{
-          headerTitle: (props) => <AppHeader {...props} headerTitle={t("Profile_Text")} />,
+        options={({ navigation }) => ({
+          headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Profile_Text")} />,
           ...styleArray,
           drawerIcon: ({ focused }) => drawerIcon(focused, "account"),
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Profile_Text"))
-        }}
+        })}
       />
       <Drawer.Screen
         name={RouteName.APP_SETTINGS_SCREEN} component={AppSettingsScreen}
-        options={{
-          headerTitle: (props) => <AppHeader {...props} headerTitle={t("Settings_Text")} />,
+        options={({ navigation }) => ({
+          headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Settings_Text")} />,
           ...styleArray,
           drawerIcon: ({ focused }) => drawerIcon(focused, "cog"),
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Settings_Text"))
-        }}
+        })}
       />
       <Drawer.Screen
         name={RouteName.HELP_SCREEN} component={HelpScreen}
-        options={{
-          headerTitle: (props) => <AppHeader {...props} headerTitle={t("Help_Text")} />,
+        options={({ navigation }) => ({
+          headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Help_Text")} />,
           ...styleArray,
           drawerIcon: ({ focused }) => drawerIcon(focused, "help-box"),
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Help_Text"))
-        }}
+        })}
       />
     </Drawer.Navigator>
   );
 }
+
 export default SideNavigator;

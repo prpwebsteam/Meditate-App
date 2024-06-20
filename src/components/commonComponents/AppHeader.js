@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import propTypes from 'prop-types';
 import { SF, SH, SW, Fonts } from '../../utils';
 import { useTheme } from '@react-navigation/native';
 import images from '../../index';
 import { GetstartedSliderStyle } from '../../styles/GetstartedSliderscreen';
+import { RouteName } from '../../routes';
 
 function AppHeader({ navigation, headerStyle, leftImage, title, rightImage, onLeftPress, onRightPress, titleStyle, LeftComponent = null, headerTitle }) {
     const { Colors } = useTheme();
@@ -39,7 +40,8 @@ function AppHeader({ navigation, headerStyle, leftImage, title, rightImage, onLe
                     ...titleStyle
                 },
                 rightView: {
-                    width: '15%',
+                    width: '5%',
+                    marginLeft: 25,
                     flexDirection: 'row',
                     justifyContent: 'center',
                     alignItems: 'center'
@@ -79,7 +81,7 @@ function AppHeader({ navigation, headerStyle, leftImage, title, rightImage, onLe
         <View style={styles.container}>
             <View style={styles.leftView}>
                 {leftImage &&
-                    <TouchableOpacity disabled={!leftImage} onPress={() => onLeftPress()}>
+                    <TouchableOpacity disabled={!leftImage} onPress={onLeftPress}>
                         <Image style={styles.leftImageStyle} source={leftImage} />
                     </TouchableOpacity>
                 }
@@ -92,18 +94,18 @@ function AppHeader({ navigation, headerStyle, leftImage, title, rightImage, onLe
             </View>
             <View style={styles.rightView}>
                 {rightImage &&
-                    <TouchableOpacity onPress={() => onRightPress()}>
+                    <TouchableOpacity onPress={onRightPress}>
                         <Image source={rightImage} style={styles.rightImageStyle} />
                     </TouchableOpacity>
                 }
             </View>
             <View style={styles.rightView}>
-                <TouchableOpacity onPress={() => onRightPress()}>
+                <TouchableOpacity onPress={() => navigation.navigate(RouteName.WISHLIST_SCREEN)}>
                     <Image source={images.wishlist} style={styles.rightImageStyle2} />
                 </TouchableOpacity>
             </View>
         </View>
-    )
+    );
 }
 
 AppHeader.defaultProps = {
@@ -112,7 +114,7 @@ AppHeader.defaultProps = {
     LeftComponent: null,
     title: '',
     rightImage: null,
-    onLeftPress: () => { },
+    onLeftPress: () => {},
     headerTitle: ''
 };
 
