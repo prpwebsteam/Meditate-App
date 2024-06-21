@@ -11,51 +11,38 @@ const SoundProvider = ({ children }) => {
   const sound = useRef(null);
   const interval = useRef(null);
 
-  const playTrack = (track) => {
+  const playTrack = (track, loop = false) => {
     if (sound.current) {
       sound.current.stop(() => {
         sound.current.release();
-        sound.current = new Sound(track.url, null, (error) => {
-          if (error) {
-            console.log('Failed to load the sound', error);
-            return;
-          }
-          sound.current.play((success) => {
-            if (success) {
-              console.log('Successfully finished playing');
-            } else {
-              console.log('Playback failed due to audio decoding errors');
-            }
-            setIsPlaying(false);
-            clearInterval(interval.current);
-          });
-          setIsPlaying(true);
-        });
-        setCurrentTrack(track);
-        setCurrentTime(0);
-        startProgressUpdater();
+        initializeAndPlayTrack(track, loop);
       });
     } else {
-      sound.current = new Sound(track.url, null, (error) => {
-        if (error) {
-          console.log('Failed to load the sound', error);
-          return;
-        }
-        sound.current.play((success) => {
-          if (success) {
-            console.log('Successfully finished playing');
-          } else {
-            console.log('Playback failed due to audio decoding errors');
-          }
-          setIsPlaying(false);
-          clearInterval(interval.current);
-        });
-        setIsPlaying(true);
-      });
-      setCurrentTrack(track);
-      setCurrentTime(0);
-      startProgressUpdater();
+      initializeAndPlayTrack(track, loop);
     }
+  };
+
+  const initializeAndPlayTrack = (track, loop) => {
+    sound.current = new Sound(track.url, null, (error) => {
+      if (error) {
+        console.log('Failed to load the sound', error);
+        return;
+      }
+      sound.current.setNumberOfLoops(loop ? -1 : 0);
+      sound.current.play((success) => {
+        if (success) {
+          console.log('Successfully finished playing');
+        } else {
+          console.log('Playback failed due to audio decoding errors');
+        }
+        setIsPlaying(false);
+        clearInterval(interval.current);
+      });
+      setIsPlaying(true);
+      startProgressUpdater();
+    });
+    setCurrentTrack(track);
+    setCurrentTime(0);
   };
 
   const startProgressUpdater = () => {
@@ -133,6 +120,9 @@ const SoundProvider = ({ children }) => {
   useEffect(() => {
     return () => {
       clearInterval(interval.current);
+      if (sound.current) {
+        sound.current.release();
+      }
     };
   }, []);
 

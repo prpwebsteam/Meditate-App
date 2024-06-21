@@ -6,6 +6,6 @@ export * from './WorkoutDetailScreen';
 export * from './AppSettingsScreen';
 export * from './EditProfile';
 export * from './HelpScreen';
-export * from './YogaScreen';
+export * from './ScanScreen';
 export * from './CategoryScreen';
 export * from './MeditationScreen';

@@ -1,26 +1,46 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, ImageBackground, Image } from 'react-native';
+import React, { useState, useMemo, useEffect } from 'react';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, ImageBackground, Image } from 'react-native';
 import { Container } from '../../components';
 import { SH, SW, SF } from '../../utils';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
+import axios from 'axios';
 import images from '../../index';
 
 const Wishlist = ({ navigation }) => {
     const { Colors } = useTheme();
     const { t } = useTranslation();
-    const [wishlist, setWishlist] = useState([
-        { id: 1, name: 'Dummy Song 1' },
-        { id: 2, name: 'Dummy Song 2' },
-        { id: 3, name: 'Dummy Song 3' }
-    ]);
+    const [wishlist, setWishlist] = useState([]);
     const [item, setItem] = useState('');
+    
+    useEffect(() => {
+        fetchSongs();
+    }, []);
 
-    const addItemToWishlist = () => {
-        if (item) {
-            const newItem = { id: wishlist.length + 1, name: item };
-            setWishlist([...wishlist, newItem]);
-            setItem('');
+    const fetchSongs = async () => {
+        try {
+            const response = await axios.get('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/songs?category_id=2');
+            console.log('Songs API Response:', response);
+
+            if (response.status === 200 && Array.isArray(response.data)) {
+                const tracks = response.data.map((item) => ({
+                    id: item.id,
+                    title: item.title,
+                    url: item.song?.add_new || null,
+                    thumbnail: item.song?.thumbnail_image || null,
+                    artist: {
+                        image: item.artist?.image || null,
+                        title: item.artist?.title || null,
+                        description: item.artist?.description ? item.artist.description.replace(/<\/?[^>]+(>|$)/g, "") : null,
+                    }
+                })).filter(track => track.url);
+
+                setWishlist(tracks);
+            } else {
+                console.error('Failed to fetch songs or invalid response data:', response.data);
+            }
+        } catch (error) {
+            console.error('Error fetching songs:', error);
         }
     };
 
@@ -40,29 +60,6 @@ const Wishlist = ({ navigation }) => {
             fontSize: SF(24),
             fontWeight: 'bold',
             color: Colors.white,
-        },
-        input: {
-            height: SH(40),
-            borderColor: Colors.border,
-            borderWidth: 1,
-            borderRadius: 5,
-            paddingHorizontal: 10,
-            marginBottom: SH(20),
-            color: Colors.text,
-            backgroundColor: Colors.card,
-            width: '100%',
-        },
-        addButton: {
-            backgroundColor: Colors.primary,
-            paddingVertical: SH(10),
-            borderRadius: 5,
-            marginBottom: SH(20),
-            alignItems: 'center',
-            width: '100%',
-        },
-        addButtonText: {
-            color: Colors.white,
-            fontSize: SF(16),
         },
         list: {
             width: '100%',
@@ -118,6 +115,24 @@ const Wishlist = ({ navigation }) => {
             flexDirection: 'row',
             alignItems: 'center',
         },
+        thumbnail: {
+            width: 50,
+            height: 50,
+            borderRadius: 10,
+            marginRight: 10,
+        },
+        trackInfo: {
+            flex: 1,
+        },
+        trackTitle: {
+            fontSize: SF(16),
+            fontWeight: 'bold',
+            color: Colors.theme_backgound,
+        },
+        trackArtist: {
+            fontSize: SF(14),
+            color: Colors.theme_backgound,
+        },
     }), [Colors]);
 
     return (
@@ -136,7 +151,11 @@ const Wishlist = ({ navigation }) => {
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
                             <View style={styles.wishlistItem}>
-                                <Text style={styles.itemText}>{item.name}</Text>
+                                <Image source={item.thumbnail ? { uri: item.thumbnail } : images.dummyImage} style={styles.thumbnail} />
+                                <View style={styles.trackInfo}>
+                                    <Text style={styles.trackTitle}>{item.title}</Text>
+                                    <Text style={styles.trackArtist}>{item.artist?.title || 'Unknown Artist'}</Text>
+                                </View>
                                 <TouchableOpacity onPress={() => removeItemFromWishlist(item.id)} style={styles.removeButton}>
                                     <Text style={styles.removeButtonText}>{t("Remove")}</Text>
                                 </TouchableOpacity>

@@ -9,12 +9,13 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import axios from 'axios';
 import { SoundContext } from '../../utils/SoundContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WorkoutDetailScreen = (props) => {
   const { Colors } = useTheme();
   const WorkoutDetailStyles = useMemo(() => WorkoutDetailStyle(Colors), [Colors]);
   const { navigation, route } = props;
-  const { categoryId, categoryName } = route.params;
+  const { categoryId, categoryName, tagId, tagName, track, fromRecentlyPlayed } = route.params; // Get the track and flag from route params
   const { t } = useTranslation();
   const [wishlist, setWishlist] = useState([]);
 
@@ -22,25 +23,34 @@ const WorkoutDetailScreen = (props) => {
   const [similarTracks, setSimilarTracks] = useState([]);
 
   useEffect(() => {
-    console.log("currentTrack:", currentTrack);
-  }, [currentTrack]);
+    console.log("tagName", tagName);
+  }, [tagName]);
 
   const fetchSongs = async () => {
     try {
-      const response = await axios.get(`https://chitraguptp85.sg-host.com/wp-json/meditate/v2/songs?category_id=${categoryId}`);
-      console.log("response:", response);
+      let response;
+      if (tagName) {
+        response = await axios.get(`https://chitraguptp85.sg-host.com/wp-json/meditate/v2/songs?tag=${tagName}`);
+      } else if (categoryId) {
+        response = await axios.get(`https://chitraguptp85.sg-host.com/wp-json/meditate/v2/songs?category_id=${categoryId}`);
+      }
+  
       if (response.status === 200 && Array.isArray(response.data)) {
         const tracks = response.data.map((item) => ({
           id: item.id,
           title: item.title,
-          singer: item.singer || "Unknown Artist",
           url: item.song?.add_new || null,
           thumbnail: item.song?.thumbnail_image || null,
+          artist: {
+            image: item.artist?.image || null,
+            title: item.artist?.title || null,
+            description: item.artist?.description ? item.artist.description.replace(/<\/?[^>]+(>|$)/g, "") : null,
+          }
         })).filter(track => track.url);
-
+  
         setSimilarTracks(tracks);
         setTrackList(tracks);
-        if (tracks.length > 0) {
+        if (tracks?.length > 0 && !fromRecentlyPlayed) {
           playTrack(tracks[0]);
         }
       } else {
@@ -49,6 +59,29 @@ const WorkoutDetailScreen = (props) => {
     } catch (error) {
       console.error('Error fetching songs:', error);
     }
+  };
+  
+  const storeRecentlyPlayed = async (track) => {
+    try {
+      let recentTracks = await AsyncStorage.getItem('recentlyPlayedTracks');
+      recentTracks = recentTracks ? JSON.parse(recentTracks) : [];
+  
+      recentTracks = recentTracks.filter(item => item.id !== track.id);
+  
+      recentTracks.unshift(track);
+      if (recentTracks.length > 10) {
+        recentTracks.pop();
+      }
+  
+      await AsyncStorage.setItem('recentlyPlayedTracks', JSON.stringify(recentTracks));
+    } catch (error) {
+      console.error('Error storing recently played track:', error);
+    }
+  };
+  
+  const handlePlayTrack = (track) => {
+    playTrack(track);
+    storeRecentlyPlayed(track);
   };
 
   const postToWishlist = async () => {
@@ -80,7 +113,10 @@ const WorkoutDetailScreen = (props) => {
 
   useEffect(() => {
     fetchSongs();
-  }, [categoryId]);
+    if (fromRecentlyPlayed && track) {
+      handlePlayTrack(track);
+    }
+  }, [categoryId, tagId, fromRecentlyPlayed, track]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -129,7 +165,9 @@ const WorkoutDetailScreen = (props) => {
             <TouchableOpacity onPress={() => navigation.navigate(RouteName.HOME_SCREEN)}>
               <Image source={images.backArrow} style={WorkoutDetailStyles.leftArrow} />
             </TouchableOpacity>
-            <Text style={[WorkoutDetailStyles.ImageTitle]}>{categoryName}</Text>
+            <Text style={[WorkoutDetailStyles.ImageTitle]}>
+              {categoryName ? categoryName : tagName}
+            </Text>
           </View>
           <ScrollView style={{ backgroundColor: 'transparent', padding: SW(30), marginBottom: 100 }} contentContainerStyle={{ flexGrow: 1 }}>
             <View style={WorkoutDetailStyles.centerMainView}>
@@ -144,12 +182,21 @@ const WorkoutDetailScreen = (props) => {
                 )}
               </View>
               <Spacing space={SH(20)} />
-              <Text style={[WorkoutDetailStyles.boxText]}>{categoryName}</Text>
+              <Text style={[WorkoutDetailStyles.boxText]}>
+                {categoryName ? categoryName : tagName}
+              </Text>
               <Spacing space={SH(10)} />
               <Text style={[WorkoutDetailStyles.boxTextLight]}>{currentTrack ? currentTrack.title : t("For_Relaxation")}</Text>
               {currentTrack && (
-                <TouchableOpacity onPress={() => navigation.navigate(RouteName.ABOUT_US_SCREEN, { singer: currentTrack.singer })}>
-                  <Text style={[WorkoutDetailStyles.singer, { textDecorationLine: 'underline' }]}>{currentTrack.singer}</Text>
+                <TouchableOpacity onPress={() => navigation.navigate(RouteName.ABOUT_US_SCREEN, {
+                  singerImage: currentTrack.artist?.image,
+                  singerTitle: currentTrack.artist?.title,
+                  singerDescription: currentTrack.artist?.description,
+                  songTitle: currentTrack.title 
+                })}>
+                  <Text style={[WorkoutDetailStyles.singer, { textDecorationLine: 'underline' }]}>
+                    {currentTrack?.artist?.title || "Unknown Artist"}
+                  </Text>
                 </TouchableOpacity>
               )}
               <Spacing space={SH(20)} />
@@ -184,31 +231,35 @@ const WorkoutDetailScreen = (props) => {
               <Spacing space={SH(20)} />
             </View>
             <Spacing space={SH(20)} />
-            <View>
-              <Text style={[WorkoutDetailStyles.boxText]}>{t("Similar Music")}</Text>
-              <View style={WorkoutDetailStyles.similarMusicContainer}>
-                {similarTracks.map((item) => (
-                  <TouchableOpacity key={item.id} onPress={() => playTrack(item)} style={WorkoutDetailStyles.trackItem}>
-                    {item.thumbnail && (
-                      <Image source={{ uri: item.thumbnail }} style={WorkoutDetailStyles.trackThumbnail} />
-                    )}
-                    <View style={WorkoutDetailStyles.trackInfo}>
-                      <Text style={WorkoutDetailStyles.trackTitle}>{item.title}</Text>
-                      <Text style={WorkoutDetailStyles.singer}>{item.singer}</Text>
-                    </View>
-                    {currentTrack?.id === item.id && isPlaying ? (
-                      <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
-                    ) : (
-                      <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
-                    )}
-                  </TouchableOpacity>
-                ))}
+            {fromRecentlyPlayed ? null : ( // Conditionally render the similar music section
+              <View>
+                <Text style={[WorkoutDetailStyles.boxText]}>{t("Similar Music")}</Text>
+                <View style={WorkoutDetailStyles.similarMusicContainer}>
+                  {similarTracks.map((item) => (
+                    <TouchableOpacity key={item.id} onPress={() => handlePlayTrack(item)} style={WorkoutDetailStyles.trackItem}>
+                      {item.thumbnail ? (
+                        <Image source={{ uri: item.thumbnail }} style={WorkoutDetailStyles.trackThumbnail} />
+                      ) : (
+                        <Image source={images.dummyImage2} style={WorkoutDetailStyles.trackThumbnail} />
+                      )}
+                      <View style={WorkoutDetailStyles.trackInfo}>
+                        <Text style={WorkoutDetailStyles.trackTitle}>{item.title}</Text>
+                        <Text style={WorkoutDetailStyles.singer}>{item.artist?.title || "Unknown Artist"}</Text>
+                      </View>
+                      {currentTrack?.id === item.id && isPlaying ? (
+                        <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
+                      ) : (
+                        <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
-            </View>
+            )}
             <Spacing space={SH(20)} />
           </ScrollView>
           <View style={WorkoutDetailStyles.stickyButton}>
-            <Button title={t("Explore_Similar")} onPress={() => navigation.navigate(RouteName.HOME_SCREEN)} />
+            <Button title={t("Explore_Similar")} onPress={() => navigation.navigate(RouteName.ALL_CATEGORY_SCREEN)} />
           </View>
         </View>
       </ImageBackground>

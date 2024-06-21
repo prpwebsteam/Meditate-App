@@ -20,6 +20,7 @@ import ResetPasswordScreen from '../screens/Authantication/ResetPasswordScreen/R
 import AboutUsScreen from '../screens/AboutUsScreen/AboutUsScreen';
 import Wishlist from '../screens/WishlistScreen/Wishlist';
 import { ToggleProvider } from '../utils/ToggleContext';
+import AllCategoryScreen from '../screens/AllCategoryScreen/AllCategoryScreen';
 
 const RootNavigator = props => {
   const { colorrdata } = useSelector(state => state.commonReducer) || {};
@@ -59,6 +60,7 @@ const RootNavigator = props => {
             <Stack.Screen name={RouteName.TRLANSTION_SCREEN} component={TranslationScreen} />
             <Stack.Screen name={RouteName.ABOUT_US_SCREEN} component={AboutUsScreen} />
             <Stack.Screen name={RouteName.WISHLIST_SCREEN} component={Wishlist} />
+            <Stack.Screen name={RouteName.ALL_CATEGORY_SCREEN} component={AllCategoryScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </SoundProvider>

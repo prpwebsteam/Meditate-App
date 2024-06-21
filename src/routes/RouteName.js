@@ -21,12 +21,13 @@ const RouteName = {
     EDIT_PROFILE_SCREEN: "EditProfileScreen",   
     APP_SETTINGS_SCREEN: "AppSettingsScreen",   
     HELP_SCREEN: "HelpScreen",   
-    YOGA_SCREEN: "YogaScreen",   
+    YOGA_SCREEN: "ScanScreen",   
     CATEGORY_SCREEN: "CategoryScreen",   
     MEDITATION_SCREEN: "MeditationScreen",   
     FORGOT_PASSWORD_SCREEN: "ForgotPasswordScreen",   
     RESET_PASSWORD_SCREEN: "ResetPasswordScreen", 
     ABOUT_US_SCREEN: "AboutUsScreen",
     WISHLIST_SCREEN: 'WishlistScreen',
+    ALL_CATEGORY_SCREEN: 'AllCategoryScreen',
 }
 export default RouteName;

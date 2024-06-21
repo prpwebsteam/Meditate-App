@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, Switch, ScrollView, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, Switch, ScrollView, TouchableOpacity, Pressable, ImageBackground, StyleSheet } from 'react-native';
 import { HomeStyle, Settings, LanguageStyles } from '../../styles';
 import { SweetAlertModal, Container, Spacing, VectoreIcons, ModalLanguage } from '../../components';
 import { SH, SF } from '../../utils';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import { useToggle } from '../../utils/ToggleContext';
+import images from '../../index';
 
 const AppSettingsScreen = () => {
   const { Colors } = useTheme();
@@ -25,9 +26,22 @@ const AppSettingsScreen = () => {
   const changeLang = (e) => {
     setSelectLabel(e)
   }
+  const styles = StyleSheet.create({
+    backgroundImage: {
+      flex: 1,
+      width: '100%',
+      height: '100%',
+    },
+    overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    },
+  });
 
   return (
     <Container>
+    <ImageBackground source={images.background1} resizeMode='cover' style={styles.backgroundImage}>
+      <View style={styles.overlay} />
       <ScrollView>
         <View style={Settingss.textcenterview}>
           <View style={Settingss.topspaceview}>
@@ -39,7 +53,7 @@ const AppSettingsScreen = () => {
               </View>
               <View style={Settingss.toggleswotchview}>
                 <Text style={Settingss.downlodtoggleswitchtext}>
-                  {t("Enable to use color picker")}
+                  {t("Enable this to use color picker")}
                 </Text>
                 <View>
                   <Switch
@@ -50,70 +64,6 @@ const AppSettingsScreen = () => {
                     value={isEnabled}
                   />
                 </View>
-              </View>
-              <Text style={Settingss.cellulardatatext}>{t("Video_Downloads")}</Text>
-              <View style={Settingss.righticonminview}>
-                <View>
-                  <Text style={Settingss.standardrecommedtext}>{t("Standard_recommended")}</Text>
-                  <Text style={Settingss.downloadfastertext}>{t("Downnloads_Faster")}</Text>
-                </View>
-                <View>
-                  <VectoreIcons
-                    icon="AntDesign"
-                    size={SF(30)}
-                    name="check"
-                    style={Settingss.chekiconstyle}
-                  />
-                </View>
-              </View>
-              <View style={Settingss.righticonminview}>
-                <View>
-                  <Text style={Settingss.standardrecommedtext}>{t("High_Definition")}</Text>
-                  <Text style={Settingss.downloadfastertext}>{t("Use_Storage")}</Text>
-                </View>
-              </View>
-              <Text style={LanguageStyles.Settingtext}>{t("Select_Your_Language")}</Text>
-              <TouchableOpacity onPress={() => setModalVisible(true)} style={LanguageStyles.SettingStyle}>
-                <Text style={LanguageStyles.SelectText}>{selectLabel}</Text>
-                <View style={LanguageStyles.DropDownIcon}>
-                  <VectoreIcons icon="Feather" name="chevron-down" color={Colors.black_text_color} size={SF(25)} /></View>
-              </TouchableOpacity>
-              <ModalLanguage modalVisible={modalVisible}
-                setModalVisible={() => {
-                  setModalVisible(!modalVisible);
-                }}
-                close={() => setModalVisible(!modalVisible)}
-                OnClose={() => setModalVisible(false)}
-                changeLang={changeLang}
-              />
-              <Text style={Settingss.offlinedoenloadstextset}>{t("Offline_Downloads")}</Text>
-              <View style={Settingss.righticonminview}>
-                <View style={Settingss.bodysettextwidth}>
-                  <Text style={Settingss.standardrecommedtext}>{t("Delete_Completed")}</Text>
-                  <Text style={Settingss.downloadfastertext}>{t("Delete_Completed_1")}</Text>
-                </View>
-                <View>
-                  <VectoreIcons
-                    icon="AntDesign"
-                    size={SF(30)}
-                    name="check"
-                    style={Settingss.chekiconstyle}
-                  />
-                </View>
-              </View>
-              <View style={Settingss.righticonminviewtwo}>
-                <View style={Settingss.bodysettextwidth}>
-                  <Text style={Settingss.deletedownloads}>{t("Delete_All_Downloads")}</Text>
-                  <Text style={Settingss.downloadfastertext}>{t("Delete_All_Downloads_2")}</Text>
-                </View>
-                <Pressable onPress={() => setSuccessModalVisible(true)}>
-                  <VectoreIcons
-                    icon="MaterialCommunityIcons"
-                    size={SF(30)}
-                    name="check"
-                    style={Settingss.chekiconstyle}
-                  />
-                </Pressable>
               </View>
             </View>
           </View>
@@ -128,6 +78,7 @@ const AppSettingsScreen = () => {
         success={true}
         buttonText={t("Ok")}
       />
+      </ImageBackground>
     </Container>
   );
 };

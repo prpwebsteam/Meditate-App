@@ -1,6 +1,8 @@
 const images = {
     splashScreenIcon: require('./lottieAnimation/logo1.png'),
     mainBG: require('./home_bg.jpg'),
+    dummyImage: require('./dummy2.png'),
+    dummyImage2: require('./dummy2.png'),
     loginBG: require('./login_bg.jpg'),
     logo: require('./lottieAnimation/logo-2.png'), 
     slide1: require('./lottieAnimation/logo.png'),

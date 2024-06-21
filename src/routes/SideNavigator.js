@@ -10,6 +10,7 @@ import { Text } from 'react-native';
 import VectorIcon from '../components/commonComponents/VectoreIcons';
 import { useTranslation } from "react-i18next";
 import { useToggle } from '../utils/ToggleContext';
+import ScanScreen from '../screens/ScanScreen/ScanScreen';
 
 const SideNavigator = () => {
   const { t } = useTranslation();
@@ -49,7 +50,7 @@ const SideNavigator = () => {
     <Drawer.Navigator screenOptions={{
       headerShown: false,
       drawerStyle: {
-        backgroundColor: 'rgba(217, 217, 214, 1.9)',
+        backgroundColor: '#141414',
       }
     }} >
       <Drawer.Screen
@@ -71,11 +72,11 @@ const SideNavigator = () => {
         })}
       />
       <Drawer.Screen
-        name={RouteName.YOGA_SCREEN} component={YogaScreen}
+        name={RouteName.YOGA_SCREEN} component={ScanScreen}
         options={({ navigation }) => ({
           headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Yoga_Text")} />,
           ...styleArray,
-          drawerIcon: ({ focused }) => drawerIcon(focused, "yoga"),
+          drawerIcon: ({ focused }) => drawerIcon(focused, "qrcode-scan"),
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Yoga_Text"))
         })}
       />
