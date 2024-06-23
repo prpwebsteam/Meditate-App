@@ -71,6 +71,8 @@ const Wishlist = ({ navigation }) => {
             padding: SH(10),
             backgroundColor: Colors.card,
             borderRadius: 5,
+            borderBottomWidth: 1, 
+            borderBottomColor: '#313131',
             marginBottom: SH(10),
         },
         itemText: {

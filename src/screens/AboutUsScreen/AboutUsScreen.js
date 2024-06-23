@@ -29,7 +29,7 @@ const AboutUsScreen = ({ route, navigation }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image source={images.backArrow} style={styles.backArrow} />
           </TouchableOpacity>
-          <Text style={[styles.title, { color: Colors.white }]}>{t("About Artist")}</Text>
+          <Text style={[styles.title, { color: Colors.white }]}>{t("About Us")}</Text>
         </View>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View>

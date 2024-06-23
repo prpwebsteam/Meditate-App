@@ -15,7 +15,7 @@ const WorkoutDetailScreen = (props) => {
   const { Colors } = useTheme();
   const WorkoutDetailStyles = useMemo(() => WorkoutDetailStyle(Colors), [Colors]);
   const { navigation, route } = props;
-  const { categoryId, categoryName, tagId, tagName, track, fromRecentlyPlayed } = route.params; // Get the track and flag from route params
+  const { categoryId, categoryName, tagId, tagName, track, fromRecentlyPlayed, relatedSongs } = route.params; // Get the relatedSongs from route params
   const { t } = useTranslation();
   const [wishlist, setWishlist] = useState([]);
 
@@ -112,11 +112,30 @@ const WorkoutDetailScreen = (props) => {
   };
 
   useEffect(() => {
-    fetchSongs();
+    if (relatedSongs) {
+      // Use related songs if passed from quiz
+      const tracks = relatedSongs.map(song => ({
+        id: song.id,
+        title: song.title,
+        url: song.song?.add_new || null,
+        thumbnail: song.song?.thumbnail_image || null,
+        artist: {
+          image: song.artist?.image || null,
+          title: song.artist?.title || null,
+          description: song.artist?.description ? song.artist.description.replace(/<\/?[^>]+(>|$)/g, "") : null,
+        }
+      })).filter(track => track.url);
+
+      setSimilarTracks(tracks);
+      setTrackList(tracks);
+      playTrack(tracks[0]);
+    } else {
+      fetchSongs();
+    }
     if (fromRecentlyPlayed && track) {
       handlePlayTrack(track);
     }
-  }, [categoryId, tagId, fromRecentlyPlayed, track]);
+  }, [categoryId, tagId, fromRecentlyPlayed, track, relatedSongs]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -231,7 +250,31 @@ const WorkoutDetailScreen = (props) => {
               <Spacing space={SH(20)} />
             </View>
             <Spacing space={SH(20)} />
-            {fromRecentlyPlayed ? null : ( // Conditionally render the similar music section
+            {relatedSongs ? (
+              <View>
+                <Text style={[WorkoutDetailStyles.boxText]}>{t("Related Music")}</Text>
+                <View style={WorkoutDetailStyles.similarMusicContainer}>
+                  {similarTracks.map((item) => (
+                    <TouchableOpacity key={item.id} onPress={() => handlePlayTrack(item)} style={WorkoutDetailStyles.trackItem}>
+                      {item.thumbnail ? (
+                        <Image source={{ uri: item.thumbnail }} style={WorkoutDetailStyles.trackThumbnail} />
+                      ) : (
+                        <Image source={images.dummyImage2} style={WorkoutDetailStyles.trackThumbnail} />
+                      )}
+                      <View style={WorkoutDetailStyles.trackInfo}>
+                        <Text style={WorkoutDetailStyles.trackTitle}>{item.title}</Text>
+                        <Text style={WorkoutDetailStyles.singer}>{item.artist?.title || "Unknown Artist"}</Text>
+                      </View>
+                      {currentTrack?.id === item.id && isPlaying ? (
+                        <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
+                      ) : (
+                        <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            ) : (
               <View>
                 <Text style={[WorkoutDetailStyles.boxText]}>{t("Similar Music")}</Text>
                 <View style={WorkoutDetailStyles.similarMusicContainer}>

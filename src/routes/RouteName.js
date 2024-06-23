@@ -29,5 +29,6 @@ const RouteName = {
     ABOUT_US_SCREEN: "AboutUsScreen",
     WISHLIST_SCREEN: 'WishlistScreen',
     ALL_CATEGORY_SCREEN: 'AllCategoryScreen',
+    QUIZ_SCREEN: 'QuizScreen',
 }
 export default RouteName;

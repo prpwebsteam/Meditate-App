@@ -6,7 +6,7 @@ import CheckBox from '@react-native-community/checkbox';
 import { Container, Spacing, BottomTabMenu, WorkOutView } from '../../components';
 import images from '../../index';
 import { RouteName } from '../../routes';
-import { SH, SW, SF } from '../../utils';
+import { Colors, SH, SW, SF } from '../../utils';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import axios from 'axios';
@@ -338,7 +338,7 @@ const HomeScreen = (props) => {
             <Spacing space={SH(30)} />
             <View style={HomeStyles.textView}>
               <Text style={HomeStyles.heading}>{t("your_mood")}</Text>
-              <TouchableOpacity style={styles.button} onPress={() => setIsModalVisible(true)}>
+              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(RouteName.QUIZ_SCREEN)}>
                 <Text style={styles.buttonText}>{t("Take Quiz")}</Text>
               </TouchableOpacity>
             </View>

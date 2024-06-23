@@ -21,6 +21,7 @@ import AboutUsScreen from '../screens/AboutUsScreen/AboutUsScreen';
 import Wishlist from '../screens/WishlistScreen/Wishlist';
 import { ToggleProvider } from '../utils/ToggleContext';
 import AllCategoryScreen from '../screens/AllCategoryScreen/AllCategoryScreen';
+import QuizScreen from '../screens/QuizScreen/QuizScreen';
 
 const RootNavigator = props => {
   const { colorrdata } = useSelector(state => state.commonReducer) || {};
@@ -61,6 +62,7 @@ const RootNavigator = props => {
             <Stack.Screen name={RouteName.ABOUT_US_SCREEN} component={AboutUsScreen} />
             <Stack.Screen name={RouteName.WISHLIST_SCREEN} component={Wishlist} />
             <Stack.Screen name={RouteName.ALL_CATEGORY_SCREEN} component={AllCategoryScreen} />
+            <Stack.Screen name={RouteName.QUIZ_SCREEN} component={QuizScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </SoundProvider>

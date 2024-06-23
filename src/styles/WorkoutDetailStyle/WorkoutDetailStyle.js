@@ -86,6 +86,8 @@ export default WorkoutDetailStyle = (Colors) => StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderBottomWidth: 1, // Added bottom border width
+    borderBottomColor: '#313131',
   },
   workoutListText: {
     color: Colors.white,
@@ -230,6 +232,8 @@ export default WorkoutDetailStyle = (Colors) => StyleSheet.create({
     backgroundColor: Colors.card,
     borderRadius: SH(10),
     width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#313131',
   },
   trackThumbnail: {
     width: 50,
