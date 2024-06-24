@@ -50,13 +50,12 @@ const AppSettingsScreen = (props) => {
     buttonView: {
       paddingHorizontal: SH(30),
       flexDirection: 'column',
-      width: '100%',
+      width: '93%',
       justifyContent: 'center',
       alignItems: 'center',
     },
     logoutButton: {
       alignSelf: 'center',
-      width: '90%',
       marginTop: 20,
     },
   });

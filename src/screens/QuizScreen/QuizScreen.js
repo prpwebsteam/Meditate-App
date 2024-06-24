@@ -69,7 +69,7 @@ const QuizScreen = ({ navigation }) => {
             return acc.concat(questionRelatedSongs);
         }, []);
 
-        navigation.navigate(RouteName.WORKOUT_DETAIL_SCREEN, { relatedSongs });
+        navigation.navigate(RouteName.WORKOUT_DETAIL_SCREEN, { relatedSongs: relatedSongs.filter(song => song && song.id && song.title) });
     };
 
     if (isLoading) {

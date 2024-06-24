@@ -45,9 +45,11 @@ const WorkoutDetailScreen = (props) => {
         })).filter(track => track.url);
 
         setSimilarTracks(tracks);
-        setTrackList(tracks);
-        if (tracks?.length > 0 && !fromRecentlyPlayed) {
-          playTrack(tracks[0]);
+        if (tracks.length > 0) {
+          setTrackList(tracks);
+          if (!fromRecentlyPlayed) {
+            playTrack(tracks[0]);
+          }
         }
       } else {
         console.error('Failed to fetch songs or invalid response data:', response.data);
@@ -135,8 +137,10 @@ const WorkoutDetailScreen = (props) => {
       })).filter(track => track.url);
 
       setSimilarTracks(tracks);
-      setTrackList(tracks);
-      playTrack(tracks[0]);
+      if (tracks.length > 0) {
+        setTrackList(tracks);
+        playTrack(tracks[0]);
+      }
     } else {
       fetchSongs();
     }
@@ -199,7 +203,7 @@ const WorkoutDetailScreen = (props) => {
         overflow: 'hidden',
         width: 200,
         height: 200,
-      }
+      },
     }), [Colors]);
 
   return (
@@ -220,60 +224,69 @@ const WorkoutDetailScreen = (props) => {
               <TouchableOpacity onPress={toggleWishlist} style={styles.rightImageStyle2}>
                 <Image source={wishlist.includes(currentTrack?.id.toString()) ? images.wishlist11 : images.wishlist1} style={{ width: SW(20), height: SW(20) }} />
               </TouchableOpacity>
-              <View style={styles.musicCard}>
-                {currentTrack?.thumbnail ? (
-                  <Image source={{ uri: currentTrack.thumbnail }} style={WorkoutDetailStyles.imageStyle} />
-                ) : (
-                  <LottieIcon source={images.lotus_complex} style={WorkoutDetailStyles.imageStyle} />
-                )}
-              </View>
-              <Spacing space={SH(20)} />
-              <Text style={[WorkoutDetailStyles.boxText]}>
-                {categoryName ? categoryName : tagName}
-              </Text>
-              <Spacing space={SH(10)} />
-              <Text style={[WorkoutDetailStyles.boxTextLight]}>{currentTrack ? currentTrack.title : t("For_Relaxation")}</Text>
-              {currentTrack && (
-                <TouchableOpacity onPress={() => navigation.navigate(RouteName.ABOUT_US_SCREEN, {
-                  singerImage: currentTrack.artist?.image,
-                  singerTitle: currentTrack.artist?.title,
-                  singerDescription: currentTrack.artist?.description,
-                  songTitle: currentTrack.title
-                })}>
-                  <Text style={[WorkoutDetailStyles.singer, { textDecorationLine: 'underline' }]}>
-                    {currentTrack?.artist?.title || "Unknown Artist"}
+              {currentTrack ? (
+                <>
+                  <View style={styles.musicCard}>
+                    {currentTrack.thumbnail ? (
+                      <Image source={{ uri: currentTrack.thumbnail }} style={WorkoutDetailStyles.imageStyle} />
+                    ) : (
+                      <LottieIcon source={images.lotus_complex} style={WorkoutDetailStyles.imageStyle} />
+                    )}
+                  </View>
+                  <Spacing space={SH(20)} />
+                  <Text style={[WorkoutDetailStyles.boxText]}>
+                    {categoryName ? categoryName : tagName}
                   </Text>
-                </TouchableOpacity>
+                  <Spacing space={SH(10)} />
+                  <Text style={[WorkoutDetailStyles.boxTextLight]}>{currentTrack.title}</Text>
+                  <TouchableOpacity onPress={() => navigation.navigate(RouteName.ABOUT_US_SCREEN, {
+                    singerImage: currentTrack.artist?.image,
+                    singerTitle: currentTrack.artist?.title,
+                    singerDescription: currentTrack.artist?.description,
+                    songTitle: currentTrack.title
+                  })}>
+                    <Text style={[WorkoutDetailStyles.singer, { textDecorationLine: 'underline' }]}>
+                      {currentTrack.artist?.title || "Unknown Artist"}
+                    </Text>
+                  </TouchableOpacity>
+                  <Spacing space={SH(20)} />
+                  <View style={WorkoutDetailStyles.playView}>
+                    <TouchableOpacity onPress={rewind}>
+                      <Image source={images.rewind_button} style={WorkoutDetailStyles.playViewIcon2} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={playPreviousTrack}>
+                      <Image source={images.backward} style={WorkoutDetailStyles.playViewIcon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={isPlaying ? pauseTrack : resumeTrack} style={WorkoutDetailStyles.playCenter}>
+                      <Image
+                        source={isPlaying ? images.pause : images.play}
+                        style={isPlaying ? WorkoutDetailStyles.playViewIconCenterPause : WorkoutDetailStyles.playViewIconCenter}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={playNextTrack}>
+                      <Image source={images.forward} style={WorkoutDetailStyles.playViewIcon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={fastForward}>
+                      <Image source={images.forward_button} style={WorkoutDetailStyles.playViewIcon2} />
+                    </TouchableOpacity>
+                  </View>
+                  <Spacing space={SH(20)} />
+                  <View style={WorkoutDetailStyles.playTimeView}>
+                    <Text style={WorkoutDetailStyles.playTimeText}>{formatTime(currentTime || 0)}</Text>
+                    <Text style={[WorkoutDetailStyles.playTimeText, WorkoutDetailStyles.off_gray]}>{formatTime(duration)}</Text>
+                  </View>
+                  <View style={WorkoutDetailStyles.counterMainViewStart}>
+                    <View style={[WorkoutDetailStyles.counterMainViewStartActive, { width: `${(currentTime / (duration || 1)) * 100}%` }]}></View>
+                  </View>
+                </>
+              ) : (
+                <Text style={{
+                  color: Colors.white,
+                  fontSize: SH(16),
+                  textAlign: 'center',
+                  marginVertical: SH(20),
+                }}>{t("No music found")}</Text>
               )}
-              <Spacing space={SH(20)} />
-              <View style={WorkoutDetailStyles.playView}>
-                <TouchableOpacity onPress={rewind}>
-                  <Image source={images.rewind_button} style={WorkoutDetailStyles.playViewIcon2} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={playPreviousTrack}>
-                  <Image source={images.backward} style={WorkoutDetailStyles.playViewIcon} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={isPlaying ? pauseTrack : resumeTrack} style={WorkoutDetailStyles.playCenter}>
-                  <Image
-                    source={isPlaying ? images.pause : images.play}
-                    style={isPlaying ? WorkoutDetailStyles.playViewIconCenterPause : WorkoutDetailStyles.playViewIconCenter}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={playNextTrack}>
-                  <Image source={images.forward} style={WorkoutDetailStyles.playViewIcon} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={fastForward}>
-                  <Image source={images.forward_button} style={WorkoutDetailStyles.playViewIcon2} />
-                </TouchableOpacity>
-              </View>
-              <Spacing space={SH(20)} />
-              <View style={WorkoutDetailStyles.playTimeView}>
-                <Text style={WorkoutDetailStyles.playTimeText}>{formatTime(currentTime || 0)}</Text>
-                <Text style={[WorkoutDetailStyles.playTimeText, WorkoutDetailStyles.off_gray]}>{formatTime(duration)}</Text>
-              </View>
-              <View style={WorkoutDetailStyles.counterMainViewStart}>
-                <View style={[WorkoutDetailStyles.counterMainViewStartActive, { width: `${(currentTime / (duration || 1)) * 100}%` }]}></View>
-              </View>
               <Spacing space={SH(20)} />
             </View>
             <Spacing space={SH(20)} />
@@ -281,48 +294,68 @@ const WorkoutDetailScreen = (props) => {
               <View>
                 <Text style={[WorkoutDetailStyles.boxText]}>{t("Related Music")}</Text>
                 <View style={WorkoutDetailStyles.similarMusicContainer}>
-                  {similarTracks.map((item) => (
-                    <TouchableOpacity key={item.id} onPress={() => handlePlayTrack(item)} style={WorkoutDetailStyles.trackItem}>
-                      {item.thumbnail ? (
-                        <Image source={{ uri: item.thumbnail }} style={WorkoutDetailStyles.trackThumbnail} />
-                      ) : (
-                        <Image source={images.dummyImage2} style={WorkoutDetailStyles.trackThumbnail} />
-                      )}
-                      <View style={WorkoutDetailStyles.trackInfo}>
-                        <Text style={WorkoutDetailStyles.trackTitle}>{item.title}</Text>
-                        <Text style={WorkoutDetailStyles.singer}>{item.artist?.title || "Unknown Artist"}</Text>
-                      </View>
-                      {currentTrack?.id === item.id && isPlaying ? (
-                        <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
-                      ) : (
-                        <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
-                      )}
-                    </TouchableOpacity>
-                  ))}
+                  {similarTracks.length === 0 ? (
+                    <Text style={{
+                      color: Colors.white,
+                      fontSize: SH(16),
+                      textAlign: 'center',
+                      marginVertical: SH(20),
+                      marginHorizontal: SH(20),
+                    }}>{t("No similar music found")}</Text>
+                  ) : (
+                    similarTracks.map((item) => (
+                      <TouchableOpacity key={item.id} onPress={() => handlePlayTrack(item)} style={WorkoutDetailStyles.trackItem}>
+                        {item.thumbnail ? (
+                          <Image source={{ uri: item.thumbnail }} style={WorkoutDetailStyles.trackThumbnail} />
+                        ) : (
+                          <Image source={images.dummyImage2} style={WorkoutDetailStyles.trackThumbnail} />
+                        )}
+                        <View style={WorkoutDetailStyles.trackInfo}>
+                          <Text style={WorkoutDetailStyles.trackTitle}>{item.title}</Text>
+                          <Text style={WorkoutDetailStyles.singer}>{item.artist?.title || "Unknown Artist"}</Text>
+                        </View>
+                        {currentTrack?.id === item.id && isPlaying ? (
+                          <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
+                        ) : (
+                          <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
+                        )}
+                      </TouchableOpacity>
+                    ))
+                  )}
                 </View>
               </View>
             ) : (
               <View>
                 <Text style={[WorkoutDetailStyles.boxText]}>{t("Similar Music")}</Text>
                 <View style={WorkoutDetailStyles.similarMusicContainer}>
-                  {similarTracks.map((item) => (
-                    <TouchableOpacity key={item.id} onPress={() => handlePlayTrack(item)} style={WorkoutDetailStyles.trackItem}>
-                      {item.thumbnail ? (
-                        <Image source={{ uri: item.thumbnail }} style={WorkoutDetailStyles.trackThumbnail} />
-                      ) : (
-                        <Image source={images.dummyImage2} style={WorkoutDetailStyles.trackThumbnail} />
-                      )}
-                      <View style={WorkoutDetailStyles.trackInfo}>
-                        <Text style={WorkoutDetailStyles.trackTitle}>{item.title}</Text>
-                        <Text style={WorkoutDetailStyles.singer}>{item.artist?.title || "Unknown Artist"}</Text>
-                      </View>
-                      {currentTrack?.id === item.id && isPlaying ? (
-                        <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
-                      ) : (
-                        <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
-                      )}
-                    </TouchableOpacity>
-                  ))}
+                  {similarTracks.length === 0 ? (
+                    <Text style={{
+                      color: Colors.white,
+                      fontSize: SH(16),
+                      textAlign: 'center',
+                      marginVertical: SH(20),
+                      marginHorizontal: SH(20),
+                    }}>{t("No similar music found")}</Text>
+                  ) : (
+                    similarTracks.map((item) => (
+                      <TouchableOpacity key={item.id} onPress={() => handlePlayTrack(item)} style={WorkoutDetailStyles.trackItem}>
+                        {item.thumbnail ? (
+                          <Image source={{ uri: item.thumbnail }} style={WorkoutDetailStyles.trackThumbnail} />
+                        ) : (
+                          <Image source={images.dummyImage2} style={WorkoutDetailStyles.trackThumbnail} />
+                        )}
+                        <View style={WorkoutDetailStyles.trackInfo}>
+                          <Text style={WorkoutDetailStyles.trackTitle}>{item.title}</Text>
+                          <Text style={WorkoutDetailStyles.singer}>{item.artist?.title || "Unknown Artist"}</Text>
+                        </View>
+                        {currentTrack?.id === item.id && isPlaying ? (
+                          <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
+                        ) : (
+                          <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
+                        )}
+                      </TouchableOpacity>
+                    ))
+                  )}
                 </View>
               </View>
             )}

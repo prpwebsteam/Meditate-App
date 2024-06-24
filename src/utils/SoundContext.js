@@ -23,7 +23,7 @@ const SoundProvider = ({ children }) => {
   };
 
   const initializeAndPlayTrack = (track, loop) => {
-    sound.current = new Sound(track.url, null, (error) => {
+    sound.current = new Sound(track?.url, null, (error) => {
       if (error) {
         console.log('Failed to load the sound', error);
         return;

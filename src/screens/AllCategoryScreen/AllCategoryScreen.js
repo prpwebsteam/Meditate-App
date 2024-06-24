@@ -79,7 +79,6 @@ const AllCategoryScreen = ({ navigation }) => {
         <Container>
             <ImageBackground source={images.background1} style={styles.backgroundImage}>
                 <View style={styles.overlay} />
-                <BottomTabMenu selected={0} />
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image source={images.backArrow} style={styles.backArrow} />
