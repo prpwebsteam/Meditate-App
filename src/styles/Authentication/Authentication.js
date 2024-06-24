@@ -255,5 +255,5 @@ export default Authentication = (Colors) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%'
-  },
+  }, 
 });

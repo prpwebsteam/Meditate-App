@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Input } from 'react-native-elements';
 import propTypes from 'prop-types';
+import { View, StyleSheet } from 'react-native';
 import { SF, SH, SW, Fonts, Colors } from '../../utils';
+import { Input } from 'react-native-elements';
 
 function Inputs({
   title,
@@ -28,6 +28,7 @@ function Inputs({
   inputContainerStyle,
   numberOfLines
 }) {
+ 
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -40,6 +41,15 @@ function Inputs({
         input_style: {
           width: '100%',
           borderColor: Colors.gray_text_color,
+          fontSize: SF(17),
+          fontWeight: '600',
+          marginBottom: SH(0),
+          fontFamily: Fonts.Poppins_Medium,
+          color: Colors.black_text_color,
+          paddingVertical: SH(8),
+          paddingHorizontal: SH(10),
+          fontFamily: Fonts.Poppins_Regular,
+          borderRadius: SH(7),
           fontSize: SF(15),
           fontWeight: '600',
           marginBottom: SH(0),
@@ -53,6 +63,8 @@ function Inputs({
         },
         labelStyle: {
           width: '100%',
+          fontSize: SF(18),
+          color: Colors.black_text_color,
           fontSize: SF(15),
           color: Colors.white,
           fontFamily: Fonts.Poppins_Medium,
@@ -62,6 +74,12 @@ function Inputs({
           paddingVertical: SH(2),
         },
         placeholderStyle: {
+          fontSize: SF(19),
+          color: Colors.theme_backgound,
+          fontFamily: Fonts.Poppins_Medium
+        },
+        errorStyle: {
+          color: Colors.theme_backgound,
           fontSize: SF(12),
           color: Colors.white,
           fontFamily: Fonts.Poppins_Medium
@@ -81,13 +99,13 @@ function Inputs({
         placeholder={placeholder}
         onChangeText={(text) => onChangeText(text)}
         leftIcon={leftIcon}
-        placeholderTextColor={'#818181'}
+        placeholderTextColor={Colors.black_text_color}
         rightIcon={rightIcon}
         numberOfLines={numberOfLines}
         errorMessage={errorMessage}
         disabled={disabled}
-        onFocus={onFocus}
-        onBlur={onBlur}
+        onFocus={() => onFocus()}
+        onBlur={() => onBlur()}
         autoFocus={autoFocus}
         keyboardType={!inputType ? 'default' : inputType}
         secureTextEntry={secureTextEntry}
@@ -99,7 +117,7 @@ function Inputs({
         inputStyle={styles.input_style}
         labelStyle={styles.labelStyle}
         inputContainerStyle={styles.inputContainerStyle}
-        onEndEditing={onEndEditing}
+        onEndEditing={(e) => onEndEditing(e)}
       />
     </View>
   );

@@ -354,7 +354,7 @@ const MeditationScreen = (props) => {
             </View>
           </View>
         </ScrollView>
-      </ImageBackground>
+      </ImageBackground> 
     </Container>
   );
 };

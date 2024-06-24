@@ -50,8 +50,10 @@
     "react-redux": "8.0.5",
     "redux": "4.2.0",
     "redux-persist": "6.0.0",
-    "redux-thunk": "2.4.2",
-    "rn-curved-navigation-bar": "1.1.0"
+    "redux-thunk": "2.4.2", 
+    "rn-curved-navigation-bar": "1.1.0",
+    "shopify-buy": "^2.11.0",
+    "react-native-webview": "^11.6.4"  
   },
   "devDependencies": {
     "@babel/core": "7.12.9",

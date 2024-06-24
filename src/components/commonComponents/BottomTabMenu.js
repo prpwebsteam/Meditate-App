@@ -50,7 +50,7 @@ function BottomTabMenu(props) {
         : id == 3 ?
           navigation.navigate(RouteName.YOGA_SCREEN)
           : id == 4 ?
-            navigation.navigate(RouteName.CATEGORY_SCREEN)
+            navigation.navigate(RouteName.PRODUCTLIST_SCREEN)
             : navigation.navigate(RouteName.EDIT_PROFILE_SCREEN)
 
   }

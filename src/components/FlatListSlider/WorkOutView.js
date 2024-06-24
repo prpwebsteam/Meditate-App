@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   description: {
-    color: 'white',
+    color: 'white', 
     fontSize: SF(12),
     textAlign: 'left',
     marginTop: SH(5),

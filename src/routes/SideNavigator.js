@@ -11,11 +11,12 @@ import VectorIcon from '../components/commonComponents/VectoreIcons';
 import { useTranslation } from "react-i18next";
 import { useToggle } from '../utils/ToggleContext';
 import ScanScreen from '../screens/ScanScreen/ScanScreen';
+import ProductListScreen from '../screens/ProductListScreen/ProductListScreen';
 
 const SideNavigator = () => {
   const { t } = useTranslation();
   const Drawer = createDrawerNavigator();
-  const { isEnabled } = useToggle();
+  const { isEnabled } = useToggle(); 
   const styleArray = {
     headerTintColor: Colors.white_text_color,
     headerStyle: {
@@ -81,7 +82,7 @@ const SideNavigator = () => {
         })}
       />
       <Drawer.Screen
-        name={RouteName.CATEGORY_SCREEN} component={CategoryScreen}
+        name={RouteName.PRODUCTLIST_SCREEN} component={ProductListScreen}
         options={({ navigation }) => ({
           headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Category_Text")} />,
           ...styleArray,
@@ -119,5 +120,4 @@ const SideNavigator = () => {
     </Drawer.Navigator>
   );
 }
-
 export default SideNavigator;

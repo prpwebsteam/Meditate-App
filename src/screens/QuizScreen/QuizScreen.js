@@ -111,6 +111,7 @@ const QuizScreen = ({ navigation }) => {
                                         <CheckBox
                                             value={quizAnswers[question.id] === optionKey}
                                             onValueChange={() => handleQuizAnswerChange(question.id, optionKey)}
+                                            style={styles.CheckBox}
                                         />
                                         <Text style={styles.optionText}>{question.questions[optionKey]}</Text>
                                     </View>
@@ -161,6 +162,10 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         height: '100%',
+    },
+    CheckBox:{
+color:'#fff',
+borderColor:'#FFF'
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,

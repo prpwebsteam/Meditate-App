@@ -9,11 +9,17 @@ import {
   WorkoutDetailScreen,
   ForgotPasswordScreen,
   TranslationScreen,
+
 } from '../screens';
 import { Colors } from '../utils';
 import SideNavigator from './SideNavigator';
 const Stack = createNativeStackNavigator();
 import { useSelector } from "react-redux";
+import { ProductListScreen } from '../screens/ProductListScreen';
+import { ProductDetailsScreen } from '../screens/ProductDetailsScreen';
+import { CheckoutScreen } from '../screens/CheckoutScreen';
+import { WebViewScreen } from '../screens/WebViewScreen';
+import { CartScreen } from '../screens/CartScreen';
 import HomeScreen from '../screens/HomeScreen';
 import { SoundProvider } from '../utils/SoundContext';
 import ResetPasswordScreen from '../screens/Authantication/ResetPasswordScreen/ResetPasswordScreen';
@@ -40,7 +46,9 @@ const RootNavigator = props => {
       };
       setColorValue(MyThemeNew)
     }
+
   }, [colorrdata, Colors])
+ 
 
   return (
     <ToggleProvider>
@@ -63,6 +71,11 @@ const RootNavigator = props => {
             <Stack.Screen name={RouteName.WISHLIST_SCREEN} component={Wishlist} />
             <Stack.Screen name={RouteName.ALL_CATEGORY_SCREEN} component={AllCategoryScreen} />
             <Stack.Screen name={RouteName.QUIZ_SCREEN} component={QuizScreen} />
+            <Stack.Screen name={RouteName.PRODUCTLIST_SCREEN} component={ProductListScreen} />
+        <Stack.Screen name={RouteName.PRODUCTDETAILS_SCREEN} component={ProductDetailsScreen} />
+        <Stack.Screen name={RouteName.CHECKOUT_SCREEN} component={CheckoutScreen} />
+        <Stack.Screen name={RouteName.WEBVIEW_SCREEN} component={WebViewScreen} />
+        <Stack.Screen name={RouteName.CART_SCREEN} component={CartScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </SoundProvider>

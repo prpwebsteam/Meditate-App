@@ -185,6 +185,6 @@ const SignUpScreen = (props) => {
       </ImageBackground>
     </Container>
   );
-};
+}; 
 
 export default SignUpScreen;
