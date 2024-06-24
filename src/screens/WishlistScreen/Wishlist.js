@@ -119,10 +119,12 @@ const Wishlist = ({ navigation }) => {
         header: {
             flexDirection: 'row',
             alignItems: 'center',
+            backgroundColor: Colors.theme_backgound,
             justifyContent: 'flex-start',
             width: '100%',
-            paddingHorizontal: 10,
-            marginBottom: SH(30),
+            paddingVertical: 10,
+            paddingTop: 10,
+            paddingHorizontal: 20,
         },
         backArrow: {
             width: SH(20),
@@ -158,13 +160,13 @@ const Wishlist = ({ navigation }) => {
         <Container>
             <ImageBackground source={images.background1} resizeMode='cover' style={styles.backgroundImage}>
                 <View style={styles.overlay} />
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image source={images.backArrow} style={styles.backArrow} />
+                    </TouchableOpacity>
+                    <Text style={styles.title}>{t('Wishlist')}</Text>
+                </View>
                 <View style={styles.container}>
-                    <View style={styles.header}>
-                        <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <Image source={images.backArrow} style={styles.backArrow} />
-                        </TouchableOpacity>
-                        <Text style={styles.title}>{t('Wishlist')}</Text>
-                    </View>
                     <FlatList
                         data={wishlist}
                         keyExtractor={(item) => item.id.toString()}
