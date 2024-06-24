@@ -12,14 +12,18 @@ const Wishlist = ({ navigation }) => {
     const { t } = useTranslation();
     const [wishlist, setWishlist] = useState([]);
     const [item, setItem] = useState('');
-    
+
     useEffect(() => {
         fetchSongs();
     }, []);
 
     const fetchSongs = async () => {
         try {
-            const response = await axios.get('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/songs?category_id=2');
+            const userId = 9;
+            const url = `https://chitraguptp85.sg-host.com/wp-json/meditate/v2/wishlist?user_id=${userId}`;
+            console.log(`Fetching songs from URL: ${url}`);
+
+            const response = await axios.get(url);
 
             if (response.status === 200 && Array.isArray(response.data)) {
                 const tracks = response.data.map((item) => ({
@@ -43,9 +47,23 @@ const Wishlist = ({ navigation }) => {
         }
     };
 
-    const removeItemFromWishlist = (id) => {
-        const newWishlist = wishlist.filter(item => item.id !== id);
-        setWishlist(newWishlist);
+    const removeItemFromWishlist = async (id) => {
+        try {
+            const response = await axios.put('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/wishlist', null, {
+                params: {
+                    user_id: 9,
+                    song_id: id,
+                },
+            });
+
+            if (response.status === 200) {
+                setWishlist((prevWishlist) => prevWishlist.filter(item => item.id !== id));
+            } else {
+                console.error('Failed to remove track from wishlist. Response status:', response.status, 'Response data:', response.data);
+            }
+        } catch (error) {
+            console.error('Error removing track from wishlist:', error);
+        }
     };
 
     const styles = useMemo(() => StyleSheet.create({
@@ -70,7 +88,7 @@ const Wishlist = ({ navigation }) => {
             padding: SH(10),
             backgroundColor: Colors.card,
             borderRadius: 5,
-            borderBottomWidth: 1, 
+            borderBottomWidth: 1,
             borderBottomColor: '#313131',
             marginBottom: SH(10),
         },
