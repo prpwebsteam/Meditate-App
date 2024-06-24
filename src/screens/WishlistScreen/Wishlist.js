@@ -154,6 +154,12 @@ const Wishlist = ({ navigation }) => {
             fontSize: SF(14),
             color: Colors.theme_backgound,
         },
+        emptyMessage: {
+            fontSize: SF(18),
+            color: Colors.white,
+            textAlign: 'center',
+            marginTop: SH(20),
+        },
     }), [Colors]);
 
     return (
@@ -167,23 +173,27 @@ const Wishlist = ({ navigation }) => {
                     <Text style={styles.title}>{t('Wishlist')}</Text>
                 </View>
                 <View style={styles.container}>
-                    <FlatList
-                        data={wishlist}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={({ item }) => (
-                            <View style={styles.wishlistItem}>
-                                <Image source={item.thumbnail ? { uri: item.thumbnail } : images.dummyImage} style={styles.thumbnail} />
-                                <View style={styles.trackInfo}>
-                                    <Text style={styles.trackTitle}>{item.title}</Text>
-                                    <Text style={styles.trackArtist}>{item.artist?.title || 'Unknown Artist'}</Text>
+                    {wishlist.length === 0 ? (
+                        <Text style={styles.emptyMessage}>{t('No items added in wishlist')}</Text>
+                    ) : (
+                        <FlatList
+                            data={wishlist}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) => (
+                                <View style={styles.wishlistItem}>
+                                    <Image source={item.thumbnail ? { uri: item.thumbnail } : images.dummyImage} style={styles.thumbnail} />
+                                    <View style={styles.trackInfo}>
+                                        <Text style={styles.trackTitle}>{item.title}</Text>
+                                        <Text style={styles.trackArtist}>{item.artist?.title || 'Unknown Artist'}</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={() => removeItemFromWishlist(item.id)} style={styles.removeButton}>
+                                        <Text style={styles.removeButtonText}>{t("Remove")}</Text>
+                                    </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity onPress={() => removeItemFromWishlist(item.id)} style={styles.removeButton}>
-                                    <Text style={styles.removeButtonText}>{t("Remove")}</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                        style={styles.list}
-                    />
+                            )}
+                            style={styles.list}
+                        />
+                    )}
                 </View>
             </ImageBackground>
         </Container>

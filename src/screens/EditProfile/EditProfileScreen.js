@@ -7,7 +7,6 @@ import { RouteName } from '../../routes';
 import { SH, SW } from '../../utils';
 import { useTranslation } from "react-i18next";
 import { useTheme } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditProfileScreen = (props) => {
   const { Colors } = useTheme();
@@ -40,24 +39,12 @@ const EditProfileScreen = (props) => {
       width: '90%',
       marginBottom: 20,
     },
-    logoutButton: {
-      alignSelf: 'center',
-      width: '90%',
-    },
     inputView: {
       paddingHorizontal: SH(30),
       color: Colors.white,
       marginBottom: 20,
     },
   });
-
-  const onLogout = async () => {
-    await AsyncStorage.removeItem('authToken');
-    navigation.reset({
-      index: 0,
-      routes: [{ name: RouteName.LOGIN_SCREEN }],
-    });
-  };
 
   return (
     <Container>
@@ -97,11 +84,6 @@ const EditProfileScreen = (props) => {
                 title={t("Update_Text")}
                 buttonStyle={styles.nextButton}
                 onPress={() => navigation.navigate(RouteName.HOME_SCREEN)}
-              />
-              <Button
-                title={t("Logout")}
-                buttonStyle={styles.logoutButton}
-                onPress={onLogout}
               />
             </View>
           </View>
