@@ -6,7 +6,6 @@ import LottieIcon from './LottieIcon';
 import propTypes from 'prop-types';
 import images from "../../index";
 import { useTheme } from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
 
 function SweetaelertModal(props) {
     const { Colors } = useTheme();
@@ -23,12 +22,7 @@ function SweetaelertModal(props) {
     >
         <View style={Style.setbgcolorgrsay}>
             <View style={Style.centeredView}>
-                <LinearGradient
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    colors={[Colors.theme_linear_gradient_1, Colors.theme_linear_gradient_2, Colors.theme_linear_gradient_3, Colors.theme_linear_gradient_4, Colors.theme_linear_gradient_2, Colors.theme_linear_gradient_4, Colors.theme_linear_gradient_2]}
-                    style={Style.modalView}>
-
+                <View style={[Style.modalView, { backgroundColor: 'black' }]}>
                     {iconVisible &&
                         <View style={Style.setroundcenter}>
                             <View style={Style.checkiconright}>
@@ -69,10 +63,8 @@ function SweetaelertModal(props) {
                             </View>
                             : null
                         }
-
-
                     </View>
-                </LinearGradient>
+                </View>
             </View>
         </View>
     </Modal>;

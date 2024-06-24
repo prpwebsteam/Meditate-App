@@ -54,24 +54,24 @@ export const Meditiondata = [
   { id: "4", time: "mins_4", title: "Yoga_1", titletext: "mins_6", image: images.meditation1 },
 ]
 export const Categorydata = [
-  { id: "1", title: "mins_7", image: images.yoga1 },
-  { id: "2", title: "mins_8", image: images.yoga2 },
-  { id: "3", title: "mins_9", image: images.yoga3 },
-  { id: "4", title: "mins_10", image: images.yoga4 },
-  { id: "5", title: "mins_11", image: images.yoga5 },
-  { id: "6", title: "mins_12", image: images.yoga6 },
-  { id: "7", title: "mins_7", image: images.yoga1 },
-  { id: "8", title: "mins_8", image: images.yoga2 },
-  { id: "9", title: "mins_9", image: images.yoga3 },
-  { id: "10", title: "mins_10", image: images.yoga4 },
-  { id: "11", title: "mins_11", image: images.yoga5 },
-  { id: "12", title: "mins_12", image: images.yoga6 }
+  { id: "1", title: "mins_7", image: images.splashScreenIcon },
+  { id: "2", title: "mins_8", image: images.splashScreenIcon },
+  { id: "3", title: "mins_9", image: images.splashScreenIcon },
+  { id: "4", title: "mins_10", image: images.splashScreenIcon },
+  { id: "5", title: "mins_11", image: images.splashScreenIcon },
+  { id: "6", title: "mins_12", image: images.splashScreenIcon },
+  { id: "7", title: "mins_7", image: images.splashScreenIcon },
+  { id: "8", title: "mins_8", image: images.splashScreenIcon },
+  { id: "9", title: "mins_9", image: images.splashScreenIcon },
+  { id: "10", title: "mins_10", image: images.splashScreenIcon },
+  { id: "11", title: "mins_11", image: images.splashScreenIcon },
+  { id: "12", title: "mins_12", image: images.splashScreenIcon }
 ]
 export const SlideGetData = [
   {
     key: '1',
-    text: "Meet_Coach",
-    boldText: 'Meet_Coach_2',
+    text: "Meet_Coach1",
+    boldText: 'Meet_Coach_22',
   },
   {
     key: '2',
@@ -80,8 +80,28 @@ export const SlideGetData = [
   },
   {
     key: '3',
-    text: "Meet_Coach_5",
-    boldText: 'Meet_Coach_6',
+    text: "WHAT WOULD YOU LIKE TO IMPROVE",
+    boldText: 'WHAT WOULD YOU LIKE TO IMPROVE',
+  },
+  {
+    key: '4',
+    text: "WELCOME TO THE WORLD'S 1ST CANDLE + MINDFULNESS MEDITATION APP",
+    boldText: 'WHERE CANDLELIGHT SPARKS A TRANSFORMATIVE WELLNESS JOURNEY.',
+  },
+  {
+    key: '5',
+    text: "TELL US YOUR NAME",
+    boldText: 'THIS WILL HELP US PERSONALIZE YOUR EXPERIENCE.',
+  },
+  {
+    key: '6',
+    text: "LET'S GET STARTED WHAT'S YOUR EMAIL ADDRESS",
+    boldText: 'ELEVATE YOUR MINDFULNESS EXPERIENCE.',
+  },
+  {
+    key: '7',
+    text: "INVEST IN A HAPPY LIFE",
+    boldText: '3.6x decrease in stress Developed with doctors.',
   },
 ];
 export const LanguageDropdownData = [

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import BottomTab from './BottomTab';
 import { Fonts, SF } from '../../utils';
 import { RouteName } from '../../routes';
@@ -19,14 +19,14 @@ function BottomTabMenu(props) {
     {
       id: '2',
       name: '',
-      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="yoga" color={Colors.white} size={SF(25)} />,
-      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="yoga" color={Colors.white} size={SF(25)} />
+      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="flower-tulip" color={Colors.white} size={SF(25)} />,
+      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="flower-tulip" color={Colors.white} size={SF(25)} />
     },
     {
       id: '3',
       name: '',
-      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="flower-tulip" color={Colors.white} size={SF(25)} />,
-      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="flower-tulip" color={Colors.white} size={SF(25)} />
+      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="qrcode-scan" color={Colors.white} size={SF(25)} />,
+      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="qrcode-scan" color={Colors.white} size={SF(25)} />
     },
     {
       id: '4',
@@ -47,11 +47,11 @@ function BottomTabMenu(props) {
     id == 1 ?
       navigation.replace(RouteName.HOME_SCREEN)
       : id == 2 ?
-        navigation.navigate(RouteName.YOGA_SCREEN)
+        navigation.navigate(RouteName.MEDITATION_SCREEN)
         : id == 3 ?
-          navigation.navigate(RouteName.MEDITATION_SCREEN)
+          navigation.navigate(RouteName.YOGA_SCREEN)
           : id == 4 ?
-            navigation.navigate(RouteName.CATEGORY_SCREEN)
+            navigation.navigate(RouteName.PRODUCTLIST_SCREEN)
             : navigation.navigate(RouteName.EDIT_PROFILE_SCREEN)
 
   }

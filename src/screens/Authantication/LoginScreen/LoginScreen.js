@@ -1,85 +1,108 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, StatusBar, ScrollView } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, StatusBar, ScrollView, Alert } from 'react-native';
 import { Authentication } from '../../../styles';
 import { Button, Container, Spacing, Input } from '../../../components';
 import images from '../../../index';
 import { RouteName } from '../../../routes';
-import { SH } from '../../../utils';
+import { SH, SF } from '../../../utils';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
+import axios from 'axios';
 
 const LoginScreen = (props) => {
   const { Colors } = useTheme();
   const Authentications = useMemo(() => Authentication(Colors), [Colors]);
   const { navigation } = props;
   const { t } = useTranslation();
-  const [inputMobile, setInputMobile] = useState('');
+  const [inputEmail, setInputEmail] = useState('');
   const [inputPassword, setInputpassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [inputName, setInputName] = useState('');
+
+  const handleLogin = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post('https://chitraguptp85.sg-host.com/wp-json/jwt-auth/v1/token', {
+        username: inputEmail,
+        password: inputPassword,
+      });
+
+      if (response.status === 200) {
+        Alert.alert('Success', 'Logged in successfully', [
+          { text: 'OK', onPress: () => navigation.navigate(RouteName.HOME_SCREEN) }
+        ]);
+      } else {
+        Alert.alert('Error', 'Invalid credentials. Please try again.');
+      }
+    } catch (error) {
+      Alert.alert('Error', error.response?.data?.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Container>
-      <StatusBar
-        barStyle={'dark-content'}
-        translucent
-        backgroundColor={'transparent'}
-        hidden={false}
-      />
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={Authentications.ScrollViewStyles}>
-        <View style={Authentications.setbgMainView}>
-          <View style={Authentications.setbgimageView}>
-            <ImageBackground source={images.login} resizeMode='cover' style={Authentications.setbgimage}>
-              <View style={Authentications.loginSignUpTab}>
-                <TouchableOpacity>
-                  <Text style={[Authentications.loginSignUpText, Authentications.activeBorder]}>{t("Login_Text")}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate(RouteName.SIGNUP_SCREEN)}>
-                  <Text style={Authentications.loginSignUpText}>{t("Sign_Up")}</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={Authentications.loginSignUpTextView}>
-                <Text style={Authentications.imageText}>{t("Welcome_Back")}</Text>
-                <Text style={[Authentications.imageText, Authentications.TextBold]}>{t("Sign_In")}</Text>
-              </View>
-            </ImageBackground>
+      <ImageBackground source={images.loginBG} resizeMode='cover' style={Authentications.setbgMainView}>
+        <StatusBar
+          barStyle={'dark-content'}
+          translucent
+          backgroundColor={'transparent'}
+          hidden={false}
+        />
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={Authentications.ScrollViewStyles}>
+          <View style={Authentications.loginTab}>
+            <TouchableOpacity>
+              <Text style={[Authentications.loginSignUpText, Authentications.activeBorder]}>{t("Login_Text")}</Text>
+            </TouchableOpacity>
           </View>
+          <Spacing space={SH(20)} />
           <View style={Authentications.inputView}>
-            <Spacing space={SH(30)} />
-            <Input
-              title={t("Mobile_number")}
-              placeholder={t("Mobile_number")}
-              onChangeText={setInputMobile}
-              value={inputMobile}
-              inputType='numeric'
-              keyboardType='numeric'
-              maxLength={10}
-              autoCompleteType="tel"
-              containerStyle={Authentications.PassWordStyle}
-            />
             <Spacing space={SH(20)} />
+            <Input
+              title={t("Email")}
+              placeholder={t("Email")}
+              onChangeText={setInputEmail}
+              value={inputEmail}
+              keyboardType='default'
+              autoCompleteType="email"
+              inputStyle={{ fontSize: SF(12) }}
+            />
             <Input
               title={t("Password_Text")}
               placeholder={t("Password_Text")}
               onChangeText={setInputpassword}
               value={inputPassword}
               secureTextEntry={true}
-              containerStyle={Authentications.PassWordStyle}
+              inputStyle={{ fontSize: SF(12) }}
             />
-            <Spacing space={SH(5)} />
-            <TouchableOpacity onPress={() => navigation.navigate(RouteName
-              .FORGOT_PASSWORD_SCREEN)}>
+            <TouchableOpacity onPress={() => navigation.navigate(RouteName.FORGOT_PASSWORD_SCREEN)}>
               <Text style={Authentications.forgotText}>{t("Forgot_Password")}</Text>
             </TouchableOpacity>
-            <Spacing space={SH(20)} />
+            <Spacing space={SH(30)} />
             <View style={Authentications.buttonView}>
-              <Button title={t("Login_Text")} buttonStyle={Authentications.nextButton} onPress={() => navigation.navigate(RouteName.OTP_VERYFY_SCREEN)} />
+              <Button
+                title={loading ? t("Logging_In") : t("Login_Text")}
+                buttonStyle={{ ...Authentications.nextButton, width: '100%' }}
+                onPress={handleLogin}
+                disabled={loading}
+              />
             </View>
+            <Spacing space={SH(25)} />
+            <TouchableOpacity onPress={() => navigation.navigate(RouteName.SIGNUP_SCREEN)}>
+              <Text style={{ textAlign: 'center', ...Authentications.signupText }}>
+                {t("Don't have an account?")}{' '}
+                <Text style={{ color: Colors.theme_backgound, fontWeight: 'bold' }}>{t("Sign Up")}</Text>
+              </Text>
+            </TouchableOpacity>
           </View>
           <Spacing space={SH(25)} />
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </ImageBackground>
     </Container>
   );
 };
+
 export default LoginScreen;

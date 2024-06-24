@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Modal } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Modal, ImageBackground } from 'react-native';
 import { fetchSingleProduct } from '../../services/productService';
 import { createCheckout, addItem } from '../../services/checkoutService';
 import { Container, Spacing, BottomTabMenu, CategoryView } from '../../components';
 import { useTheme } from '@react-navigation/native';
+import images from '../../images';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -42,7 +43,24 @@ const ProductDetailsScreen = ({ route, navigation }) => {
     });
   }, [productId]);
 
-  const handleAddToCart = async () => {
+  // const handleAddToCart = async () => {
+  //   if (!selectedVariant) {
+  //     console.error('No variant selected');
+  //     return;
+  //   }
+  //   try {
+  //     const checkout = await createCheckout();
+  //     if (!checkout) {
+  //       console.error('Failed to create checkout');
+  //       return;
+  //     }
+  //     await addItem(checkout.id, [{ variantId: selectedVariant.id, quantity }]);
+  //     navigation.navigate('CartScreen', { cart: [{ ...selectedVariant, productTitle: product.title, quantity }], updateCart: () => {} });
+  //   } catch (error) {
+  //     console.error('Error adding item to cart:', error);
+  //   }
+  // };
+  const handleAddToCart = async () => { 
     if (!selectedVariant) {
       console.error('No variant selected');
       return;
@@ -54,12 +72,28 @@ const ProductDetailsScreen = ({ route, navigation }) => {
         return;
       }
       await addItem(checkout.id, [{ variantId: selectedVariant.id, quantity }]);
-      navigation.navigate('CartScreen', { cart: [{ ...selectedVariant, productTitle: product.title, quantity }], updateCart: () => {} });
+      navigation.navigate('CartScreen', { cart: [{ ...selectedVariant, productTitle: product.title, quantity }], quantities: [quantity], updateCart: () => {} });
     } catch (error) {
       console.error('Error adding item to cart:', error);
     }
   };
-
+  // const handleBuyNow = async () => {
+  //   if (!selectedVariant) {
+  //     console.error('No variant selected');
+  //     return;
+  //   }
+  //   try {
+  //     const checkout = await createCheckout();
+  //     if (!checkout) {
+  //       console.error('Failed to create checkout');
+  //       return;
+  //     }
+  //     await addItem(checkout.id, [{ variantId: selectedVariant.id, quantity }]);
+  //     navigation.navigate('CheckoutScreen', { cart: [{ ...selectedVariant, productTitle: product.title, quantity }], quantities: [quantity] });
+  //   } catch (error) {
+  //     console.error('Error processing buy now:', error);
+  //   }
+  // };
   const handleBuyNow = async () => {
     if (!selectedVariant) {
       console.error('No variant selected');
@@ -72,12 +106,12 @@ const ProductDetailsScreen = ({ route, navigation }) => {
         return;
       }
       await addItem(checkout.id, [{ variantId: selectedVariant.id, quantity }]);
-      navigation.navigate('CheckoutScreen', { cart: [{ ...selectedVariant, productTitle: product.title, quantity }], quantities: [quantity] });
+      navigation.navigate('CheckoutScreen', { cart: [{ ...selectedVariant, productTitle: product.title, quantity }], quantities: [quantity], checkoutId: checkout.id });
     } catch (error) {
       console.error('Error processing buy now:', error);
     }
   };
-
+  
   const handleScroll = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const newIndex = Math.round(offsetX / screenWidth);
@@ -93,111 +127,125 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      {product ? (
-        <>
-          <ScrollView contentContainerStyle={styles.scrollContent}>
-            <View style={styles.imageSlider}>
-              <ScrollView
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                onScroll={handleScroll}
-                scrollEventThrottle={16}
-              >
-                {product.images.map((image, index) => (
-                  <TouchableOpacity key={index} onPress={() => openZoomImage(index)}>
-                    <Image source={{ uri: image.src }} style={styles.productImage} resizeMode="center" />
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-              {product.images.length > 1 && (
-                <View style={styles.bulletContainer}>
-                  {product.images.map((_, index) => (
-                    <View
-                      key={index}
-                      style={currentIndex === index ? styles.activeBullet : styles.bullet}
+    <Container>
+      <ImageBackground source={images.background1} style={styles.backgroundImage}>
+        <View style={styles.overlay} />
+
+        <View style={styles.container}>
+          {product ? (
+            <>
+              <ScrollView contentContainerStyle={styles.scrollContent}>
+                <View style={styles.imageSlider}>
+                  <ScrollView
+                    horizontal
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                    onScroll={handleScroll}
+                    scrollEventThrottle={16}
+                  >
+                    {product.images.map((image, index) => (
+                      <TouchableOpacity key={index} onPress={() => openZoomImage(index)}>
+                        <Image source={{ uri: image.src }} style={styles.productImage} resizeMode="center" />
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                  {product.images.length > 1 && (
+                    <View style={styles.bulletContainer}>
+                      {product.images.map((_, index) => (
+                        <View
+                          key={index}
+                          style={currentIndex === index ? styles.activeBullet : styles.bullet}
+                        />
+                      ))}
+                    </View>
+                  )}
+                </View>
+                <Text style={styles.title}>{product.title}</Text>
+                {selectedVariant ? (
+                  <>
+                    <Text style={styles.price}>
+                      {selectedVariant.price.currencyCode} {selectedVariant.price.amount}
+                    </Text>
+                    <Text style={styles.description}>
+                      {showFullDescription
+                        ? product.description
+                        : product.description.length > 200
+                        ? `${product.description.slice(0, 200)}...`
+                        : product.description}
+                      <Text onPress={() => setShowFullDescription(!showFullDescription)} style={styles.loadMoreText}>
+                        {showFullDescription ? ' Load Less' : ' Load More'}
+                      </Text>
+                    </Text>
+                    <VariantTabs
+                      options={product.variants}
+                      selectedOption={selectedVariant}
+                      onSelect={setSelectedVariant}
                     />
-                  ))}
-                </View>
-              )}
-            </View>
-            <Text style={styles.title}>{product.title}</Text>
-            {selectedVariant ? (
-              <>
-                <Text style={styles.price}>
-                  {selectedVariant.price.currencyCode} {selectedVariant.price.amount}
-                </Text>
-                <Text style={styles.description}>
-                  {showFullDescription
-                    ? product.description
-                    : product.description.length > 200
-                    ? `${product.description.slice(0, 200)}...`
-                    : product.description}
-                  <Text onPress={() => setShowFullDescription(!showFullDescription)} style={styles.loadMoreText}>
-                    {showFullDescription ? ' Load Less' : ' Load More'}
-                  </Text>
-                </Text>
-                <VariantTabs
-                  options={product.variants}
-                  selectedOption={selectedVariant}
-                  onSelect={setSelectedVariant}
-                />
-                <View style={styles.quantityContainer}>
-                  <Text style={styles.quantityLabel}>Quantity</Text>
-                  <View style={styles.quantityControls}>
-                    <TouchableOpacity style={styles.quantityButton} onPress={() => setQuantity(Math.max(1, quantity - 1))}>
-                      <Text style={styles.quantityButtonText}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.quantityText}>{quantity}</Text>
-                    <TouchableOpacity style={styles.quantityButton} onPress={() => setQuantity(quantity + 1)}>
-                      <Text style={styles.quantityButtonText}>+</Text>
-                    </TouchableOpacity>
+                    <View style={styles.quantityContainer}>
+                      <Text style={styles.quantityLabel}>Quantity</Text>
+                      <View style={styles.quantityControls}>
+                        <TouchableOpacity style={styles.quantityButton} onPress={() => setQuantity(Math.max(1, quantity - 1))}>
+                          <Text style={styles.quantityButtonText}>-</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.quantityText}>{quantity}</Text>
+                        <TouchableOpacity style={styles.quantityButton} onPress={() => setQuantity(quantity + 1)}>
+                          <Text style={styles.quantityButtonText}>+</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </>
+                ) : (
+                  <Text style={styles.soldOutText}>Sold Out</Text>
+                )}
+              </ScrollView>
+              {zoomImageIndex !== null && (
+                <Modal visible={true} transparent={true} onRequestClose={closeZoomImage}>
+                  <View style={styles.zoomContainer}>
+                    <ScrollView
+                      contentContainerStyle={styles.zoomScrollView}
+                      minimumZoomScale={1}
+                      maximumZoomScale={5}
+                      showsHorizontalScrollIndicator={false}
+                      showsVerticalScrollIndicator={false}
+                    >
+                      <TouchableOpacity onPress={closeZoomImage} style={styles.zoomCloseButton}>
+                        <Text style={styles.zoomCloseButtonText}>✕</Text>
+                      </TouchableOpacity>
+                      <Image source={{ uri: product.images[zoomImageIndex].src }} style={styles.zoomImage} resizeMode="contain" />
+                    </ScrollView>
                   </View>
-                </View>
-              </>
-            ) : (
-              <Text style={styles.soldOutText}>Sold Out</Text>
-            )}
-          </ScrollView>
-          {zoomImageIndex !== null && (
-            <Modal visible={true} transparent={true} onRequestClose={closeZoomImage}>
-              <View style={styles.zoomContainer}>
-                <ScrollView
-                  contentContainerStyle={styles.zoomScrollView}
-                  minimumZoomScale={1}
-                  maximumZoomScale={5}
-                  showsHorizontalScrollIndicator={false}
-                  showsVerticalScrollIndicator={false}
-                >
-                  <TouchableOpacity onPress={closeZoomImage} style={styles.zoomCloseButton}>
-                    <Text style={styles.zoomCloseButtonText}>✕</Text>
-                  </TouchableOpacity>
-                  <Image source={{ uri: product.images[zoomImageIndex].src }} style={styles.zoomImage} resizeMode="contain" />
-                </ScrollView>
-              </View>
-            </Modal>
+                </Modal>
+              )}
+            </>
+          ) : (
+            <Text style={styles.loadingText}>Loading...</Text>
           )}
-        </>
-      ) : (
-        <Text style={styles.loadingText}>Loading...</Text>
-      )}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
-          <Text style={styles.buttonText}>Add to Cart</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buyNowButton} onPress={handleBuyNow}>
-          <Text style={styles.buybuttonText}>Buy Now</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+              <Text style={styles.buttonText}>Add to Cart</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buyNowButton} onPress={handleBuyNow}>
+              <Text style={styles.buybuttonText}>Buy Now</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ImageBackground>
+    </Container>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#121212',
   },
   scrollContent: {
     padding: 16,
@@ -205,12 +253,13 @@ const styles = StyleSheet.create({
   imageSlider: {
     height: 400,
     marginBottom: 16,
-    marginTop: 30,
+    // marginTop: 30,
   },
   productImage: {
     width: screenWidth - 32,
     height: 400,
     borderRadius: 10,
+    paddingLeft: 4,
   },
   bulletContainer: {
     position: 'absolute',
@@ -245,10 +294,9 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
   loadMoreText: {
-    fontSize: 16,
-    color: '#6200ee',
-    backgroundColor: '#121212',
-   },
+    fontSize: 16, 
+    color: '#f79f80',
+  },
   price: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -263,13 +311,13 @@ const styles = StyleSheet.create({
   tabButton: {
     padding: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#f79f80',
     borderRadius: 5,
-    backgroundColor: '#1e1e1e',
+    backgroundColor: 'rgba(217, 217, 214, 0.2)',
     marginRight: 8,
   },
   selectedTabButton: {
-    backgroundColor: '#6200ee',
+    backgroundColor: '#f79f80',
   },
   tabButtonText: {
     color: '#fff',
@@ -288,7 +336,7 @@ const styles = StyleSheet.create({
   quantityControls: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#333',
+    backgroundColor: 'rgba(217, 217, 214, 0.2)',
     borderRadius: 5,
   },
   quantityButton: {
@@ -310,7 +358,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#121212',
   },
   addToCartButton: {
-    backgroundColor: '#6200ee',
+    backgroundColor: '#f79f80',
     padding: 12,
     borderRadius: 5,
     width: '48%',

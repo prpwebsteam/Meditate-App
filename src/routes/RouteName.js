@@ -24,11 +24,16 @@ const RouteName = {
     YOGA_SCREEN: "YogaScreen",   
     CATEGORY_SCREEN: "CategoryScreen",   
     MEDITATION_SCREEN: "MeditationScreen",   
-    FORGOT_PASSWORD_SCREEN: "ForgotPasswordScreen",   
+    FORGOT_PASSWORD_SCREEN: "ForgotPasswordScreen",    
     CHECKOUT_SCREEN: "CheckoutScreen",
     PRODUCTDETAILS_SCREEN: "ProductDetailsScreen",
     PRODUCTLIST_SCREEN: "ProductListScreen",
     WEBVIEW_SCREEN: "WebViewScreen",
-    CART_SCREEN: "CartScreen"
+    CART_SCREEN: "CartScreen", 
+    RESET_PASSWORD_SCREEN: "ResetPasswordScreen", 
+    ABOUT_US_SCREEN: "AboutUsScreen",
+    WISHLIST_SCREEN: 'WishlistScreen',
+    ALL_CATEGORY_SCREEN: 'AllCategoryScreen',
+    QUIZ_SCREEN: 'QuizScreen',
 }
-export default RouteName; 
+export default RouteName;

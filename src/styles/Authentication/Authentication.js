@@ -66,13 +66,6 @@ export default Authentication = (Colors) => StyleSheet.create({
   setbgMainView: {
     flex: 1,
   },
-  setbgimageView: {
-    height: SH(450),
-    position: 'relative',
-    backgroundColor: Colors.theme_backgound,
-    overflow: "hidden",
-    borderBottomEndRadius: SW(100),
-  },
   setbgimage: {
     height: '100%',
     position: 'relative',
@@ -81,17 +74,27 @@ export default Authentication = (Colors) => StyleSheet.create({
     paddingHorizontal: SW(20)
   },
   loginSignUpTextView: {
-    marginBottom: SH(40)
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: SH(10),
   },
   imageText: {
-    fontSize: SF(30),
+    fontSize: SF(24),
+    marginRight: 5,
     color: Colors.white_text_color,
     fontFamily: Fonts.RobotoCondensed_Regular
   },
-  loginSignUpTab: {
-    marginTop: SH(30),
+  loginTab: {
+    marginTop: SH(300),
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  SignUpTab: {
+    marginTop: SH(50),
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   loginSignUpText: {
@@ -106,22 +109,31 @@ export default Authentication = (Colors) => StyleSheet.create({
     borderBottomWidth: SW(2),
   },
   inputView: {
-    paddingHorizontal: SH(30)
+    paddingHorizontal: SH(30),
+    color: Colors.white,
+    marginBottom: 50
   },
   forgotText: {
-    color: Colors.black_text_color,
+    color: Colors.white,
     alignSelf: 'flex-end',
-    fontSize: SF(16),
-    paddingTop: SH(10),
+    fontSize: SF(12),
     fontFamily: Fonts.Poppins_Medium,
-    paddingRight: SW(15)
+    paddingRight: SW(15),
+    marginTop: -20, 
+  },
+  signupText: {
+    color: Colors.white,
+    fontSize: SF(12),
+    fontFamily: Fonts.Poppins_Medium,
+    paddingRight: SW(15),
+    marginTop: -20, 
   },
   verificationInputView: {
-    paddingHorizontal: SH(30),
-    marginTop: SH(50)
+    marginTop: SH(300),
+    marginBottom: SH(30)
   },
   verificationTextTitle: {
-    color: Colors.theme_backgound,
+    color: Colors.white,
     fontSize: SF(25),
     fontFamily: Fonts.RobotoCondensed_Bold
   },
@@ -142,7 +154,9 @@ export default Authentication = (Colors) => StyleSheet.create({
   },
 
   buttonMainView: {
+    flex: 1,
     flexDirection: 'row',
+    width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -170,7 +184,8 @@ export default Authentication = (Colors) => StyleSheet.create({
   PassWordStyle: {
     paddingBottom: SH(0),
     marginBottom: SH(0),
-    height: SH(80)
+    height: SH(80),
+    color: Colors.white
   },
   // Start Otp Screen style
   MinFlexView: {
@@ -240,5 +255,5 @@ export default Authentication = (Colors) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%'
-  },
+  }, 
 });

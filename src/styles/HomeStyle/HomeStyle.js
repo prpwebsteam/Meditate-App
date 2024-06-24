@@ -11,6 +11,10 @@ export default HomeStyle = (Colors) => StyleSheet.create({
   },
   HomeCommonTitle: {
     color: Colors.theme_backgound,
+    paddingBottom: 55
+  },
+  HomeCommonTitle: {
+    color: Colors.theme_backgound_second,
     fontSize: SF(17),
     fontFamily: Fonts.RobotoCondensed_Regular
   },
@@ -197,6 +201,7 @@ export default HomeStyle = (Colors) => StyleSheet.create({
   },
   userTitle: {
     color: Colors.theme_backgound,
+    color: Colors.theme_backgound_second,
     fontSize: SF(17),
     fontFamily: Fonts.RobotoCondensed_Regular,
     paddingHorizontal: SW(10)
@@ -211,6 +216,7 @@ export default HomeStyle = (Colors) => StyleSheet.create({
   },
   heading: {
     color: Colors.theme_backgound,
+    color: Colors.theme_backgound_second,
     fontSize: SF(19),
     fontFamily: Fonts.RobotoCondensed_Bold,
   },
@@ -372,4 +378,4 @@ export default HomeStyle = (Colors) => StyleSheet.create({
   viewImageBoxTextMeditation: {
     paddingRight: SW(23)
   }
-});
+}); 

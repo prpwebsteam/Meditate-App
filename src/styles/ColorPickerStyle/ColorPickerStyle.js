@@ -61,8 +61,8 @@ export default ColorPickerStyle =(Colors)=> StyleSheet.create({
     fontSize: 20,
   },
   colorpickerpickerimagwidth: {
-    width: 30,
-    height: 30,
-    marginRight: 10,
+    width: 20,
+    height: 20,
+    marginRight: 20,
   }
 });

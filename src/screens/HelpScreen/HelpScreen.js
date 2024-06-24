@@ -1,46 +1,111 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Text, View, ScrollView, KeyboardAvoidingView, TextInput, } from "react-native";
+import React, { useState, useMemo } from "react";
+import { View, ScrollView, TextInput, ImageBackground, Alert } from "react-native"; // Import Alert
 import { HelpStyle, HomeStyle } from '../../styles';
 import { Button, Container, SweetAlertModal } from '../../components';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
+import images from '../../index';
 
-const DoctoreHelpScreen = (props) => {
+const DoctoreHelpScreen = () => {
   const { Colors } = useTheme();
   const HomeStyles = useMemo(() => HomeStyle(Colors), [Colors]);
   const HelpStyles = useMemo(() => HelpStyle(Colors), [Colors]);
   const { t } = useTranslation();
+
   const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+
   const onPressHandle = () => {
-    setSuccessModalVisible(false)
+    // Check if subject or message is empty
+    if (!subject.trim() || !message.trim()) {
+      Alert.alert(
+        "",
+        "Subject or message cannot be empty",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+      );
+      return;
+    }
+
+    sendEmail();
+    setSubject('');
+    setMessage('');
+    setSuccessModalVisible(true);
   }
+
+  const sendEmail = async () => {
+    try {
+      const apiUrl = 'https://chitraguptp85.sg-host.com/wp-json/meditate/v2/send-email';
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          subject: subject,
+          message: message,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Email sent successfully');
+      } else {
+        console.error('Failed to send email');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  };
 
   return (
     <Container>
-      <ScrollView>
-        <View style={HomeStyles.textcenterview}>
-          <View style={HelpStyles.settopspace}>
-            <TextInput style={HelpStyles.settextinputwidth} placeholder={t("Type_Message")} placeholderTextColor="black" />
+      <ImageBackground source={images.background1} style={HelpStyles.backgroundImage}>
+        <View style={HelpStyles.overlay} />
+        <ScrollView>
+          <View style={HomeStyles.textcenterview}>
+            <View style={HelpStyles.settopspace}>
+              <TextInput
+                style={[HelpStyles.setsubinputwidth, { color: 'black' }]}
+                placeholder={t("Subject")}
+                placeholderTextColor="black"
+                onChangeText={text => setSubject(text)}
+                value={subject}
+              />
+            </View>
+            <View style={HelpStyles.settopspace}>
+              <TextInput
+                style={[HelpStyles.settextinputwidth, { color: 'black' }]}
+                placeholder={t("Type_Message")}
+                placeholderTextColor="black"
+                multiline
+                numberOfLines={4}
+                onChangeText={text => setMessage(text)}
+                value={message}
+              />
+            </View>
           </View>
-          <View>
-            <Text style={HelpStyles.settextinputtext}>{t("Deleted_Successfully_1")}</Text>
+        </ScrollView>
+        <View style={HelpStyles.textcenterview}>
+          <View style={HelpStyles.setbuttonstyle}>
+            {/* Button to send email */}
+            <Button
+              title={t("Send_Mail")}
+              onPress={onPressHandle}
+            />
           </View>
         </View>
-      </ScrollView>
-      <View style={HelpStyles.textcenterview}>
-        <View style={HelpStyles.setbuttonstyle}>
-          <Button title={t("Send_Mail")} onPress={() => setSuccessModalVisible(true)} />
-        </View>
-      </View>
-      <SweetAlertModal
-        message={t("Email_Has")}
-        modalVisible={successModalVisible}
-        setModalVisible={setSuccessModalVisible}
-        onPress={() => onPressHandle()}
-        success={true}
-        buttonText={t("OK")}
-      />
+        <SweetAlertModal
+          message={t("Email_Has")}
+          modalVisible={successModalVisible}
+          setModalVisible={setSuccessModalVisible}
+          onPress={onPressHandle}
+          success={true}
+          buttonText={t("OK")}
+        />
+      </ImageBackground>
     </Container>
   );
 };
+
 export default DoctoreHelpScreen;

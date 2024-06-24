@@ -17,7 +17,8 @@ export default GetstartedSliderStyle = (Colors)=> StyleSheet.create({
     width: '100%',
   },
   imageSlide1: {
-    width: SW(500),
+    width: SW(250),
+    objectFit: 'cover',
   },
   imageSlide2: {
     width: SW(450),
@@ -29,18 +30,28 @@ export default GetstartedSliderStyle = (Colors)=> StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf:'center'
+    alignSelf:'center',
   },
   textcenterview: {
     flexDirection: 'column',
     justifyContent: 'center',
     textAlign: 'center',
+    fontSize: 12,
+    marginHorizontal: 20
   },
   sliderText: {
-    color: Colors.theme_backgound,
-    fontSize: SF(30),
+    color: Colors.white,
+    fontSize: SF(14),
     textAlign: 'center',
-    lineHeight: SH(40),
+    lineHeight: SH(20),
+    fontFamily:Fonts.RobotoCondensed_Regular
+  },
+  sliderText1: {
+    color: Colors.white,
+    fontSize: SF(14),
+    textAlign: 'center',
+    paddingHorizontal: 20,
+    lineHeight: SH(20),
     fontFamily:Fonts.RobotoCondensed_Regular
   },
   sliderTextBold: {
@@ -57,15 +68,15 @@ export default GetstartedSliderStyle = (Colors)=> StyleSheet.create({
     width:'90%',
   },
   activebutonstyleset: {
-    width: 19,
+    width: 5,
     height: 5,
     backgroundColor: Colors.theme_backgound_second,
     borderRadius: 100,
   },
   dotStyle:{
-    width: 19,
+    width: 5,
     height: 5,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.gray,
     borderRadius: 100
   },
  mainInnerView: {
@@ -73,5 +84,5 @@ export default GetstartedSliderStyle = (Colors)=> StyleSheet.create({
     position: 'relative',
     flexDirection: 'column',
     justifyContent: 'space-around',
-  }
+  },
 });

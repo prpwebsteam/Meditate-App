@@ -50,6 +50,14 @@ function Inputs({
           paddingHorizontal: SH(10),
           fontFamily: Fonts.Poppins_Regular,
           borderRadius: SH(7),
+          fontSize: SF(15),
+          fontWeight: '600',
+          marginBottom: SH(0),
+          fontFamily: Fonts.Poppins_Medium,
+          color: Colors.white,
+          paddingVertical: SH(8),
+          paddingHorizontal: SH(10),
+          borderRadius: SH(2),
           borderWidth: SH(1),
           ...inputStyle,
         },
@@ -57,6 +65,8 @@ function Inputs({
           width: '100%',
           fontSize: SF(18),
           color: Colors.black_text_color,
+          fontSize: SF(15),
+          color: Colors.white,
           fontFamily: Fonts.Poppins_Medium,
           paddingHorizontal: SW(5),
           ...titleStyle,
@@ -70,11 +80,18 @@ function Inputs({
         },
         errorStyle: {
           color: Colors.theme_backgound,
+          fontSize: SF(12),
+          color: Colors.white,
+          fontFamily: Fonts.Poppins_Medium
+        },
+        errorStyle: {
+          color: Colors.white,
           fontFamily: Fonts.Poppins_Regular,
         },
       }),
     [title, titleStyle, inputStyle, Colors],
   );
+
   return (
     <View style={styles.container}>
       <Input

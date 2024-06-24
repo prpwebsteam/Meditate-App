@@ -14,9 +14,12 @@ import {
   Pressable,
   ScrollView,
   AsyncStorage,
+  ImageBackground,
 } from 'react-native';
 import { fetchAllProducts } from '../../services/productService';
 import EmptyCart from '../../components/commonComponents/CartIcon';
+import { BottomTabMenu, Container } from '../../components';
+import images from '../../images';
 
 const { width, height } = Dimensions.get('window');
 
@@ -114,7 +117,8 @@ const ProductListScreen = ({ navigation }) => {
     const variantsLength = item.variants?.length || 0;
 
     return (
-      <View style={styles.productContainer}>
+   
+      <View style={styles.productContainer}> 
         {discountPercentage && (
           <View style={styles.discountBadge}>
             <Text style={styles.discountText}>{discountPercentage}% OFF</Text>
@@ -141,10 +145,15 @@ const ProductListScreen = ({ navigation }) => {
           <Text style={styles.addButtonTextVariant}>ADD</Text>
         </TouchableOpacity>
       </View>
+  
     );
   };
 
   return (
+    <Container>
+    <ImageBackground source={images.background1} style={styles.backgroundImage}>
+      <View style={styles.overlay} />
+      <BottomTabMenu  selected={3} />
     <View style={styles.container}>
       <View style={styles.cartButtonContainer}>
         <TouchableOpacity style={styles.cartButton} onPress={() => navigation.navigate('CartScreen', { cart, updateCart })}>
@@ -176,9 +185,13 @@ const ProductListScreen = ({ navigation }) => {
           transparent={true}
           visible={modalVisible}
           onRequestClose={closeModal}
+          style={styles.modlewapper}
         >
+         
           <Animated.View style={[styles.centeredView, { transform: [{ translateY: modalAnim }] }]}>
+     
             <View style={styles.modalView}>
+            <View style={styles.overlay} />
               <Text style={styles.modalText}>{selectedProduct.title}</Text>
               <ScrollView>
                 {selectedProduct.variants.map((variant, index) => (
@@ -221,6 +234,8 @@ const ProductListScreen = ({ navigation }) => {
         </Modal>
       )}
     </View>
+    </ImageBackground>
+    </Container>
   );
 };
 
@@ -268,10 +283,20 @@ const ImageSlider = ({ images }) => {
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  },
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#f8f8f8',
+    marginBottom:55,
+  
   },
   row: {
     justifyContent: 'space-between',
@@ -292,7 +317,7 @@ const styles = StyleSheet.create({
   shopAllText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#fff',
     marginRight: 10,
   },
   cartIconContainer: {
@@ -306,17 +331,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: '#000',
-    backgroundColor: '#28a745',
+    backgroundColor: '#f79f80', 
     borderRadius: 10, 
     padding: 5,
-    marginBottom: 5,
+    marginBottom: 5, 
+  },
+  modlewapper:{
+    zIndex:999,
+ 
   },
   productContainer: {
     flex: 1,
     marginHorizontal: 5,
     paddingBottom: 18,
     borderRadius: 10,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(217, 217, 214, 0.2)',
     alignItems: 'center',
     justifyContent: 'space-between',
     shadowColor: '#000',
@@ -349,8 +378,9 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     maxWidth: '100%',
-    width: 200,
+    width: 201,
     height: 180,
+    maxHeight: '100%',
     paddingHorizontal: 2,
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -380,7 +410,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: '#fff',
     textAlign: 'left',
     justifyContent: 'flex-start',
     alignItems: 'flex-start'
@@ -388,12 +418,12 @@ const styles = StyleSheet.create({
   productPrice: {
     marginTop: 5,
     fontSize: 14,
-    color: '#666',
+    color: '#fff',
   },
   productDescription: {
     marginTop: 5,
     fontSize: 12,
-    color: '#666',
+    color: '#fff',
     textAlign: 'center',
   },
   sizeSelector: {
@@ -401,7 +431,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   sizeText: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: 'rgba(217, 217, 214, 0.2)',
     borderRadius: 4,
     padding: 5,
     marginHorizontal: 2,
@@ -412,24 +442,24 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     borderWidth: 1,
-    borderColor: '#28a745',
+    borderColor: '#fff',
     borderRadius: 6,
     paddingTop: 8,
     paddingBottom: 10,
     paddingHorizontal: 45,
-    color: '#28a745',
+    color: '#fff',
     width: '100%',
     alignItems: 'center',
     fontWeight: 'bold'
   },
   addButtonTextVariant: {
     borderWidth: 1,
-    borderColor: '#28a745',
+    borderColor: '#fff',
     borderRadius: 6,
     paddingTop: 8,
     paddingBottom: 8,
     paddingHorizontal: 45,
-    color: '#28a745',
+    color: '#ddd',
     width: '100%',
     alignItems: 'center',
     fontWeight: 'bold'
@@ -438,7 +468,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'green',
+    borderColor: '#fff',
     borderRadius: 10,
     padding: 10,
     paddingBottom: 10,
@@ -450,12 +480,11 @@ const styles = StyleSheet.create({
     color: 'green'
   },
   variantContainerVariant: {
-    backgroundColor: 'white',
     borderRadius: 10,
   },
   textvariant: {
     fontSize: 12,
-    color: 'gray'
+    color: '#fff'
   },
   carticon: {
     color: '#000',
@@ -466,7 +495,7 @@ const styles = StyleSheet.create({
   cartButtonText: {
     color: '#fff',
     fontSize: 10,
-    backgroundColor: '#28a745',
+    backgroundColor: '#f79f80',
     textAlign: 'center',
     borderRadius: 100,
     height: 16,
@@ -483,11 +512,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
     marginTop: 22,
+    zIndex:999
   },
   modalView: {
     width: '100%',
     height: '70%',
-    backgroundColor: 'white',
+    backgroundColor: '#fff', 
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
@@ -497,12 +527,13 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
+    zIndex:999,
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
   },
   textStyle: {
-    color: '#000',
+    color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -512,7 +543,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000'
+    color: '#fff'
   },
   variantContainer: {
     width: '100%',
@@ -537,11 +568,11 @@ const styles = StyleSheet.create({
   variantTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000'
+    color: '#fff'
   },
   variantPrice: {
     fontSize: 13,
-    color: '#666',
+    color: '#fff',
   },
 });
 
