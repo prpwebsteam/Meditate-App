@@ -1,13 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { View, ScrollView, StyleSheet, ImageBackground, Text } from 'react-native';
-import { Authentication } from '../../styles/Authentication';
+import { View, ScrollView, StyleSheet, ImageBackground } from 'react-native';
+import { Authentication } from '../../styles';
 import { Button, Container, Spacing, Input, BottomTabMenu } from '../../components';
+import images from '../../images';
 import { RouteName } from '../../routes';
 import { SH, SW } from '../../utils';
 import { useTranslation } from "react-i18next";
 import { useTheme } from '@react-navigation/native';
-import images from '../../index';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const EditProfileScreen = (props) => {
   const { Colors } = useTheme();
@@ -30,7 +29,7 @@ const EditProfileScreen = (props) => {
     },
     buttonView: {
       paddingHorizontal: SW(40),
-      flexDirection: 'row',
+      flexDirection: 'column',
       width: '100%',
       justifyContent: 'center', 
       alignItems: 'center', 
@@ -38,6 +37,7 @@ const EditProfileScreen = (props) => {
     nextButton: {
       alignSelf: 'center',
       width: '90%',
+      marginBottom: 20,
     },
     inputView: {
       paddingHorizontal: SH(30),
@@ -92,4 +92,5 @@ const EditProfileScreen = (props) => {
     </Container>
   );
 };
+
 export default EditProfileScreen;

@@ -88,27 +88,28 @@ const ScanScreen = (props) => {
       },
       cameraContainer: {
         width: '100%',
-        height: 400, // Adjust the height as needed
+        height: 500, 
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: '#fff',
-        borderWidth: 1
       },
       camera: {
         width: '90%',
         height: '90%', 
         borderRadius: 10,
         overflow: 'hidden',
+        borderColor: '#fff',
+        borderWidth: 2
       },
       capture: {
         flex: 0,
-        backgroundColor: '#fff',
+        backgroundColor: '#f79f80',
         borderRadius: 5,
-        color: '#000',
+        color: '#fff',
         padding: 15,
         paddingHorizontal: 20,
         alignSelf: 'center',
         marginBottom: 20,
+        fontWeight: 'bold',
       },
       permissionButton: {
         flex: 0,
@@ -159,7 +160,7 @@ const ScanScreen = (props) => {
           )
         )}
         <TouchableOpacity onPress={takePicture} style={styles.capture}>
-          <Text style={{ fontSize: 14, color: '#000' }}> SCAN </Text>
+          <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold', paddingHorizontal: 50 }}> Scan </Text>
         </TouchableOpacity>
         <BottomTabMenu {...props} selected={2} />
       </ImageBackground>

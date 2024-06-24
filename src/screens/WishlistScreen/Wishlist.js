@@ -12,15 +12,18 @@ const Wishlist = ({ navigation }) => {
     const { t } = useTranslation();
     const [wishlist, setWishlist] = useState([]);
     const [item, setItem] = useState('');
-    
+
     useEffect(() => {
         fetchSongs();
     }, []);
 
     const fetchSongs = async () => {
         try {
-            const response = await axios.get('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/songs?category_id=2');
-            console.log('Songs API Response:', response);
+            const userId = 9;
+            const url = `https://chitraguptp85.sg-host.com/wp-json/meditate/v2/wishlist?user_id=${userId}`;
+            console.log(`Fetching songs from URL: ${url}`);
+
+            const response = await axios.get(url);
 
             if (response.status === 200 && Array.isArray(response.data)) {
                 const tracks = response.data.map((item) => ({
@@ -44,9 +47,23 @@ const Wishlist = ({ navigation }) => {
         }
     };
 
-    const removeItemFromWishlist = (id) => {
-        const newWishlist = wishlist.filter(item => item.id !== id);
-        setWishlist(newWishlist);
+    const removeItemFromWishlist = async (id) => {
+        try {
+            const response = await axios.put('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/wishlist', null, {
+                params: {
+                    user_id: 9,
+                    song_id: id,
+                },
+            });
+
+            if (response.status === 200) {
+                setWishlist((prevWishlist) => prevWishlist.filter(item => item.id !== id));
+            } else {
+                console.error('Failed to remove track from wishlist. Response status:', response.status, 'Response data:', response.data);
+            }
+        } catch (error) {
+            console.error('Error removing track from wishlist:', error);
+        }
     };
 
     const styles = useMemo(() => StyleSheet.create({
@@ -71,7 +88,7 @@ const Wishlist = ({ navigation }) => {
             padding: SH(10),
             backgroundColor: Colors.card,
             borderRadius: 5,
-            borderBottomWidth: 1, 
+            borderBottomWidth: 1,
             borderBottomColor: '#313131',
             marginBottom: SH(10),
         },
@@ -102,10 +119,12 @@ const Wishlist = ({ navigation }) => {
         header: {
             flexDirection: 'row',
             alignItems: 'center',
+            backgroundColor: Colors.theme_backgound,
             justifyContent: 'flex-start',
             width: '100%',
-            paddingHorizontal: 10,
-            marginBottom: SH(30),
+            paddingVertical: 10,
+            paddingTop: 10,
+            paddingHorizontal: 20,
         },
         backArrow: {
             width: SH(20),
@@ -135,36 +154,46 @@ const Wishlist = ({ navigation }) => {
             fontSize: SF(14),
             color: Colors.theme_backgound,
         },
+        emptyMessage: {
+            fontSize: SF(18),
+            color: Colors.white,
+            textAlign: 'center',
+            marginTop: SH(20),
+        },
     }), [Colors]);
 
     return (
         <Container>
             <ImageBackground source={images.background1} resizeMode='cover' style={styles.backgroundImage}>
                 <View style={styles.overlay} />
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image source={images.backArrow} style={styles.backArrow} />
+                    </TouchableOpacity>
+                    <Text style={styles.title}>{t('Wishlist')}</Text>
+                </View>
                 <View style={styles.container}>
-                    <View style={styles.header}>
-                        <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <Image source={images.backArrow} style={styles.backArrow} />
-                        </TouchableOpacity>
-                        <Text style={styles.title}>{t('Wishlist')}</Text>
-                    </View>
-                    <FlatList
-                        data={wishlist}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={({ item }) => (
-                            <View style={styles.wishlistItem}>
-                                <Image source={item.thumbnail ? { uri: item.thumbnail } : images.dummyImage} style={styles.thumbnail} />
-                                <View style={styles.trackInfo}>
-                                    <Text style={styles.trackTitle}>{item.title}</Text>
-                                    <Text style={styles.trackArtist}>{item.artist?.title || 'Unknown Artist'}</Text>
+                    {wishlist.length === 0 ? (
+                        <Text style={styles.emptyMessage}>{t('No items added in wishlist')}</Text>
+                    ) : (
+                        <FlatList
+                            data={wishlist}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) => (
+                                <View style={styles.wishlistItem}>
+                                    <Image source={item.thumbnail ? { uri: item.thumbnail } : images.dummyImage} style={styles.thumbnail} />
+                                    <View style={styles.trackInfo}>
+                                        <Text style={styles.trackTitle}>{item.title}</Text>
+                                        <Text style={styles.trackArtist}>{item.artist?.title || 'Unknown Artist'}</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={() => removeItemFromWishlist(item.id)} style={styles.removeButton}>
+                                        <Text style={styles.removeButtonText}>{t("Remove")}</Text>
+                                    </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity onPress={() => removeItemFromWishlist(item.id)} style={styles.removeButton}>
-                                    <Text style={styles.removeButtonText}>{t("Remove")}</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                        style={styles.list}
-                    />
+                            )}
+                            style={styles.list}
+                        />
+                    )}
                 </View>
             </ImageBackground>
         </Container>

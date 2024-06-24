@@ -29,9 +29,7 @@ const GetstartedSliderscreen = ({ navigation }) => {
     }
   };
 
-  useEffect(()=>{
-    console.log("selectedOptions",selectedOptions)
-  },[selectedOptions])
+
   const handleContinuePress = (index) => {
     const nextIndex = index + 1;
     if (nextIndex < slides.length) {

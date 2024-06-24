@@ -1,6 +1,7 @@
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import React, { useMemo } from 'react';
 import propTypes from 'prop-types';
+import { Colors } from '../../utils';
 import { useTheme } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 function ContainerComponent({
@@ -15,11 +16,11 @@ function ContainerComponent({
       StyleSheet.create({
         statusBarStyle: {
           flex: 0,
-          backgroundColor: Colors.transpharent,
+          backgroundColor: 'transpharent',
         },
         containerStyle: {
           flex: 1,
-          backgroundColor: Colors.transpharent,
+          backgroundColor: 'transpharent',
         },
         linearGradient: {
           flex: 1

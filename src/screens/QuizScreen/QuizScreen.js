@@ -69,7 +69,6 @@ const QuizScreen = ({ navigation }) => {
             return acc.concat(questionRelatedSongs);
         }, []);
 
-        console.log("relatedSongs:-----------", relatedSongs);
         navigation.navigate(RouteName.WORKOUT_DETAIL_SCREEN, { relatedSongs });
     };
 
