@@ -1,0 +1,2 @@
+export const COLOR_PICKER_SET = "COLOR_PICKER_SET";
+export const COMMON_LOADING = "COMMON_LOADING";
