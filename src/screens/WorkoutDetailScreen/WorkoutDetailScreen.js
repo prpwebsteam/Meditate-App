@@ -22,10 +22,6 @@ const WorkoutDetailScreen = (props) => {
   const { isPlaying, currentTrack, playTrack, pauseTrack, resumeTrack, playNextTrack, playPreviousTrack, setTrackList, currentTime, duration, fastForward, rewind } = useContext(SoundContext);
   const [similarTracks, setSimilarTracks] = useState([]);
 
-  useEffect(() => {
-    console.log("tagName", tagName);
-  }, [tagName]);
-
   const fetchSongs = async () => {
     try {
       let response;
@@ -89,7 +85,6 @@ const WorkoutDetailScreen = (props) => {
       console.error("No track is currently playing");
       return;
     }
-    console.log("Current track being added to wishlist:", currentTrack);
 
     try {
       const response = await axios.post('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/wishlist', {
@@ -101,7 +96,6 @@ const WorkoutDetailScreen = (props) => {
       });
 
       if (response.status === 200) {
-        console.log('Track added to wishlist:', response.data);
         setWishlist((prevWishlist) => [...prevWishlist, currentTrack.id]);
       } else {
         console.error('Failed to add track to wishlist. Response status:', response.status, 'Response data:', response.data);

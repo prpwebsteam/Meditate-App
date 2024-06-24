@@ -8,6 +8,7 @@ import { SH, SF } from '../../../utils';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = (props) => {
   const { Colors } = useTheme();
@@ -28,8 +29,12 @@ const LoginScreen = (props) => {
       });
 
       if (response.status === 200) {
+        await AsyncStorage.setItem('authToken', response.data.token);
         Alert.alert('Success', 'Logged in successfully', [
-          { text: 'OK', onPress: () => navigation.navigate(RouteName.HOME_SCREEN) }
+          { text: 'OK', onPress: () => navigation.reset({
+            index: 0,
+            routes: [{ name: RouteName.HOME_SCREEN }],
+          }) }
         ]);
       } else {
         Alert.alert('Error', 'Invalid credentials. Please try again.');

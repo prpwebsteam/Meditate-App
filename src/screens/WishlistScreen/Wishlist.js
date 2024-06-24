@@ -20,7 +20,6 @@ const Wishlist = ({ navigation }) => {
     const fetchSongs = async () => {
         try {
             const response = await axios.get('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/songs?category_id=2');
-            console.log('Songs API Response:', response);
 
             if (response.status === 200 && Array.isArray(response.data)) {
                 const tracks = response.data.map((item) => ({

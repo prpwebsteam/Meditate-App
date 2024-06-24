@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import { View, ScrollView, StyleSheet, ImageBackground, Text } from 'react-native';
-import { Authentication } from '../../styles/Authentication';
+import { View, ScrollView, StyleSheet, ImageBackground } from 'react-native';
+import { Authentication } from '../../styles';
 import { Button, Container, Spacing, Input, BottomTabMenu } from '../../components';
+import images from '../../images';
 import { RouteName } from '../../routes';
 import { SH, SW } from '../../utils';
 import { useTranslation } from "react-i18next";
 import { useTheme } from '@react-navigation/native';
-import images from '../../index';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditProfileScreen = (props) => {
   const { Colors } = useTheme();
@@ -30,12 +30,17 @@ const EditProfileScreen = (props) => {
     },
     buttonView: {
       paddingHorizontal: SW(40),
-      flexDirection: 'row',
+      flexDirection: 'column',
       width: '100%',
       justifyContent: 'center', 
       alignItems: 'center', 
     },
     nextButton: {
+      alignSelf: 'center',
+      width: '90%',
+      marginBottom: 20,
+    },
+    logoutButton: {
       alignSelf: 'center',
       width: '90%',
     },
@@ -45,6 +50,14 @@ const EditProfileScreen = (props) => {
       marginBottom: 20,
     },
   });
+
+  const onLogout = async () => {
+    await AsyncStorage.removeItem('authToken');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: RouteName.LOGIN_SCREEN }],
+    });
+  };
 
   return (
     <Container>
@@ -85,6 +98,11 @@ const EditProfileScreen = (props) => {
                 buttonStyle={styles.nextButton}
                 onPress={() => navigation.navigate(RouteName.HOME_SCREEN)}
               />
+              <Button
+                title={t("Logout")}
+                buttonStyle={styles.logoutButton}
+                onPress={onLogout}
+              />
             </View>
           </View>
         </ScrollView>
@@ -92,4 +110,5 @@ const EditProfileScreen = (props) => {
     </Container>
   );
 };
+
 export default EditProfileScreen;

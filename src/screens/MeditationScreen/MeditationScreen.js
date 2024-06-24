@@ -58,7 +58,6 @@ const MeditationScreen = (props) => {
       console.error("No track is currently playing");
       return;
     }
-    console.log("Current track being added to wishlist:", currentTrack);
 
     try {
       const response = await axios.post('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/wishlist', {
@@ -70,7 +69,6 @@ const MeditationScreen = (props) => {
       });
 
       if (response.status === 200) {
-        console.log('Track added to wishlist:', response.data);
         setWishlist((prevWishlist) => [...prevWishlist, currentTrack.id]);
       } else {
         console.error('Failed to add track to wishlist. Response status:', response.status, 'Response data:', response.data);

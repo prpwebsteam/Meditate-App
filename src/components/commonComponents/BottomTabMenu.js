@@ -43,7 +43,6 @@ function BottomTabMenu(props) {
 
   ];
   onPressHandle = (id) => {
-    // console.log(id)
     id == 1 ?
       navigation.replace(RouteName.HOME_SCREEN)
       : id == 2 ?
