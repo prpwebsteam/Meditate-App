@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View, Image, StatusBar } from 'react-native';
+import { View, Image, StatusBar, StyleSheet, ImageBackground } from 'react-native';
 import Styles from '../../styles/SplashScreenStyle/SplashScreenStyle';
 import images from '../../index';
 import RouteName from '../../routes/RouteName';
@@ -17,15 +17,22 @@ const SplashScreen = ({ navigation }) => {
     }, []);
     return (
         <Container>
-            <View style={Styles.setbgimage}>
-                <Image
-                    source={images.splashScreenIcon}
-                    style={[GetstartedSliderStyles.imagesetus, GetstartedSliderStyles.imageSlide1]}
-                    resizeMode='contain'
-                />
-            </View>
+            <ImageBackground source={images.background1} resizeMode='cover' style={{
+                flex: 1,
+                width: '100%',
+                height: '100%',
+            }}>
+                <View style={{ 
+            ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0, 0, 0, 0.7)', }} />
+                <View style={Styles.setbgimage}>
+                    <Image
+                        source={images.slide1}
+                        style={[GetstartedSliderStyles.imagesetus, GetstartedSliderStyles.imageSlide1]}
+                        resizeMode='contain'
+                    />
+                </View>
+            </ImageBackground>
         </Container>
     );
 };
 export default SplashScreen;
- 
