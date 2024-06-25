@@ -31,7 +31,8 @@ function AppHeader({ navigation, headerStyle, leftImage, title, rightImage, onLe
                 leftImageStyle: {
                     height: SH(18),
                     width: SW(18),
-                    resizeMode: 'contain'
+                    resizeMode: 'contain',
+                    tintColor: '#794619',
                 },
                 titleStyle: {
                     fontSize: SF(18),
@@ -48,10 +49,12 @@ function AppHeader({ navigation, headerStyle, leftImage, title, rightImage, onLe
                 },
                 rightImageStyle: {
                     resizeMode: 'contain',
+                    tintColor: '#794619',
                     marginLeft: 5
                 },
                 rightImageStyle2: {
                     resizeMode: 'contain',
+                    tintColor: '#794619',
                     marginLeft: 5,
                     marginTop: 5,
                     height: 30,
@@ -71,7 +74,8 @@ function AppHeader({ navigation, headerStyle, leftImage, title, rightImage, onLe
                 centerImageStyle: {
                     width: 250,
                     height: 30,
-                    resizeMode: 'contain'
+                    resizeMode: 'contain',
+                    tintColor: '#794619',
                 }
             }),
         [headerStyle, Colors, titleStyle],

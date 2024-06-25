@@ -99,7 +99,7 @@ function Inputs({
         placeholder={placeholder}
         onChangeText={(text) => onChangeText(text)}
         leftIcon={leftIcon}
-        placeholderTextColor={Colors.black_text_color}
+        placeholderTextColor={Colors.off_white}
         rightIcon={rightIcon}
         numberOfLines={numberOfLines}
         errorMessage={errorMessage}

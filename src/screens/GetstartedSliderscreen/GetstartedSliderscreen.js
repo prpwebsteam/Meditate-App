@@ -85,50 +85,50 @@ const GetstartedSliderscreen = ({ navigation }) => {
                       <Icon name="lightbulb" type="material-community" color="#000000" />
                     </View>
                     <Text style={[styles.checkboxLabel, { fontSize: 12 }]}>FOCUS AND PRODUCTIVITY</Text>
-                    <CustomCheckbox
+                    {/* <CustomCheckbox
                       isChecked={selectedOptions.includes('Focus and Productivity')}
                       onPress={() => handleCheckboxChange('Focus and Productivity')}
-                    />
+                    /> */}
                   </View>
                   <View style={styles.checkbox}>
                     <View style={styles.iconContainer}>
                       <Icon name="bed" type="material-community" color="#000000" />
                     </View>
                     <Text style={[styles.checkboxLabel, { fontSize: 12 }]}>QUALITY OF SLEEP</Text>
-                    <CustomCheckbox
+                    {/* <CustomCheckbox
                       isChecked={selectedOptions.includes('Quality of Sleep')}
                       onPress={() => handleCheckboxChange('Quality of Sleep')}
-                    />
+                    /> */}
                   </View>
                   <View style={styles.checkbox}>
                     <View style={styles.iconContainer}>
                       <Icon name="spa" type="material-community" color="#000000" />
                     </View>
                     <Text style={[styles.checkboxLabel, { fontSize: 12 }]}>RELIEVE STRESS</Text>
-                    <CustomCheckbox
+                    {/* <CustomCheckbox
                       isChecked={selectedOptions.includes('Relieve Stress')}
                       onPress={() => handleCheckboxChange('Relieve Stress')}
-                    />
+                    /> */}
                   </View>
                   <View style={styles.checkbox}>
                     <View style={styles.iconContainer}>
                       <Icon name="flower" type="material-community" color="#000000" />
                     </View>
                     <Text style={[styles.checkboxLabel, { fontSize: 12 }]}>GROW PERSONALLY</Text>
-                    <CustomCheckbox
+                    {/* <CustomCheckbox
                       isChecked={selectedOptions.includes('Grow Personally')}
                       onPress={() => handleCheckboxChange('Grow Personally')}
-                    />
+                    /> */}
                   </View>
                   <View style={styles.checkbox}>
                     <View style={styles.iconContainer}>
                       <Icon name="heart" type="material-community" color="#000000" />
                     </View>
                     <Text style={[styles.checkboxLabel, { fontSize: 12 }]}>STRENGTHEN VITALITY</Text>
-                    <CustomCheckbox
+                    {/* <CustomCheckbox
                       isChecked={selectedOptions.includes('Strengthen Vitality')}
                       onPress={() => handleCheckboxChange('Strengthen Vitality')}
-                    />
+                    /> */}
                   </View>
                 </View>
               ) : (

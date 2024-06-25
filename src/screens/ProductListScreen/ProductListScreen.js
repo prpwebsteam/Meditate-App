@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   shopAllText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#f1cdbb',
     marginRight: 10,
   },
   cartIconContainer: {
@@ -326,6 +326,7 @@ const styles = StyleSheet.create({
   cartIcon: {
     fontSize: 35,
     color: '#000',
+    tintColor: '#f1cdbb',
   },
   cartButtonText: {
     fontSize: 12,
@@ -410,7 +411,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 14,
     fontWeight: '600',
-    color: '#fff',
+    color: '#f1cdbb',
     textAlign: 'left',
     justifyContent: 'flex-start',
     alignItems: 'flex-start'
@@ -418,12 +419,12 @@ const styles = StyleSheet.create({
   productPrice: {
     marginTop: 5,
     fontSize: 14,
-    color: '#fff',
+    color: '#f1cdbb',
   },
   productDescription: {
     marginTop: 5,
     fontSize: 12,
-    color: '#fff',
+    color: '#f1cdbb',
     textAlign: 'center',
   },
   sizeSelector: {
@@ -442,24 +443,24 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     borderWidth: 1,
-    borderColor: '#fff',
+    borderColor: '#f1cdbb',
     borderRadius: 6,
     paddingTop: 8,
     paddingBottom: 10,
     paddingHorizontal: 45,
-    color: '#fff',
+    color: '#f1cdbb',
     width: '100%',
     alignItems: 'center',
     fontWeight: 'bold'
   },
   addButtonTextVariant: {
     borderWidth: 1,
-    borderColor: '#fff',
+    borderColor: '#f1cdbb',
     borderRadius: 6,
     paddingTop: 8,
     paddingBottom: 8,
     paddingHorizontal: 45,
-    color: '#ddd',
+    color: '#f1cdbb',
     width: '100%',
     alignItems: 'center',
     fontWeight: 'bold'
@@ -468,7 +469,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#fff',
+    borderColor: '#f1cdbb',
     borderRadius: 10,
     padding: 10,
     paddingBottom: 10,
@@ -484,12 +485,12 @@ const styles = StyleSheet.create({
   },
   textvariant: {
     fontSize: 12,
-    color: '#fff'
+    color: '#f1cdbb'
   },
   carticon: {
-    color: '#000',
     fontWeight: 'bold',
     fontSize: 30,
+    tintColor: '#794619',
     textAlign: 'center',
   },
   cartButtonText: {

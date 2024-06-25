@@ -76,7 +76,7 @@ const Wishlist = ({ navigation }) => {
         title: {
             fontSize: SF(24),
             fontWeight: 'bold',
-            color: Colors.white,
+            color: Colors.btn_color,
         },
         list: {
             width: '100%',
@@ -104,7 +104,7 @@ const Wishlist = ({ navigation }) => {
             borderRadius: 5,
         },
         removeButtonText: {
-            color: Colors.white,
+            color: Colors.btn_color,
             fontSize: SF(14),
         },
         backgroundImage: {
@@ -128,6 +128,7 @@ const Wishlist = ({ navigation }) => {
         },
         backArrow: {
             width: SH(20),
+            tintColor: '#794619',
             height: SH(20),
             marginRight: SW(10),
             marginTop: 5

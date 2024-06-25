@@ -99,7 +99,7 @@ const QuizScreen = ({ navigation }) => {
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image source={images.backArrow} style={styles.backArrow} />
                     </TouchableOpacity>
-                    <Text style={[styles.title, { color: '#fff' }]}>{t("Quiz")}</Text>
+                    <Text style={[styles.title, { color: '#794619' }]}>{t("Quiz")}</Text>
                 </View>
                 <ScrollView style={styles.container}>
                     <View style={styles.container2}>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#f79f80',
+        backgroundColor: '#f1cdbb',
         paddingVertical: 10,
         paddingTop: 10,
         paddingHorizontal: 20,
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     backArrow: {
         width: SH(20),
         height: SH(20),
+        tintColor: '#794619',
         marginTop: 3,
         marginRight: SW(10),
     },
@@ -202,7 +203,7 @@ borderColor:'#FFF'
         alignItems: 'center',
     },
     button: {
-        backgroundColor: '#d3d3d3',
+        backgroundColor: '#f1cdbb',
         paddingVertical: SH(10),
         paddingHorizontal: SH(20),
         borderRadius: SH(5),
@@ -210,7 +211,7 @@ borderColor:'#FFF'
         alignItems: 'center',
     },
     buttonText: {
-        color: 'black',
+        color: '#794619',
         fontSize: SF(16),
         fontWeight: 'bold',
     },

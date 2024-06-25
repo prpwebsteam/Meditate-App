@@ -15,12 +15,47 @@ const WorkoutDetailScreen = (props) => {
   const { Colors } = useTheme();
   const WorkoutDetailStyles = useMemo(() => WorkoutDetailStyle(Colors), [Colors]);
   const { navigation, route } = props;
-  const { categoryId, categoryName, tagId, tagName, track, fromRecentlyPlayed, relatedSongs } = route.params; // Get the relatedSongs from route params
+  const { categoryId, categoryName, tagId, tagName, track, fromRecentlyPlayed, relatedSongs } = route.params;
   const { t } = useTranslation();
   const [wishlist, setWishlist] = useState([]);
 
-  const { isPlaying, currentTrack, playTrack, pauseTrack, resumeTrack, playNextTrack, playPreviousTrack, setTrackList, currentTime, duration, fastForward, rewind } = useContext(SoundContext);
+
+  const {
+    isPlaying,
+    currentTrack,
+    playTrack,
+    pauseTrack,
+    resumeTrack,
+    playNextTrack,
+    playPreviousTrack,
+    setTrackList,
+    currentTime,
+    duration,
+    fastForward,
+    rewind,
+    setSpeed
+  } = useContext(SoundContext);
   const [similarTracks, setSimilarTracks] = useState([]);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
+
+  const toggleSpeed = () => {
+    let newSpeed;
+    switch (playbackSpeed) {
+      case 1.0:
+        newSpeed = 1.5;
+        break;
+      case 1.5:
+        newSpeed = 2.0;
+        break;
+      case 2.0:
+        newSpeed = 3.0;
+        break;
+      default:
+        newSpeed = 1.0;
+    }
+    setPlaybackSpeed(newSpeed);
+    setSpeed(newSpeed);
+  };
 
   const fetchSongs = async () => {
     try {
@@ -193,6 +228,25 @@ const WorkoutDetailScreen = (props) => {
         top: SH(15),
         right: SW(7),
       },
+      speedButton: {
+        width: SW(35),
+        height: SW(50),
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        right: SW(10),
+        top: SH(5),
+        paddingBottom: 40
+      },
+      speedText: {
+        color: Colors.black,
+        backgroundColor: '#f1cdbb',
+        borderRadius: 5,
+        width: SW(35),
+        height: SW(20),
+        fontWeight: 'bold',
+        textAlign: 'center'
+      },
       headerRight: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -222,7 +276,7 @@ const WorkoutDetailScreen = (props) => {
           <ScrollView style={{ backgroundColor: 'transparent', padding: SW(30), marginBottom: 100 }} contentContainerStyle={{ flexGrow: 1 }}>
             <View style={WorkoutDetailStyles.centerMainView}>
               <TouchableOpacity onPress={toggleWishlist} style={styles.rightImageStyle2}>
-                <Image source={wishlist.includes(currentTrack?.id.toString()) ? images.wishlist11 : images.wishlist1} style={{ width: SW(20), height: SW(20) }} />
+                <Image source={wishlist.includes(currentTrack?.id.toString()) ? images.wishlist11 : images.wishlist1} style={{ width: SW(20), height: SW(20), tintColor: '#f1cdbb' }} />
               </TouchableOpacity>
               {currentTrack ? (
                 <>
@@ -271,12 +325,19 @@ const WorkoutDetailScreen = (props) => {
                     </TouchableOpacity>
                   </View>
                   <Spacing space={SH(20)} />
-                  <View style={WorkoutDetailStyles.playTimeView}>
-                    <Text style={WorkoutDetailStyles.playTimeText}>{formatTime(currentTime || 0)}</Text>
-                    <Text style={[WorkoutDetailStyles.playTimeText, WorkoutDetailStyles.off_gray]}>{formatTime(duration)}</Text>
-                  </View>
-                  <View style={WorkoutDetailStyles.counterMainViewStart}>
-                    <View style={[WorkoutDetailStyles.counterMainViewStartActive, { width: `${(currentTime / (duration || 1)) * 100}%` }]}></View>
+                  <View style={{ alignItems: 'center', width: '100%' }}>
+                    <View style={{ alignItems: 'center', width: '80%', marginRight: 45 }}>
+                      <View style={WorkoutDetailStyles.playTimeView}>
+                        <Text style={WorkoutDetailStyles.playTimeText}>{formatTime(currentTime || 0)}</Text>
+                        <Text style={[WorkoutDetailStyles.playTimeText, WorkoutDetailStyles.off_gray]}>{formatTime(duration)}</Text>
+                      </View>
+                      <View style={WorkoutDetailStyles.counterMainViewStart}>
+                        <View style={[WorkoutDetailStyles.counterMainViewStartActive, { width: `${(currentTime / (duration || 1)) * 100}%` }]}></View>
+                      </View>
+                    </View>
+                    <TouchableOpacity onPress={toggleSpeed} style={styles.speedButton}>
+                      <Text style={styles.speedText}>{playbackSpeed}x</Text>
+                    </TouchableOpacity>
                   </View>
                 </>
               ) : (

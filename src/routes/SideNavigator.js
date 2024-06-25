@@ -18,7 +18,7 @@ const SideNavigator = () => {
   const Drawer = createDrawerNavigator();
   const { isEnabled } = useToggle(); 
   const styleArray = {
-    headerTintColor: Colors.white_text_color,
+    headerTintColor: Colors.btn_color,
     headerStyle: {
       backgroundColor: Colors.theme_backgound_second,
     },
@@ -36,14 +36,14 @@ const SideNavigator = () => {
         icon="MaterialCommunityIcons"
         name={icon}
         size={SF(24)}
-        color={focused ? Colors.white_text_color : Colors.theme_backgound_second}
+        color={focused ? Colors.btn_color : Colors.theme_backgound_second}
       />
     )
   }
 
   const drawerTitle = (focused, title) => {
     return (
-      <Text style={{ color: focused ? Colors.white : Colors.theme_backgound, fontSize: SF(18), fontFamily: Fonts.RobotoCondensed_Regular }}>{title}</Text>
+      <Text style={{ color: focused ? Colors.btn_color : Colors.theme_backgound, fontSize: SF(18), fontFamily: Fonts.RobotoCondensed_Regular }}>{title}</Text>
     )
   }
 

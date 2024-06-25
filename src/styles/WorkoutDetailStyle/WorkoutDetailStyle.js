@@ -47,10 +47,11 @@ export default WorkoutDetailStyle = (Colors) => StyleSheet.create({
     flexDirection:'row',
     justifyContent:'flex-start',
     alignItems:'center',
-    marginLeft:SW(-20)
+    marginLeft:SW(-20),
   },
   leftArrow:{
-    width:SW(60)
+    width:SW(60),
+    tintColor: '#794619',
   },
   ImagebottomContent:{
     flexDirection:'row',
@@ -160,6 +161,7 @@ elevation: 6,
     marginHorizontal:SW(20)
   },
   playViewIconCenter:{
+    tintColor: Colors.btn_color,
     marginRight:SW(15),
     width:SW(20),
     height:SH(20),
@@ -179,11 +181,12 @@ elevation: 6,
     backgroundColor:Colors.theme_backgound_second,
     alignItems:'flex-start',
   },
-  playTimeView:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center',
-    width:"100%"
+  playTimeView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: "100%",
+    paddingHorizontal: SW(10),
   },
   playTimeText:{
     color:Colors.theme_backgound,
@@ -238,6 +241,7 @@ elevation: 6,
   leftArrow: {
     width: 20,
     height: 20,
+    tintColor: '#f1cdbb',
   },
   ImagebottomContent: {
     flexDirection: 'row',
@@ -345,45 +349,43 @@ elevation: 6,
     borderRadius: SH(10),
   },
   playViewIcon: {
+    tintColor: '#f1cdbb',
     width: SW(20),
     height: SH(20),
     marginHorizontal: SW(20)
   },
   playViewIcon2: {
+    tintColor: '#f1cdbb',
     width: SW(20),
     height: SH(20),
   },
   playViewIconCenter: {
+    tintColor: Colors.btn_color,
     marginRight: SW(15),
     width: SW(20),
     height: SH(20),
     marginHorizontal: SW(20)
   },
   playViewIconCenterPause: {
+    tintColor: Colors.btn_color,
     marginRight: SW(20),
     width: SW(20),
     height: SH(20),
     marginHorizontal: SW(20)
   },
   counterMainViewStart: {
-    width: "100%",
+    width: "100%", 
     height: SH(2),
     backgroundColor: Colors.off_white,
     position: 'relative',
     justifyContent: 'center',
-    opacity: 0.9
+    opacity: 0.9,
   },
   counterMainViewStartActive: {
     width: 0,
     height: "100%",
     backgroundColor: Colors.theme_backgound_second,
     alignItems: 'flex-start',
-  },
-  playTimeView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: "100%"
   },
   playTimeText: {
     color: Colors.theme_backgound,

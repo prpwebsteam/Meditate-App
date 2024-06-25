@@ -48,7 +48,7 @@ const RootNavigator = props => {
     }
 
   }, [colorrdata, Colors])
- 
+
 
   return (
     <ToggleProvider>
@@ -72,10 +72,10 @@ const RootNavigator = props => {
             <Stack.Screen name={RouteName.ALL_CATEGORY_SCREEN} component={AllCategoryScreen} />
             <Stack.Screen name={RouteName.QUIZ_SCREEN} component={QuizScreen} />
             <Stack.Screen name={RouteName.PRODUCTLIST_SCREEN} component={ProductListScreen} />
-        <Stack.Screen name={RouteName.PRODUCTDETAILS_SCREEN} component={ProductDetailsScreen} />
-        <Stack.Screen name={RouteName.CHECKOUT_SCREEN} component={CheckoutScreen} />
-        <Stack.Screen name={RouteName.WEBVIEW_SCREEN} component={WebViewScreen} />
-        <Stack.Screen name={RouteName.CART_SCREEN} component={CartScreen} />
+            <Stack.Screen name={RouteName.PRODUCTDETAILS_SCREEN} component={ProductDetailsScreen} />
+            <Stack.Screen name={RouteName.CHECKOUT_SCREEN} component={CheckoutScreen} />
+            <Stack.Screen name={RouteName.WEBVIEW_SCREEN} component={WebViewScreen} />
+            <Stack.Screen name={RouteName.CART_SCREEN} component={CartScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </SoundProvider>

@@ -8,6 +8,7 @@ const SoundProvider = ({ children }) => {
   const [currentTrack, setCurrentTrack] = useState(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [trackList, setTrackList] = useState([]);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
   const sound = useRef(null);
   const interval = useRef(null);
 
@@ -29,6 +30,7 @@ const SoundProvider = ({ children }) => {
         return;
       }
       sound.current.setNumberOfLoops(loop ? -1 : 0);
+      sound.current.setSpeed(playbackSpeed);
       sound.current.play((success) => {
         if (success) {
           console.log('Successfully finished playing');
@@ -117,6 +119,13 @@ const SoundProvider = ({ children }) => {
     }
   };
 
+  const setSpeed = (speed) => {
+    setPlaybackSpeed(speed);
+    if (sound.current) {
+      sound.current.setSpeed(speed);
+    }
+  };
+
   useEffect(() => {
     return () => {
       clearInterval(interval.current);
@@ -139,7 +148,9 @@ const SoundProvider = ({ children }) => {
       currentTime,
       duration: sound.current ? sound.current.getDuration() : 0,
       fastForward,
-      rewind
+      rewind,
+      setSpeed,
+      playbackSpeed
     }}>
       {children}
     </SoundContext.Provider>

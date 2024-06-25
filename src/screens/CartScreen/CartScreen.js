@@ -143,7 +143,7 @@ const CartScreen = ({ route, navigation }) => {
               </View>
               <TouchableOpacity
                 style={styles.continueShoppingButton}
-                onPress={() => navigation.navigate(RouteName.HOME_SCREEN)}
+                onPress={() => navigation.goBack()}
               >
                 <Text style={styles.continueShoppingButtonText}>Continue Shopping</Text>
               </TouchableOpacity>

@@ -285,7 +285,7 @@ const HomeScreen = (props) => {
         alignItems: 'center',
       },
       buttonText: {
-        color: Colors.white,
+        color: Colors.btn_color,
         fontSize: SF(16),
         fontWeight: 'bold',
       },

@@ -238,11 +238,13 @@ const MeditationScreen = (props) => {
         paddingHorizontal: SW(10),
       },
       trackIcon: {
+        tintColor: '#f1cdbb',
         width: SH(30),
         height: SH(30),
         marginLeft: 10,
       },
       trackIcon2: {
+        tintColor: '#f1cdbb',
         width: SH(30),
         height: SH(30),
       },
@@ -286,7 +288,7 @@ const MeditationScreen = (props) => {
                   onValueChange={(itemValue) => handleTimerSelect(itemValue)}
                   style={{
                     height: SH(40),
-                    color: Colors.white,
+                    color: Colors.btn_color,
                     borderRadius: 10
                   }}
                 >

@@ -17,7 +17,6 @@ const images = {
     slideimage3: require('./fourty_five.png'),
     slideimage4: require('./fourty_five.png'),
     lotus_complex: require('./lottieAnimation/Lotus_complex.json'),
-    play: require('./play.png'),
     forward_button: require('./forward_button.png'),
     rewind_button: require('./rewind_button.png'),
     splashScreenIcon: require('./lottieAnimation/logo1.png'),

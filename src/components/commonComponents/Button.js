@@ -20,7 +20,7 @@ function Button(props) {
         height: SH(45),
       },
       buttonTextStyle: {
-        color: Colors.white,
+        color: Colors.btn_color,
         fontSize: SF(20),
         fontFamily:Fonts.RobotoCondensed_Regular
       },
