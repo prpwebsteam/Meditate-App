@@ -82,7 +82,7 @@ const GetstartedSliderscreen = ({ navigation }) => {
                 <View style={styles.checkboxContainer}>
                   <View style={styles.checkbox}>
                     <View style={styles.iconContainer}>
-                      <Icon name="lightbulb" type="material-community" color="#000000" />
+                      <Icon name="lightbulb" type="material-community" color="#794619" />
                     </View>
                     <Text style={[styles.checkboxLabel, { fontSize: 12 }]}>FOCUS AND PRODUCTIVITY</Text>
                     {/* <CustomCheckbox
@@ -92,7 +92,7 @@ const GetstartedSliderscreen = ({ navigation }) => {
                   </View>
                   <View style={styles.checkbox}>
                     <View style={styles.iconContainer}>
-                      <Icon name="bed" type="material-community" color="#000000" />
+                      <Icon name="bed" type="material-community" color="#794619" />
                     </View>
                     <Text style={[styles.checkboxLabel, { fontSize: 12 }]}>QUALITY OF SLEEP</Text>
                     {/* <CustomCheckbox
@@ -102,7 +102,7 @@ const GetstartedSliderscreen = ({ navigation }) => {
                   </View>
                   <View style={styles.checkbox}>
                     <View style={styles.iconContainer}>
-                      <Icon name="spa" type="material-community" color="#000000" />
+                      <Icon name="spa" type="material-community" color="#794619" />
                     </View>
                     <Text style={[styles.checkboxLabel, { fontSize: 12 }]}>RELIEVE STRESS</Text>
                     {/* <CustomCheckbox
@@ -112,7 +112,7 @@ const GetstartedSliderscreen = ({ navigation }) => {
                   </View>
                   <View style={styles.checkbox}>
                     <View style={styles.iconContainer}>
-                      <Icon name="flower" type="material-community" color="#000000" />
+                      <Icon name="flower" type="material-community" color="#794619" />
                     </View>
                     <Text style={[styles.checkboxLabel, { fontSize: 12 }]}>GROW PERSONALLY</Text>
                     {/* <CustomCheckbox
@@ -122,7 +122,7 @@ const GetstartedSliderscreen = ({ navigation }) => {
                   </View>
                   <View style={styles.checkbox}>
                     <View style={styles.iconContainer}>
-                      <Icon name="heart" type="material-community" color="#000000" />
+                      <Icon name="heart" type="material-community" color="#794619" />
                     </View>
                     <Text style={[styles.checkboxLabel, { fontSize: 12 }]}>STRENGTHEN VITALITY</Text>
                     {/* <CustomCheckbox
@@ -204,20 +204,20 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   continueButton: {
-    backgroundColor: '#f4c2b0',
+    backgroundColor: '#f1cdbb',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 25,
     width: '80%',
   },
   continueButtonText: {
-    color: '#9b5330',
+    color: '#794619',
     fontSize: 16,
     textAlign: 'center',
     fontWeight: 'bold',
   },
   iconContainer: {
-    backgroundColor: '#f4c2b0',
+    backgroundColor: '#f1cdbb',
     padding: 10,
     borderRadius: 50,
     justifyContent: 'center',
