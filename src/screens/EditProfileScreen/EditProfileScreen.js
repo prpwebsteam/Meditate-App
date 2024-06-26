@@ -31,8 +31,8 @@ const EditProfileScreen = (props) => {
       paddingHorizontal: SW(40),
       flexDirection: 'column',
       width: '100%',
-      justifyContent: 'center', 
-      alignItems: 'center', 
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     nextButton: {
       alignSelf: 'center',
@@ -45,6 +45,37 @@ const EditProfileScreen = (props) => {
       marginBottom: 20,
     },
   });
+
+  const updateProfile = async () => {
+    try {
+      const payload = {
+        name: inputName,
+        mobile: inputMobile,
+        email: inputNameemail,
+      };
+      console.log('Updating profile with:', payload);
+      alert('Profile updated successfully!');
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      alert('Failed to update profile.');
+    }
+  };
+
+  const validateAndUpdate = () => {
+    if (!inputName.trim()) {
+      alert("Name is required");
+      return;
+    }
+    if (!inputMobile.match(/^\d{10}$/)) {
+      alert("Enter a valid 10-digit mobile number");
+      return;
+    }
+    if (!inputNameemail.match(/^\S+@\S+\.\S+$/)) {
+      alert("Enter a valid email address");
+      return;
+    }
+    updateProfile();
+  };
 
   return (
     <Container>
@@ -83,7 +114,7 @@ const EditProfileScreen = (props) => {
               <Button
                 title={t("Update_Text")}
                 buttonStyle={styles.nextButton}
-                onPress={() => navigation.navigate(RouteName.HOME_SCREEN)}
+                onPress={validateAndUpdate}
               />
             </View>
           </View>

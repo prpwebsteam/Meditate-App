@@ -13,17 +13,19 @@ import {
   Modal,
   Pressable,
   ScrollView,
-  AsyncStorage,
   ImageBackground,
 } from 'react-native';
 import { fetchAllProducts } from '../../services/productService';
 import EmptyCart from '../../components/commonComponents/CartIcon';
 import { BottomTabMenu, Container } from '../../components';
 import images from '../../images';
-
+import { useNavigation } from '@react-navigation/native';
+import { RouteName } from '../../routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width, height } = Dimensions.get('window');
 
-const ProductListScreen = ({ navigation }) => {
+const ProductListScreen = ({ props }) => {
+  const navigation = useNavigation();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -117,8 +119,8 @@ const ProductListScreen = ({ navigation }) => {
     const variantsLength = item.variants?.length || 0;
 
     return (
-   
-      <View style={styles.productContainer}> 
+
+      <View style={styles.productContainer}>
         {discountPercentage && (
           <View style={styles.discountBadge}>
             <Text style={styles.discountText}>{discountPercentage}% OFF</Text>
@@ -128,7 +130,7 @@ const ProductListScreen = ({ navigation }) => {
           <ImageSlider images={images} style={styles.productImage} resizeMode="center" />
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('ProductDetailsScreen', { productId: item.id })} style={styles.containerinner} 
+          onPress={() => navigation?.navigate(RouteName.PRODUCTDETAILS_SCREEN, { productId: item.id })} style={styles.containerinner}
         >
           <Text style={styles.productTitle} numberOfLines={2} ellipsizeMode="tail">{item.title}</Text>
           <View style={styles.variantContainerVariant}>
@@ -145,96 +147,97 @@ const ProductListScreen = ({ navigation }) => {
           <Text style={styles.addButtonTextVariant}>ADD</Text>
         </TouchableOpacity>
       </View>
-  
     );
   };
 
   return (
     <Container>
-    <ImageBackground source={images.background1} style={styles.backgroundImage}>
-      <View style={styles.overlay} />
-      <BottomTabMenu  selected={3} />
-    <View style={styles.container}>
-      <View style={styles.cartButtonContainer}>
-        <TouchableOpacity style={styles.cartButton} onPress={() => navigation.navigate('CartScreen', { cart, updateCart })}>
-          <Text style={styles.shopAllText}>Shop All</Text>
-          <View style={styles.cartIconContainer}>
-            <EmptyCart style={styles.cartIcon}></EmptyCart>
-            {cart.length > 0 && <Text style={styles.cartButtonText}>{cart.length}</Text>}
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      {loading && products.length === 0 ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <FlatList
-          data={products}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-          ListFooterComponent={renderFooter}
-          numColumns={2}
-          columnWrapperStyle={styles.row}
-          ListEmptyComponent={<Text style={styles.emptyMessage}>No products available</Text>}
-        />
-      )}
-
-      {selectedProduct && (
-        <Modal
-          animationType="none"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={closeModal}
-          style={styles.modlewapper}
-        >
-         
-          <Animated.View style={[styles.centeredView, { transform: [{ translateY: modalAnim }] }]}>
-     
-            <View style={styles.modalView}>
-            <View style={styles.overlay} />
-              <Text style={styles.modalText}>{selectedProduct.title}</Text>
-              <ScrollView>
-                {selectedProduct.variants.map((variant, index) => (
-                  <View key={index} style={styles.variantContainer}>
-                    <Image
-                      source={{ uri: variant.image?.src }}
-                      style={styles.variantImage}
-                      resizeMode="contain"
-                    />
-                    <View style={styles.variantDetails}>
-                      <Text style={styles.variantTitle}>
-                        {variant.title.length > 10 ? `${variant.title.slice(0, 10)}..` : variant.title}
-                      </Text>
-                      <Text style={styles.variantPrice}>
-                        {variant.priceV2.currencyCode} {variant.priceV2.amount}
-                      </Text>
-                    </View>
-                    <TouchableOpacity
-                      style={styles.addButton}
-                      onPress={() => addToCart({
-                        ...variant,
-                        productId: selectedProduct.id,
-                        productTitle: selectedProduct.title,
-                        productImage: selectedProduct.images[0]?.src,
-                      })}
-                    >
-                      <Text style={styles.addButtonText}>ADD</Text>
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </ScrollView>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={closeModal}
-              >
-                <Text style={styles.textStyle}>✕</Text>
-              </Pressable>
+      <ImageBackground source={images.background1} style={styles.backgroundImage}>
+        <View style={styles.overlay} />
+        <BottomTabMenu {...props} selected={3} />
+        <View style={styles.container}>
+          <View style={styles.cartButtonContainer}>
+            <View style={styles.cartButton} >
+              <Text style={styles.shopAllText}>Shop All</Text>
+              <TouchableOpacity onPress={() => navigation?.navigate(RouteName.CART_SCREEN, { cart, updateCart })}>
+                <View style={styles.cartIconContainer}>
+                  <EmptyCart style={styles.cartIcon}></EmptyCart>
+                  {cart.length > 0 && <Text style={styles.cartButtonText}>{cart.length}</Text>}
+                </View>
+              </TouchableOpacity>
             </View>
-          </Animated.View>
-        </Modal>
-      )}
-    </View>
-    </ImageBackground>
+          </View>
+
+          {loading && products.length === 0 ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            <FlatList
+              data={products}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderItem}
+              ListFooterComponent={renderFooter}
+              numColumns={2}
+              columnWrapperStyle={styles.row}
+              ListEmptyComponent={<Text style={styles.emptyMessage}>No products available</Text>}
+            />
+          )}
+
+          {selectedProduct && (
+            <Modal
+              animationType="none"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={closeModal}
+              style={styles.modlewapper}
+            >
+
+              <Animated.View style={[styles.centeredView, { transform: [{ translateY: modalAnim }] }]}>
+
+                <View style={styles.modalView}>
+                  <View style={styles.overlay} />
+                  <Text style={styles.modalText}>{selectedProduct.title}</Text>
+                  <ScrollView>
+                    {selectedProduct.variants.map((variant, index) => (
+                      <View key={index} style={styles.variantContainer}>
+                        <Image
+                          source={{ uri: variant.image?.src }}
+                          style={styles.variantImage}
+                          resizeMode="contain"
+                        />
+                        <View style={styles.variantDetails}>
+                          <Text style={styles.variantTitle}>
+                            {variant.title.length > 10 ? `${variant.title.slice(0, 10)}..` : variant.title}
+                          </Text>
+                          <Text style={styles.variantPrice}>
+                            {variant.priceV2.currencyCode} {variant.priceV2.amount}
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          style={styles.addButton}
+                          onPress={() => addToCart({
+                            ...variant,
+                            productId: selectedProduct.id,
+                            productTitle: selectedProduct.title,
+                            productImage: selectedProduct.images[0]?.src,
+                          })}
+                        >
+                          <Text style={styles.addButtonText}>ADD</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                  </ScrollView>
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={closeModal}
+                  >
+                    <Text style={styles.textStyle}>✕</Text>
+                  </Pressable>
+                </View>
+              </Animated.View>
+            </Modal>
+          )}
+        </View>
+      </ImageBackground>
     </Container>
   );
 };
@@ -295,8 +298,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    marginBottom:55,
-  
+    marginBottom: 55,
+
+  },
+  buttonClose: {
+    backgroundColor: '#f1cdbb',
+    width: '100%',
+    borderRadius: 10,
   },
   row: {
     justifyContent: 'space-between',
@@ -313,6 +321,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'space-between',
+    paddingHorizontal: 5
   },
   shopAllText: {
     fontSize: 16,
@@ -332,14 +341,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: '#000',
-    backgroundColor: '#f79f80', 
-    borderRadius: 10, 
+    backgroundColor: '#f79f80',
+    borderRadius: 10,
     padding: 5,
-    marginBottom: 5, 
+    marginBottom: 5,
   },
-  modlewapper:{
-    zIndex:999,
- 
+  modlewapper: {
+    zIndex: 999,
+
   },
   productContainer: {
     flex: 1,
@@ -513,31 +522,32 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
     marginTop: 22,
-    zIndex:999
+    zIndex: 999
   },
   modalView: {
     width: '100%',
     height: '70%',
-    backgroundColor: '#fff', 
+    backgroundColor: '#fff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { 
+    shadowOffset: {
       width: 0,
       height: 2,
     },
-    zIndex:999,
+    zIndex: 999,
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
   },
   textStyle: {
-    color: '#fff',
+    color: '#794619',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+    paddingVertical: 10,
   },
   modalText: {
     marginBottom: 15,

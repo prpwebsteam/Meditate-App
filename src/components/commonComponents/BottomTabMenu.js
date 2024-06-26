@@ -19,8 +19,8 @@ function BottomTabMenu(props) {
     {
       id: '2',
       name: '',
-      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="flower-tulip" color={Colors.btn_color} size={SF(25)} />,
-      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="flower-tulip" color={Colors.white} size={SF(25)} />
+      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="meditation" color={Colors.btn_color} size={SF(30)} />,
+      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="meditation" color={Colors.white} size={SF(30)} />
     },
     {
       id: '3',
@@ -31,8 +31,8 @@ function BottomTabMenu(props) {
     {
       id: '4',
       name: '',
-      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="shape" color={Colors.btn_color} size={SF(25)} />,
-      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="shape" color={Colors.white} size={SF(25)} />
+      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="shopping" color={Colors.btn_color} size={SF(25)} />,
+      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="shopping" color={Colors.white} size={SF(25)} />
     },
     {
       id: '5',

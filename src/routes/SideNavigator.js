@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteName } from '../routes';
 import {
-  HomeScreen, EditProfileScreen, AppSettingsScreen, HelpScreen, YogaScreen, CategoryScreen, MeditationScreen
+  HomeScreen, EditProfileScreen, AppSettingsScreen, HelpScreen, YogaScreen, CategoryScreen, ProductListScreen, MeditationScreen
 } from '../screens';
 import { AppHeader, ColorPicker } from '../components';
 import { Colors, Fonts, SF } from '../utils';
@@ -11,7 +11,6 @@ import VectorIcon from '../components/commonComponents/VectoreIcons';
 import { useTranslation } from "react-i18next";
 import { useToggle } from '../utils/ToggleContext';
 import ScanScreen from '../screens/ScanScreen/ScanScreen';
-import ProductListScreen from '../screens/ProductListScreen/ProductListScreen';
 
 const SideNavigator = () => {
   const { t } = useTranslation();
@@ -68,7 +67,7 @@ const SideNavigator = () => {
         options={({ navigation }) => ({
           headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Meditation_Text")} />,
           ...styleArray,
-          drawerIcon: ({ focused }) => drawerIcon(focused, "flower-tulip"),
+          drawerIcon: ({ focused }) => drawerIcon(focused, "meditation"),
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Meditation_Text"))
         })}
       />
@@ -86,7 +85,7 @@ const SideNavigator = () => {
         options={({ navigation }) => ({
           headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Category_Text")} />,
           ...styleArray,
-          drawerIcon: ({ focused }) => drawerIcon(focused, "shape"),
+          drawerIcon: ({ focused }) => drawerIcon(focused, "shopping"),
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Category_Text"))
         })}
       />
@@ -113,7 +112,7 @@ const SideNavigator = () => {
         options={({ navigation }) => ({
           headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Help_Text")} />,
           ...styleArray,
-          drawerIcon: ({ focused }) => drawerIcon(focused, "help-box"),
+          drawerIcon: ({ focused }) => drawerIcon(focused, "email"),
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Help_Text"))
         })}
       />
