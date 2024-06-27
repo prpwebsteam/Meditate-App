@@ -241,7 +241,7 @@ elevation: 6,
   leftArrow: {
     width: 20,
     height: 20,
-    tintColor: '#f1cdbb',
+    tintColor: '#f79f80',
   },
   ImagebottomContent: {
     flexDirection: 'row',
@@ -349,13 +349,13 @@ elevation: 6,
     borderRadius: SH(10),
   },
   playViewIcon: {
-    tintColor: '#f1cdbb',
+    tintColor: '#f79f80',
     width: SW(20),
     height: SH(20),
     marginHorizontal: SW(20)
   },
   playViewIcon2: {
-    tintColor: '#f1cdbb',
+    tintColor: '#f79f80',
     width: SW(20),
     height: SH(20),
   },

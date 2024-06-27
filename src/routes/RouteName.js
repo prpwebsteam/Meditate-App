@@ -35,5 +35,6 @@ const RouteName = {
     WISHLIST_SCREEN: 'WishlistScreen',
     ALL_CATEGORY_SCREEN: 'AllCategoryScreen',
     QUIZ_SCREEN: 'QuizScreen',
+    JOURNAL_SCREEN: 'JournalScreen',
 }
 export default RouteName;

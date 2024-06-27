@@ -240,7 +240,7 @@ const WorkoutDetailScreen = (props) => {
       },
       speedText: {
         color: Colors.black,
-        backgroundColor: '#f1cdbb',
+        backgroundColor: '#f79f80',
         borderRadius: 5,
         width: SW(35),
         height: SW(20),
@@ -276,7 +276,7 @@ const WorkoutDetailScreen = (props) => {
           <ScrollView style={{ backgroundColor: 'transparent', padding: SW(30), marginBottom: 100 }} contentContainerStyle={{ flexGrow: 1 }}>
             <View style={WorkoutDetailStyles.centerMainView}>
               <TouchableOpacity onPress={toggleWishlist} style={styles.rightImageStyle2}>
-                <Image source={wishlist.includes(currentTrack?.id.toString()) ? images.wishlist11 : images.wishlist1} style={{ width: SW(20), height: SW(20), tintColor: '#f1cdbb' }} />
+                <Image source={wishlist.includes(currentTrack?.id.toString()) ? images.wishlist11 : images.wishlist1} style={{ width: SW(20), height: SW(20), tintColor: '#f79f80' }} />
               </TouchableOpacity>
               {currentTrack ? (
                 <>

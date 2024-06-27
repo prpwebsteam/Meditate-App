@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
 
   },
   buttonClose: {
-    backgroundColor: '#f1cdbb',
+    backgroundColor: '#f79f80',
     width: '100%',
     borderRadius: 10,
   },
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
   shopAllText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#f1cdbb',
+    color: '#f79f80',
     marginRight: 10,
   },
   cartIconContainer: {
@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
   cartIcon: {
     fontSize: 35,
     color: '#000',
-    tintColor: '#f1cdbb',
+    tintColor: '#f79f80',
   },
   cartButtonText: {
     fontSize: 12,
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 14,
     fontWeight: '600',
-    color: '#f1cdbb',
+    color: '#f79f80',
     textAlign: 'left',
     justifyContent: 'flex-start',
     alignItems: 'flex-start'
@@ -428,12 +428,12 @@ const styles = StyleSheet.create({
   productPrice: {
     marginTop: 5,
     fontSize: 14,
-    color: '#f1cdbb',
+    color: '#f79f80',
   },
   productDescription: {
     marginTop: 5,
     fontSize: 12,
-    color: '#f1cdbb',
+    color: '#f79f80',
     textAlign: 'center',
   },
   sizeSelector: {
@@ -452,24 +452,24 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     borderWidth: 1,
-    borderColor: '#f1cdbb',
+    borderColor: '#f79f80',
     borderRadius: 6,
     paddingTop: 8,
     paddingBottom: 10,
     paddingHorizontal: 45,
-    color: '#f1cdbb',
+    color: '#f79f80',
     width: '100%',
     alignItems: 'center',
     fontWeight: 'bold'
   },
   addButtonTextVariant: {
     borderWidth: 1,
-    borderColor: '#f1cdbb',
+    borderColor: '#f79f80',
     borderRadius: 6,
     paddingTop: 8,
     paddingBottom: 8,
     paddingHorizontal: 45,
-    color: '#f1cdbb',
+    color: '#f79f80',
     width: '100%',
     alignItems: 'center',
     fontWeight: 'bold'
@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#f1cdbb',
+    borderColor: '#f79f80',
     borderRadius: 10,
     padding: 10,
     paddingBottom: 10,
@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
   },
   textvariant: {
     fontSize: 12,
-    color: '#f1cdbb'
+    color: '#f79f80'
   },
   carticon: {
     fontWeight: 'bold',

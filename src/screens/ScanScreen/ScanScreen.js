@@ -102,7 +102,7 @@ const ScanScreen = (props) => {
       },
       capture: {
         flex: 0,
-        backgroundColor: '#f1cdbb',
+        backgroundColor: '#f79f80',
         borderRadius: 5,
         color: '#794619',
         padding: 15,

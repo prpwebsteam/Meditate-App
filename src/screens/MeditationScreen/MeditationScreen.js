@@ -238,13 +238,13 @@ const MeditationScreen = (props) => {
         paddingHorizontal: SW(10),
       },
       trackIcon: {
-        tintColor: '#f1cdbb',
+        tintColor: '#f79f80',
         width: SH(30),
         height: SH(30),
         marginLeft: 10,
       },
       trackIcon2: {
-        tintColor: '#f1cdbb',
+        tintColor: '#f79f80',
         width: SH(30),
         height: SH(30),
       },

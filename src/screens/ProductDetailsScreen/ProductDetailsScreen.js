@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#f1cdbb',
+    color: '#f79f80',
     marginBottom: 8,
   },
   description: {
@@ -295,12 +295,12 @@ const styles = StyleSheet.create({
   },
   loadMoreText: {
     fontSize: 16, 
-    color: '#f1cdbb',
+    color: '#f79f80',
   },
   price: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#f1cdbb',
+    color: '#f79f80',
     marginBottom: 16,
   },
   tabsContainer: {
@@ -311,13 +311,13 @@ const styles = StyleSheet.create({
   tabButton: {
     padding: 10,
     borderWidth: 1,
-    borderColor: '#f1cdbb',
+    borderColor: '#f79f80',
     borderRadius: 5,
     backgroundColor: 'rgba(217, 217, 214, 0.2)',
     marginRight: 8,
   },
   selectedTabButton: {
-    backgroundColor: '#f1cdbb',
+    backgroundColor: '#f79f80',
   },
   tabButtonText: {
     color: '#794619',
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#121212',
   },
   addToCartButton: {
-    backgroundColor: '#f1cdbb',
+    backgroundColor: '#f79f80',
     padding: 12,
     borderRadius: 5,
     width: '48%',

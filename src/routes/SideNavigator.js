@@ -11,6 +11,7 @@ import VectorIcon from '../components/commonComponents/VectoreIcons';
 import { useTranslation } from "react-i18next";
 import { useToggle } from '../utils/ToggleContext';
 import ScanScreen from '../screens/ScanScreen/ScanScreen';
+import JournalScreen from '../screens/JournalScreen/JournalScreen';
 
 const SideNavigator = () => {
   const { t } = useTranslation();
@@ -105,6 +106,15 @@ const SideNavigator = () => {
           ...styleArray,
           drawerIcon: ({ focused }) => drawerIcon(focused, "cog"),
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Settings_Text"))
+        })}
+      />
+      <Drawer.Screen
+        name={RouteName.JOURNAL_SCREEN} component={JournalScreen}
+        options={({ navigation }) => ({
+          headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Journal")} />,
+          ...styleArray,
+          drawerIcon: ({ focused }) => drawerIcon(focused, "notebook"),
+          drawerLabel: ({ focused }) => drawerTitle(focused, t("Journal"))
         })}
       />
       <Drawer.Screen

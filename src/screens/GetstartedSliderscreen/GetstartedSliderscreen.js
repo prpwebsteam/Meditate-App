@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   continueButton: {
-    backgroundColor: '#f1cdbb',
+    backgroundColor: '#f79f80',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 25,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   iconContainer: {
-    backgroundColor: '#f1cdbb',
+    backgroundColor: '#f79f80',
     padding: 10,
     borderRadius: 50,
     justifyContent: 'center',

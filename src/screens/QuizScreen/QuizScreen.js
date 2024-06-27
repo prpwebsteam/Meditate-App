@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useTheme } from '@react-navigation/native';
 import { Colors, SW, SH, SF } from '../../utils';
 import { useTranslation } from 'react-i18next';
-import { BottomTabMenu, Container } from '../../components';
+import { BottomTabMenu, Container, VectoreIcons } from '../../components';
 import images from '../../index';
 import { RouteName } from '../../routes';
 import { SoundContext } from '../../utils/SoundContext';
@@ -16,6 +16,7 @@ const QuizScreen = ({ navigation }) => {
     const { t } = useTranslation();
     const [quizQuestions, setQuizQuestions] = useState([]);
     const [quizAnswers, setQuizAnswers] = useState({});
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -49,6 +50,20 @@ const QuizScreen = ({ navigation }) => {
         });
     };
 
+    const handleNextQuestion = () => {
+        if (currentQuestionIndex < quizQuestions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+        } else {
+            handleSubmitQuiz();
+        }
+    };
+
+    const handlePreviousQuestion = () => {
+        if (currentQuestionIndex > 0) {
+            setCurrentQuestionIndex(currentQuestionIndex - 1);
+        }
+    };
+
     const handleSubmitQuiz = () => {
         const relatedSongsMap = quizQuestions.reduce((acc, question) => {
             if (question.related_songs) {
@@ -57,13 +72,11 @@ const QuizScreen = ({ navigation }) => {
             return acc;
         }, {});
 
-        // Filter correct answers
         const correctAnswers = quizQuestions.filter((question) => {
             const correctOptionKey = `option${question.questions.answer}`;
             return quizAnswers[question.id] === correctOptionKey;
         });
 
-        // Collect related songs from correct answers
         const relatedSongs = correctAnswers.reduce((acc, question) => {
             const questionRelatedSongs = relatedSongsMap[question.id] || [];
             return acc.concat(questionRelatedSongs);
@@ -91,6 +104,8 @@ const QuizScreen = ({ navigation }) => {
         );
     }
 
+    const currentQuestion = quizQuestions[currentQuestionIndex];
+
     return (
         <Container>
             <ImageBackground source={images.background1} style={styles.backgroundImage}>
@@ -103,25 +118,36 @@ const QuizScreen = ({ navigation }) => {
                 </View>
                 <ScrollView style={styles.container}>
                     <View style={styles.container2}>
-                        {quizQuestions.map((question, index) => (
-                            <View key={question.id} style={styles.questionContainer}>
-                                <Text style={styles.questionText}>{`Q${index + 1}: ${question.title}`}</Text>
-                                {Object.keys(question.questions).filter(key => key.startsWith('option')).map((optionKey, optionIndex) => (
-                                    <View key={optionIndex} style={styles.optionContainer}>
-                                        <CheckBox
-                                            value={quizAnswers[question.id] === optionKey}
-                                            onValueChange={() => handleQuizAnswerChange(question.id, optionKey)}
-                                            style={styles.CheckBox}
-                                        />
-                                        <Text style={styles.optionText}>{question.questions[optionKey]}</Text>
-                                    </View>
-                                ))}
-                            </View>
-                        ))}
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={handleSubmitQuiz}>
-                                <Text style={styles.buttonText}>{t('Submit')}</Text>
+                        <View key={currentQuestion.id} style={styles.questionContainer}>
+                            <Text style={styles.questionText}>{`Q${currentQuestionIndex + 1}: ${currentQuestion.title}`}</Text>
+                            {Object.keys(currentQuestion.questions).filter(key => key.startsWith('option')).map((optionKey, optionIndex) => (
+                                <View key={optionIndex} style={styles.optionContainer}>
+                                    <CheckBox
+                                        value={quizAnswers[currentQuestion.id] === optionKey}
+                                        onValueChange={() => handleQuizAnswerChange(currentQuestion.id, optionKey)}
+                                        style={styles.CheckBox}
+                                    />
+                                    <Text style={styles.optionText}>{currentQuestion.questions[optionKey]}</Text>
+                                </View>
+                            ))}
+                        </View>
+                        <View style={styles.navigationContainer}>
+                            <TouchableOpacity
+                                style={[styles.arrowButton, currentQuestionIndex === 0 && styles.disabledArrow]}
+                                onPress={handlePreviousQuestion}
+                                disabled={currentQuestionIndex === 0}
+                            >
+                                <VectoreIcons icon="MaterialCommunityIcons" name="chevron-left" color={Colors.white} size={SF(25)} />
                             </TouchableOpacity>
+                            {currentQuestionIndex < quizQuestions.length - 1 ? (
+                                <TouchableOpacity style={styles.arrowButton} onPress={handleNextQuestion}>
+                                    <VectoreIcons icon="MaterialCommunityIcons" name="chevron-right" color={Colors.white} size={SF(25)} />
+                                </TouchableOpacity>
+                            ) : (
+                                <TouchableOpacity style={styles.submitButton} onPress={handleSubmitQuiz}>
+                                    <Text style={styles.submitButtonText}>{t('Submit')}</Text>
+                                </TouchableOpacity>
+                            )}
                         </View>
                     </View>
                 </ScrollView>
@@ -138,13 +164,12 @@ const styles = StyleSheet.create({
     },
     container2: {
         flex: 1,
-        padding: SH(20),
-        paddingBottom: 50
+        paddingBottom: 10
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#f1cdbb',
+        backgroundColor: '#f79f80',
         paddingVertical: 10,
         paddingTop: 10,
         paddingHorizontal: 20,
@@ -152,7 +177,7 @@ const styles = StyleSheet.create({
     backArrow: {
         width: SH(20),
         height: SH(20),
-        tintColor: '#794619',
+        tintColor: '#fff',
         marginTop: 3,
         marginRight: SW(10),
     },
@@ -165,8 +190,8 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     CheckBox:{
-color:'#fff',
-borderColor:'#FFF'
+        color:'#fff',
+        borderColor:'#FFF'
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,
@@ -183,6 +208,9 @@ borderColor:'#FFF'
     },
     questionContainer: {
         marginBottom: SH(30),
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: 'rgba(217, 217, 214, 0.15)',
     },
     questionText: {
         fontSize: SF(18),
@@ -199,18 +227,28 @@ borderColor:'#FFF'
         fontSize: SF(16),
         color: 'white',
     },
-    buttonContainer: {
+    navigationContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
-    button: {
-        backgroundColor: '#f1cdbb',
+    arrowButton: {
+        paddingVertical: SH(10),
+        paddingHorizontal: SH(20),
+        alignItems: 'center',
+    },
+    disabledArrow: {
+        opacity: 0.5,
+    },
+    submitButton: {
+        backgroundColor: '#f79f80',
         paddingVertical: SH(10),
         paddingHorizontal: SH(20),
         borderRadius: SH(5),
-        width: '100%',
         alignItems: 'center',
+        width: '50%',
     },
-    buttonText: {
+    submitButtonText: {
         color: '#794619',
         fontSize: SF(16),
         fontWeight: 'bold',
