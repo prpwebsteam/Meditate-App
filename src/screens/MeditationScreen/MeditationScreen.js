@@ -304,9 +304,11 @@ const MeditationScreen = (props) => {
               <AnimatedCircularProgress
                 size={200}
                 width={10}
-                fill={remainingTime ? (remainingTime / timerDuration) * 100 : 0}
-                tintColor={Colors.primary}
-                backgroundColor={Colors.theme_backgound}>
+                fill={remainingTime ? 100 - (remainingTime / timerDuration) * 100 : 0}
+                tintColor={Colors.theme_backgound}
+                backgroundColor={Colors.black}
+                rotation={-90} 
+              >
                 {
                   () => (
                     <View>
@@ -356,7 +358,7 @@ const MeditationScreen = (props) => {
             </View>
           </View>
         </ScrollView>
-      </ImageBackground> 
+      </ImageBackground>
     </Container>
   );
 };

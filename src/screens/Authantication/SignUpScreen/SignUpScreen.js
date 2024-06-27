@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, StatusBar, ScrollView, Alert } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Authentication } from '../../../styles';
 import { Button, Container, Spacing, Input } from '../../../components';
 import images from '../../../index';
@@ -46,6 +46,26 @@ const SignUpScreen = (props) => {
     }
   };
 
+  const styles = StyleSheet.create({ 
+    loginButtonContainer: {
+      width: '100%',
+      alignItems: 'center',
+    },
+    loginButton: {
+      backgroundColor: Colors.theme_backgound_second,
+      padding: 10,
+      borderRadius: 10,
+      width: '87%',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    loginButtonText: {
+      color: Colors.btn_color,
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+  })
+  
   return (
     <Container>
       <ImageBackground source={images.loginBG} resizeMode='cover' style={Authentications.setbgMainView}>
@@ -172,19 +192,24 @@ const SignUpScreen = (props) => {
                 disabled={loading}
               />
             </View>
-            <Spacing space={SH(25)} />
-            <TouchableOpacity onPress={() => navigation.navigate(RouteName.LOGIN_SCREEN)}>
-              <Text style={{ textAlign: 'center', ...Authentications.signupText }}>
-                {t("Already have an account?")}{' '}
-                <Text style={{ color: Colors.theme_backgound, fontWeight: 'bold'}}>{t("Login")}</Text>
-              </Text>
-            </TouchableOpacity>
+            <Spacing space={SH(45)} />
+            <Text style={{ textAlign: 'center', ...Authentications.signupText }}>
+              {t("Already have an account?")}{' '}
+            </Text>
+            <View style={styles.loginButtonContainer}>
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={() => navigation.navigate(RouteName.LOGIN_SCREEN)}
+              >
+                <Text style={styles.loginButtonText}>{t("Login")}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <Spacing space={SH(25)} />
         </ScrollView>
       </ImageBackground>
     </Container>
   );
-}; 
+};
 
 export default SignUpScreen;

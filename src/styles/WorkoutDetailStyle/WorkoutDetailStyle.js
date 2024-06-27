@@ -51,7 +51,7 @@ export default WorkoutDetailStyle = (Colors) => StyleSheet.create({
   },
   leftArrow:{
     width:SW(60),
-    tintColor: '#794619',
+    tintColor: '#fff',
   },
   ImagebottomContent:{
     flexDirection:'row',

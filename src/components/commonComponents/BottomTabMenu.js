@@ -13,32 +13,32 @@ function BottomTabMenu(props) {
     {
       id: '1',
       name: '',
-      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="home" color={Colors.btn_color} size={SF(25)} />,
-      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="home" color={Colors.white} size={SF(25)} />
+      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="home" color={Colors.active_color} size={SF(25)} />,
+      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="home" color={Colors.active_color} size={SF(25)} />
     },
     {
       id: '2',
       name: '',
-      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="meditation" color={Colors.btn_color} size={SF(30)} />,
-      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="meditation" color={Colors.white} size={SF(30)} />
+      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="meditation" color={Colors.active_color} size={SF(30)} />,
+      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="meditation" color={Colors.active_color} size={SF(30)} />
     },
     {
       id: '3',
       name: '',
-      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="qrcode-scan" color={Colors.btn_color} size={SF(25)} />,
-      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="qrcode-scan" color={Colors.white} size={SF(25)} />
+      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="qrcode-scan" color={Colors.active_color} size={SF(25)} />,
+      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="qrcode-scan" color={Colors.active_color} size={SF(25)} />
     },
     {
       id: '4',
       name: '',
-      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="shopping" color={Colors.btn_color} size={SF(25)} />,
-      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="shopping" color={Colors.white} size={SF(25)} />
+      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="shopping" color={Colors.active_color} size={SF(25)} />,
+      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="shopping" color={Colors.active_color} size={SF(25)} />
     },
     {
       id: '5',
       name: '',
-      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="account" color={Colors.white} size={SF(25)} />,
-      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="account" color={Colors.white} size={SF(25)} />
+      activeIcon: <VectoreIcons icon="MaterialCommunityIcons" name="account" color={Colors.active_color} size={SF(25)} />,
+      inactiveIcon: <VectoreIcons icon="MaterialCommunityIcons" name="account" color={Colors.active_color} size={SF(25)} />
     },
 
   ];

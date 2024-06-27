@@ -48,6 +48,7 @@ const QuizScreen = ({ navigation }) => {
             ...quizAnswers,
             [questionId]: answer,
         });
+        setTimeout(handleNextQuestion, 1000);
     };
 
     const handleNextQuestion = () => {
@@ -114,7 +115,7 @@ const QuizScreen = ({ navigation }) => {
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image source={images.backArrow} style={styles.backArrow} />
                     </TouchableOpacity>
-                    <Text style={[styles.title, { color: '#794619' }]}>{t("Quiz")}</Text>
+                    <Text style={[styles.title, { color: '#fff' }]}>{t("Quiz")}</Text>
                 </View>
                 <ScrollView style={styles.container}>
                     <View style={styles.container2}>
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
         width: '50%',
     },
     submitButtonText: {
-        color: '#794619',
+        color: '#fff',
         fontSize: SF(16),
         fontWeight: 'bold',
     },

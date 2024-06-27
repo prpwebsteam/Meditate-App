@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     addButtonText: {
-        color: '#794619',
+        color: '#fff',
         fontSize: 16,
     },
     entryItem: {

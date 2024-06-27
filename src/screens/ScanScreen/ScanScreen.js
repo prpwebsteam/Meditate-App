@@ -104,7 +104,7 @@ const ScanScreen = (props) => {
         flex: 0,
         backgroundColor: '#f79f80',
         borderRadius: 5,
-        color: '#794619',
+        color: '#fff',
         padding: 15,
         paddingHorizontal: 20,
         alignSelf: 'center',
@@ -122,7 +122,7 @@ const ScanScreen = (props) => {
       },
       permissionButtonText: {
         fontSize: 16,
-        color: '#794619',
+        color: '#000',
       },
     }), [Colors]);
 
@@ -160,7 +160,7 @@ const ScanScreen = (props) => {
           )
         )}
         <TouchableOpacity onPress={takePicture} style={styles.capture}>
-          <Text style={{ fontSize: 18, color: '#794619', fontWeight: 'bold', paddingHorizontal: 50 }}> Scan </Text>
+          <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold', paddingHorizontal: 50 }}> Scan </Text>
         </TouchableOpacity>
         <BottomTabMenu {...props} selected={2} />
       </ImageBackground>

@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
   carticon: {
     fontWeight: 'bold',
     fontSize: 30,
-    tintColor: '#794619',
+    tintColor: '#fff',
     textAlign: 'center',
   },
   cartButtonText: {
@@ -543,7 +543,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   textStyle: {
-    color: '#794619',
+    color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',

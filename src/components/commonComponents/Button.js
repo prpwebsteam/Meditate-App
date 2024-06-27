@@ -21,7 +21,8 @@ function Button(props) {
       },
       buttonTextStyle: {
         color: Colors.btn_color,
-        fontSize: SF(20),
+        fontSize: SF(16),
+        fontWeight: 'bold',
         fontFamily:Fonts.RobotoCondensed_Regular
       },
       buttonViewStyle: {

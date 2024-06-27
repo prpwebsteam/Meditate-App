@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f79f80',
   },
   tabButtonText: {
-    color: '#794619',
+    color: '#fff',
   },
   quantityContainer: {
     flexDirection: 'row',
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonText: {
-    color: '#794619',
+    color: '#fff',
     fontWeight: 'bold',
   },
   soldOutText: {

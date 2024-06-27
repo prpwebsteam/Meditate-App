@@ -328,8 +328,8 @@ const WorkoutDetailScreen = (props) => {
                   <View style={{ alignItems: 'center', width: '100%' }}>
                     <View style={{ alignItems: 'center', width: '80%', marginRight: 45 }}>
                       <View style={WorkoutDetailStyles.playTimeView}>
-                        <Text style={WorkoutDetailStyles.playTimeText}>{formatTime(currentTime || 0)}</Text>
-                        <Text style={[WorkoutDetailStyles.playTimeText, WorkoutDetailStyles.off_gray]}>{formatTime(duration)}</Text>
+                        <Text style={[WorkoutDetailStyles.playTimeText, {marginLeft: -10}]}>{formatTime(currentTime || 0)}</Text>
+                        <Text style={[WorkoutDetailStyles.playTimeText, WorkoutDetailStyles.off_gray, {marginRight: -10}]}>{formatTime(duration || 0)}</Text>
                       </View>
                       <View style={WorkoutDetailStyles.counterMainViewStart}>
                         <View style={[WorkoutDetailStyles.counterMainViewStartActive, { width: `${(currentTime / (duration || 1)) * 100}%` }]}></View>

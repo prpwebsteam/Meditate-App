@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, StatusBar, ScrollView, Alert } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Authentication } from '../../../styles';
 import { Button, Container, Spacing, Input } from '../../../components';
 import images from '../../../index';
@@ -45,6 +45,26 @@ const LoginScreen = (props) => {
       setLoading(false);
     }
   };
+
+  const styles = StyleSheet.create({ 
+    loginButtonContainer: {
+      width: '100%',
+      alignItems: 'center',
+    },
+    loginButton: {
+      backgroundColor: Colors.theme_backgound_second,
+      padding: 10,
+      borderRadius: 10,
+      width: '87%',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    loginButtonText: {
+      color: Colors.btn_color,
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+  })
 
   return (
     <Container>
@@ -95,13 +115,20 @@ const LoginScreen = (props) => {
                 disabled={loading}
               />
             </View>
-            <Spacing space={SH(25)} />
-            <TouchableOpacity onPress={() => navigation.navigate(RouteName.SIGNUP_SCREEN)}>
-              <Text style={{ textAlign: 'center', ...Authentications.signupText }}>
-                {t("Don't have an account?")}{' '}
-                <Text style={{ color: Colors.theme_backgound, fontWeight: 'bold' }}>{t("Sign Up")}</Text>
-              </Text>
-            </TouchableOpacity>
+            <Spacing space={SH(45)} />
+            <Text style={{ textAlign: 'center', ...Authentications.signupText }}>
+              {t("Don't have an account?")}
+            </Text>
+
+            
+            <View style={styles.loginButtonContainer}>
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={() => navigation.navigate(RouteName.SIGNUP_SCREEN)}
+              >
+                <Text style={styles.loginButtonText}>{t("SignUp")}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <Spacing space={SH(25)} />
         </ScrollView>

@@ -7,6 +7,7 @@ const SoundProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(null);
   const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0); // Initialize duration with 0
   const [trackList, setTrackList] = useState([]);
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
   const sound = useRef(null);
@@ -42,9 +43,11 @@ const SoundProvider = ({ children }) => {
       });
       setIsPlaying(true);
       startProgressUpdater();
+      setDuration(sound.current.getDuration()); // Update duration here
     });
     setCurrentTrack(track);
     setCurrentTime(0);
+    setDuration(0); // Reset duration while the new track is loading
   };
 
   const startProgressUpdater = () => {
@@ -107,7 +110,7 @@ const SoundProvider = ({ children }) => {
 
   const fastForward = () => {
     if (sound.current) {
-      const newTime = Math.min(currentTime + 10, sound.current.getDuration());
+      const newTime = Math.min(currentTime + 10, duration);
       seekTo(newTime);
     }
   };
@@ -146,7 +149,7 @@ const SoundProvider = ({ children }) => {
       playNextTrack,
       playPreviousTrack,
       currentTime,
-      duration: sound.current ? sound.current.getDuration() : 0,
+      duration,
       fastForward,
       rewind,
       setSpeed,

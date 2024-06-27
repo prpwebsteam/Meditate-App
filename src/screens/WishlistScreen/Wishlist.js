@@ -128,7 +128,7 @@ const Wishlist = ({ navigation }) => {
         },
         backArrow: {
             width: SH(20),
-            tintColor: '#794619',
+            tintColor: '#fff',
             height: SH(20),
             marginRight: SW(10),
             marginTop: 5
