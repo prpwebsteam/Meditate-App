@@ -359,8 +359,8 @@ const WorkoutDetailScreen = (props) => {
                   <View style={{ alignItems: 'center', width: '100%' }}>
                     <View style={{ alignItems: 'center', width: '80%', marginRight: 45 }}>
                       <View style={WorkoutDetailStyles.playTimeView}>
-                        <Text style={[WorkoutDetailStyles.playTimeText, {marginLeft: -10}]}>{formatTime(currentTime || 0)}</Text>
-                        <Text style={[WorkoutDetailStyles.playTimeText, WorkoutDetailStyles.off_gray, {marginRight: -10}]}>{formatTime(duration || 0)}</Text>
+                        <Text style={[WorkoutDetailStyles.playTimeText, { marginLeft: -10 }]}>{formatTime(currentTime || 0)}</Text>
+                        <Text style={[WorkoutDetailStyles.playTimeText, WorkoutDetailStyles.off_gray, { marginRight: -10 }]}>{formatTime(duration || 0)}</Text>
                       </View>
                       <View style={WorkoutDetailStyles.counterMainViewStart}>
                         <View style={[WorkoutDetailStyles.counterMainViewStartActive, { width: `${(currentTime / (duration || 1)) * 100}%` }]}></View>
@@ -420,17 +420,9 @@ const WorkoutDetailScreen = (props) => {
               <View>
                 <Text style={[WorkoutDetailStyles.boxText]}>{t("Similar Music")}</Text>
                 <View style={WorkoutDetailStyles.similarMusicContainer}>
-                  {similarTracks.length === 0 ? (
-                    <Text style={{
-                      color: Colors.white,
-                      fontSize: SH(16),
-                      textAlign: 'center',
-                      marginVertical: SH(20),
-                      marginHorizontal: SH(20),
-                    }}>{t("No similar music found")}</Text>
-                  ) : (
+                  {
                     similarTracks.map((item) => (
-                      <TouchableOpacity key={item.id} onPress={() => handlePlayTrack(item)} style={WorkoutDetailStyles.trackItem}>
+                      <View key={item.id} style={WorkoutDetailStyles.trackItem}>
                         {item.thumbnail ? (
                           <Image source={{ uri: item.thumbnail }} style={WorkoutDetailStyles.trackThumbnail} />
                         ) : (
@@ -440,14 +432,18 @@ const WorkoutDetailScreen = (props) => {
                           <Text style={WorkoutDetailStyles.trackTitle}>{item.title}</Text>
                           <Text style={WorkoutDetailStyles.singer}>{item.artist?.title || "Unknown Artist"}</Text>
                         </View>
-                        {currentTrack?.id === item.id && isPlaying ? (
-                          <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
-                        ) : (
-                          <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
-                        )}
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => currentTrack?.id === item.id && isPlaying ? pauseTrack() : handlePlayTrack(item)}
+                        >
+                          {currentTrack?.id === item.id && isPlaying ? (
+                            <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
+                          ) : (
+                            <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
+                          )}
+                        </TouchableOpacity>
+                      </View>
                     ))
-                  )}
+                  }
                 </View>
               </View>
             )}

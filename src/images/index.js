@@ -25,7 +25,7 @@ const images = {
     dummyImage: require('./dummy2.png'),
     dummyImage2: require('./dummy2.png'),
     loginBG: require('./login_bg.jpg'),
-    screenbg: require('./screen.jpg'),
+    screenbg: require('./screen.gif'),
     logo: require('./lottieAnimation/logo-2.png'), 
     slide1: require('./lottieAnimation/logo.png'),
     slide2: require('./lottieAnimation/slide2.json'),

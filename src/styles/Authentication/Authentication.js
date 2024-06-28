@@ -54,9 +54,9 @@ export default Authentication = (Colors) => StyleSheet.create({
     width: '70%'
   },
   buttonView: {
-    paddingHorizontal: SW(20),
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    width: '100%',
+    justifyContent: 'center'
   },
   yourSelfRoundImage: {
     width: SW(30),
@@ -119,7 +119,7 @@ export default Authentication = (Colors) => StyleSheet.create({
     fontSize: SF(12),
     fontFamily: Fonts.Poppins_Medium,
     paddingRight: SW(15),
-    marginTop: -20, 
+    marginTop: -10, 
   },
   signupText: {
     color: Colors.white,

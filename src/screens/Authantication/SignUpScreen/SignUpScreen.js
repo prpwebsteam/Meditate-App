@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Authentication } from '../../../styles';
 import { Button, Container, Spacing, Input, SweetAlertModal } from '../../../components';
 import images from '../../../index';
@@ -21,6 +21,27 @@ const SignUpScreen = (props) => {
   const [age, setAge] = useState('');
   const [loading, setLoading] = useState(false);
   const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 5;
+  };
+
+  const validateForm = () => {
+    return (
+      inputName.length > 0 &&
+      validateEmail(inputEmail) &&
+      validatePassword(inputPassword) &&
+      gender.length > 0 &&
+      age.length > 0
+    );
+  };
 
   const handleSignUp = async () => {
     setLoading(true);
@@ -45,7 +66,25 @@ const SignUpScreen = (props) => {
     }
   };
 
-  const styles = StyleSheet.create({ 
+  const handleEmailChange = (email) => {
+    setInputEmail(email);
+    if (!validateEmail(email)) {
+      setEmailError(t("Invalid email address"));
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const handlePasswordChange = (password) => {
+    setInputPassword(password);
+    if (!validatePassword(password)) {
+      setPasswordError(t("Password must be at least 5 characters"));
+    } else {
+      setPasswordError('');
+    }
+  };
+
+  const styles = StyleSheet.create({
     loginButtonContainer: {
       width: '100%',
       alignItems: 'center',
@@ -63,8 +102,27 @@ const SignUpScreen = (props) => {
       fontWeight: 'bold',
       fontSize: 16,
     },
-  })
-  
+    signUpButton: {
+      backgroundColor: validateForm() ? Colors.theme_backgound_second : 'gray',
+      padding: 10,
+      borderRadius: 10,
+      width: '87%',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    signUpButtonText: {
+      color: Colors.btn_color,
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+    errorText: {
+      color: 'red',
+      fontSize: SF(12),
+      marginTop: -5,
+      marginLeft: 5
+    }
+  });
+
   return (
     <Container>
       <ImageBackground source={images.loginBG} resizeMode='cover' style={Authentications.setbgMainView}>
@@ -98,23 +156,29 @@ const SignUpScreen = (props) => {
             <Input
               title={t("Email")}
               placeholder={t("Email")}
-              onChangeText={setInputEmail}
+              onChangeText={handleEmailChange}
               value={inputEmail}
               keyboardType='email-address'
               autoCompleteType="email"
               containerStyle={Authentications.PassWordStyle}
               inputStyle={{ fontSize: SF(12) }}
             />
+            <View style={{ paddingLeft: 10 }}>
+              {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+            </View>
             <Spacing space={SH(20)} />
             <Input
               title={t("Password_Text")}
               placeholder={t("Password_Text")}
-              onChangeText={setInputPassword}
+              onChangeText={handlePasswordChange}
               value={inputPassword}
               secureTextEntry={true}
               containerStyle={Authentications.PassWordStyle}
               inputStyle={{ fontSize: SF(12) }}
             />
+            <View style={{ paddingLeft: 10 }}>
+              {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+            </View>
             <Spacing space={SH(20)} />
             <Text style={{
               fontSize: SF(16), color: Colors.white,
@@ -184,12 +248,15 @@ const SignUpScreen = (props) => {
             />
             <Spacing space={SH(30)} />
             <View style={Authentications.buttonView}>
-              <Button
-                title={loading ? t("Signing_Up") : t("Sign_Up")}
-                buttonStyle={{ ...Authentications.nextButton, width: '100%' }}
-                onPress={handleSignUp}
-                disabled={loading}
-              />
+              <TouchableOpacity
+                style={styles.signUpButton}
+                onPress={validateForm() && !loading ? handleSignUp : null}
+                disabled={loading || !validateForm()}
+              >
+                <Text style={styles.signUpButtonText}>
+                  {loading ? t("Signing_Up") : t("Sign_Up")}
+                </Text>
+              </TouchableOpacity>
             </View>
             <Spacing space={SH(45)} />
             <Text style={{ textAlign: 'center', ...Authentications.signupText }}>
