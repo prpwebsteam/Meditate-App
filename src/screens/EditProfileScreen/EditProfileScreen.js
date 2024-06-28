@@ -7,6 +7,7 @@ import { SH, SW } from '../../utils';
 import { useTranslation } from "react-i18next";
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RouteName } from '../../routes';
 
 const EditProfileScreen = (props) => {
   const { Colors } = useTheme();
@@ -52,7 +53,7 @@ const EditProfileScreen = (props) => {
       alignItems: 'center',
     },
     button: {
-      width: '49%',
+      width: '48%',
       alignItems: 'center',
       paddingVertical: 10,
       borderRadius: 5,
@@ -102,12 +103,12 @@ const EditProfileScreen = (props) => {
       fontWeight: 'bold'
     },
     editButton: {
-      alignSelf: 'center',
-      marginVertical: 10,
-      paddingHorizontal: 50,
+      width: '48%',
+      alignItems: 'center',
       paddingVertical: 10,
+      borderRadius: 5,
       backgroundColor: Colors.theme_backgound,
-      borderRadius: 5
+      marginBottom: 20,
     },
     inputField: {
       marginBottom: -10,
@@ -242,20 +243,21 @@ const EditProfileScreen = (props) => {
                 </TouchableOpacity>
               </View>
             ) : (
-              <TouchableOpacity
-                style={[styles.editButton]}
-                onPress={() => setIsEditing(true)}
-              >
-                <Text style={styles.tableCell2}>Edit Details</Text>
-              </TouchableOpacity>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: SW(30) }}>
+                <TouchableOpacity
+                  style={[styles.editButton]}
+                  onPress={() => setIsEditing(true)}
+                >
+                  <Text style={styles.buttonText}>{t("Edit Details")}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.editButton]}
+                  onPress={() => navigation.navigate(RouteName.HOME_SCREEN)}
+                >
+                  <Text style={styles.buttonText}>{t("View Orders")}</Text>
+                </TouchableOpacity>
+              </View>
             )}
-
-            <TouchableOpacity
-              style={[styles.editButton]}
-              onPress={() => navigation.navigate('')}
-            >
-              <Text style={styles.buttonText}>{t("View Orders")}</Text>
-            </TouchableOpacity>
           </View>
         </ScrollView>
       </ImageBackground>
