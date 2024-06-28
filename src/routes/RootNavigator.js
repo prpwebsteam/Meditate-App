@@ -39,7 +39,7 @@ const SplashScreenNavigator = ({ navigation }) => {
         } else {
           navigation?.replace(RouteName.SIGNUP_SCREEN);
         }
-      }, 3000);
+      }, 8000);
     };
 
     checkAuthToken();

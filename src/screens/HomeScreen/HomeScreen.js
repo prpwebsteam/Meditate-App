@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import axios from 'axios';
 import { SoundContext } from '../../utils/SoundContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
 
 const HomeScreen = (props) => {
   const { Colors } = useTheme();
@@ -26,12 +27,8 @@ const HomeScreen = (props) => {
   const [greeting, setGreeting] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState({});
-
-  useEffect(() => {
-    console.log("tagData:-------", tagData);
-    console.log("workoutData:-------", workoutData);
-  }, [tagData, workoutData]);
-
+  const customer = useSelector(state => state.auth);
+console.log("Bhairav:----", customer)
   const fetchTags = async () => {
     try {
       const response = await axios.get('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/tags');
@@ -332,7 +329,7 @@ const HomeScreen = (props) => {
           <View style={HomeStyles.textcenterview}>
             <Spacing space={SH(20)} />
             <View style={HomeStyles.userIconView}>
-              <Text style={HomeStyles.userTitle}>{t("Hey Bhairav, ")}{greeting}</Text>
+              <Text style={HomeStyles.userTitle}>{t(`Hey ${customer?.customer?.firstName || ""}, `)}{greeting}</Text>
             </View>
             <Spacing space={SH(20)} />
             <Spacing space={SH(30)} />
