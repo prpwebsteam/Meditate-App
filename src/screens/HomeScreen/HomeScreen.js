@@ -20,6 +20,11 @@ const HomeScreen = (props) => {
   const { navigation } = props;
   const { t } = useTranslation();
   const { isPlaying, currentTrack, pauseTrack, resumeTrack, currentTime, duration } = useContext(SoundContext);
+  const [customerDetail, setCustomerDetail] = useState('');
+
+  useEffect(async () => {
+    setCustomerDetail(JSON.parse(await AsyncStorage.getItem('customer')));
+  }, [])
 
   const [workoutData, setWorkoutData] = useState([]);
   const [tagData, setTagData] = useState([]);
@@ -27,8 +32,7 @@ const HomeScreen = (props) => {
   const [greeting, setGreeting] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState({});
-  const customer = useSelector(state => state.auth);
-console.log("Bhairav:----", customer)
+  console.log("Bhairav:----", customerDetail)
   const fetchTags = async () => {
     try {
       const response = await axios.get('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/tags');
@@ -329,7 +333,7 @@ console.log("Bhairav:----", customer)
           <View style={HomeStyles.textcenterview}>
             <Spacing space={SH(20)} />
             <View style={HomeStyles.userIconView}>
-              <Text style={HomeStyles.userTitle}>{t(`Hey ${customer?.customer?.firstName || ""}, `)}{greeting}</Text>
+              <Text style={HomeStyles.userTitle}>{t(`Hey ${customerDetail?.firstName || ""}, `)}{greeting}</Text>
             </View>
             <Spacing space={SH(20)} />
             <Spacing space={SH(30)} />

@@ -14,11 +14,10 @@ import RootNavigator from './src/routes/RootNavigator';
 const App = () => {
   return (
     <Provider store={store}>
-      
-    <PersistGate loading={null} persistor={persistor}>
-    <RootNavigator />
-    </PersistGate>
-  </Provider>
+      <PersistGate loading={null} persistor={persistor}>
+        <RootNavigator />
+      </PersistGate>
+    </Provider>
   );
 };
 
