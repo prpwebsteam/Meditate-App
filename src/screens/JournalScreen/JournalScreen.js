@@ -19,7 +19,6 @@ const TodoScreen = () => {
             if (storedTodos) {
                 setTodos(JSON.parse(storedTodos));
                 
-        console.log("todoEntries:-",storedTodos);
             }
         } catch (error) {
             console.error('Failed to load todos.', error);

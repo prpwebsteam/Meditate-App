@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground, StyleSheet, Share } from 'react-native';
 import { WorkoutDetailStyle } from '../../styles';
 import { Button, Container, Spacing, LottieIcon } from '../../components';
 import images from '../../index';
@@ -18,7 +18,6 @@ const WorkoutDetailScreen = (props) => {
   const { categoryId, categoryName, tagId, tagName, track, fromRecentlyPlayed, relatedSongs } = route.params;
   const { t } = useTranslation();
   const [wishlist, setWishlist] = useState([]);
-
 
   const {
     isPlaying,
@@ -150,9 +149,30 @@ const WorkoutDetailScreen = (props) => {
     }
   };
 
-  useEffect(() => {
-    console.log("wishlist:-------", wishlist);
-  }, [wishlist]);
+  const shareSong = async () => {
+    if (!currentTrack) {
+      console.error("No track is currently playing");
+      return;
+    }
+
+    try {
+      const result = await Share.share({
+        message: `Check out this song: ${currentTrack.title} by ${currentTrack.artist?.title}. Listen here: ${currentTrack.url}`,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log('Shared with activity type of:', result.activityType);
+        } else {
+          console.log('Shared');
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log('Dismissed');
+      }
+    } catch (error) {
+      console.error('Error sharing song:', error);
+    }
+  };
 
   useEffect(() => {
     fetchWishlistItems();
@@ -226,7 +246,15 @@ const WorkoutDetailScreen = (props) => {
         marginRight: SW(20),
         position: 'absolute',
         top: SH(15),
-        right: SW(7),
+        right: SW(10),
+      },
+      shareImageStyle: {
+        width: SW(10),
+        height: SW(10),
+        marginRight: SW(20),
+        position: 'absolute',
+        top: SH(15),
+        left: SW(15),
       },
       speedButton: {
         width: SW(35),
@@ -278,6 +306,9 @@ const WorkoutDetailScreen = (props) => {
               <TouchableOpacity onPress={toggleWishlist} style={styles.rightImageStyle2}>
                 <Image source={wishlist.includes(currentTrack?.id.toString()) ? images.wishlist11 : images.wishlist1} style={{ width: SW(20), height: SW(20), tintColor: '#f79f80' }} />
               </TouchableOpacity>
+              <TouchableOpacity onPress={shareSong} style={styles.shareImageStyle}>
+                <Image source={images.shareIcon} style={{ width: SW(20), height: SW(20), tintColor: '#f79f80' }} />
+              </TouchableOpacity>
               {currentTrack ? (
                 <>
                   <View style={styles.musicCard}>
@@ -306,7 +337,7 @@ const WorkoutDetailScreen = (props) => {
                   <Spacing space={SH(20)} />
                   <View style={WorkoutDetailStyles.playView}>
                     <TouchableOpacity onPress={rewind}>
-                      <Image source={images.rewind_button} style={WorkoutDetailStyles.playViewIcon2} />
+                      <Image source={images.rewind_button} style={WorkoutDetailStyles.playViewIcon3} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={playPreviousTrack}>
                       <Image source={images.backward} style={WorkoutDetailStyles.playViewIcon} />

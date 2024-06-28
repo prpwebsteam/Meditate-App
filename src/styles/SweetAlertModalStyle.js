@@ -72,6 +72,7 @@ export default SweetAlertModalStyle = (Colors) => StyleSheet.create({
     },
     loginSuccessIcon:{
         width:SW(180),
-        alignSelf:'center'
+        alignSelf:'center',
+        tintColor: 'black'
     }
 });

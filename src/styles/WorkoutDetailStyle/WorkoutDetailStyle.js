@@ -356,8 +356,16 @@ elevation: 6,
   },
   playViewIcon2: {
     tintColor: '#f79f80',
-    width: SW(20),
-    height: SH(20),
+    width: SW(30),
+    height: SH(30),
+  },
+  playViewIcon3: {
+    tintColor: '#f79f80',
+    width: SW(25),
+    height: SH(25),
+  },
+  mirrorImage: {
+    transform: [{ scaleX: -1 }]
   },
   playViewIconCenter: {
     tintColor: Colors.btn_color,

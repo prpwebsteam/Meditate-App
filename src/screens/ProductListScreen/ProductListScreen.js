@@ -24,8 +24,7 @@ import { RouteName } from '../../routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width, height } = Dimensions.get('window');
 
-const ProductListScreen = ({ props }) => {
-  const navigation = useNavigation();
+const ProductListScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -154,7 +153,7 @@ const ProductListScreen = ({ props }) => {
     <Container>
       <ImageBackground source={images.background1} style={styles.backgroundImage}>
         <View style={styles.overlay} />
-        <BottomTabMenu {...props} selected={3} />
+        <BottomTabMenu navigation={navigation} selected={3} />
         <View style={styles.container}>
           <View style={styles.cartButtonContainer}>
             <View style={styles.cartButton} >

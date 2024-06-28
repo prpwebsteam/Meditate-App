@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView } from 'react-native';
 import { Authentication } from '../../../styles';
-import { Button, Container, Spacing, Input } from '../../../components';
+import { Button, Container, Spacing, Input, SweetAlertModal } from '../../../components';
 import images from '../../../index';
 import { RouteName } from '../../../routes';
 import { SH, SF, Fonts, SW } from '../../../utils';
@@ -20,6 +20,7 @@ const SignUpScreen = (props) => {
   const [gender, setGender] = useState('');
   const [age, setAge] = useState('');
   const [loading, setLoading] = useState(false);
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
 
   const handleSignUp = async () => {
     setLoading(true);
@@ -33,9 +34,7 @@ const SignUpScreen = (props) => {
       });
 
       if (response.status === 200) {
-        Alert.alert('Success', 'Account created successfully', [
-          { text: 'OK', onPress: () => navigation.navigate(RouteName.LOGIN_SCREEN) }
-        ]);
+        setSuccessModalVisible(true);
       } else {
         Alert.alert('Error', 'Something went wrong. Please try again.');
       }
@@ -207,6 +206,14 @@ const SignUpScreen = (props) => {
           </View>
           <Spacing space={SH(25)} />
         </ScrollView>
+        <SweetAlertModal
+          message={t("Account created successfully")}
+          modalVisible={successModalVisible}
+          setModalVisible={setSuccessModalVisible}
+          onPress={() => navigation.navigate(RouteName.LOGIN_SCREEN)}
+          success={true}
+          buttonText={t("OK")}
+        />
       </ImageBackground>
     </Container>
   );

@@ -23,26 +23,7 @@ function SweetaelertModal(props) {
         <View style={Style.setbgcolorgrsay}>
             <View style={Style.centeredView}>
                 <View style={[Style.modalView, { backgroundColor: 'black' }]}>
-                    {iconVisible &&
-                        <View style={Style.setroundcenter}>
-                            <View style={Style.checkiconright}>
-                            </View>
-                        </View>
-                    }
-                    {loginSuccess &&
-                        <LottieIcon
-                            style={Style.loginSuccessIcon}
-                            source={images.loginSuccess}
-                            loop={false}
-                        />
-                    }
-                    {success &&
-                        <LottieIcon
-                            style={Style.loginSuccessIcon}
-                            source={images.success}
-                            loop={false}
-                        />
-                    }
+                
                     <View style={Style.registertextset}>
                         <Text style={Style.settext}>{message}</Text>
                     </View>

@@ -39,20 +39,27 @@ export default HelpStyle = (Colors) => StyleSheet.create({
     height: '100%',
   },
   settextinputwidth: {
-    backgroundColor: 'rgba(217, 217, 214, 0.9)',
+    backgroundColor: 'rgba(217, 217, 214, 0.3)',
     borderRadius: 7,
     paddingBottom: 100,
     paddingLeft: 10,
     paddingRight: 10,
     color: '#000',
     fontFamily: Fonts.RobotoCondensed_Regular,
+  },  
+  descriptionText: {
+    fontSize: 16,
+    color: '#f79f80',
+    textAlign: 'center',
+    marginBottom: 20,
+    paddingHorizontal: 25
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
   setsubinputwidth: {
-    backgroundColor: 'rgba(217, 217, 214, 0.9)',
+    backgroundColor: 'rgba(217, 217, 214, 0.3)',
     borderRadius: 7,
     paddingLeft: 10,
     paddingRight: 10,

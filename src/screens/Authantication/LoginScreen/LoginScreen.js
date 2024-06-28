@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView } from 'react-native';
 import { Authentication } from '../../../styles';
-import { Button, Container, Spacing, Input } from '../../../components';
+import { Button, Container, Spacing, Input, SweetAlertModal } from '../../../components';
 import images from '../../../index';
 import { RouteName } from '../../../routes';
 import { SH, SF } from '../../../utils';
@@ -18,7 +18,7 @@ const LoginScreen = (props) => {
   const [inputEmail, setInputEmail] = useState('');
   const [inputPassword, setInputpassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [inputName, setInputName] = useState('');
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
 
   const handleLogin = async () => {
     setLoading(true);
@@ -30,12 +30,7 @@ const LoginScreen = (props) => {
 
       if (response.status === 200) {
         await AsyncStorage.setItem('authToken', response.data.token);
-        Alert.alert('Success', 'Logged in successfully', [
-          { text: 'OK', onPress: () => navigation.reset({
-            index: 0,
-            routes: [{ name: RouteName.HOME_SCREEN }],
-          }) }
-        ]);
+        setSuccessModalVisible(true);
       } else {
         Alert.alert('Error', 'Invalid credentials. Please try again.');
       }
@@ -119,8 +114,6 @@ const LoginScreen = (props) => {
             <Text style={{ textAlign: 'center', ...Authentications.signupText }}>
               {t("Don't have an account?")}
             </Text>
-
-            
             <View style={styles.loginButtonContainer}>
               <TouchableOpacity
                 style={styles.loginButton}
@@ -132,6 +125,17 @@ const LoginScreen = (props) => {
           </View>
           <Spacing space={SH(25)} />
         </ScrollView>
+        <SweetAlertModal
+          message={t("Logged in successfully")}
+          modalVisible={successModalVisible}
+          setModalVisible={setSuccessModalVisible}
+          onPress={() => navigation.reset({
+            index: 0,
+            routes: [{ name: RouteName.HOME_SCREEN }],
+          })}
+          success={true}
+          buttonText={t("OK")}
+        />
       </ImageBackground>
     </Container>
   );

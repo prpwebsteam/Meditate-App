@@ -21,7 +21,6 @@ const Wishlist = ({ navigation }) => {
         try {
             const userId = 9;
             const url = `https://chitraguptp85.sg-host.com/wp-json/meditate/v2/wishlist?user_id=${userId}`;
-            console.log(`Fetching songs from URL: ${url}`);
 
             const response = await axios.get(url);
 

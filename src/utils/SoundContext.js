@@ -110,14 +110,14 @@ const SoundProvider = ({ children }) => {
 
   const fastForward = () => {
     if (sound.current) {
-      const newTime = Math.min(currentTime + 10, duration);
+      const newTime = Math.min(currentTime + 30, duration);
       seekTo(newTime);
     }
   };
 
   const rewind = () => {
     if (sound.current) {
-      const newTime = Math.max(currentTime - 10, 0);
+      const newTime = Math.max(currentTime - 30, 0);
       seekTo(newTime);
     }
   };

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { View, ScrollView, TextInput, ImageBackground, Alert } from "react-native"; // Import Alert
+import { View, ScrollView, TextInput, ImageBackground, Alert, Text } from "react-native"; // Import Alert and Text
 import { HelpStyle, HomeStyle } from '../../styles';
 import { Button, Container, SweetAlertModal } from '../../components';
 import { useTheme } from '@react-navigation/native';
@@ -65,19 +65,24 @@ const DoctoreHelpScreen = () => {
         <ScrollView>
           <View style={HomeStyles.textcenterview}>
             <View style={HelpStyles.settopspace}>
+              <Text style={HelpStyles.descriptionText}>
+                {t("If you have any questions or need assistance, please fill out the form below with the subject and your message. We will get back to you as soon as possible.")}
+              </Text>
+            </View>
+            <View style={HelpStyles.settopspace}>
               <TextInput
-                style={[HelpStyles.setsubinputwidth, { color: 'black' }]}
+                style={[HelpStyles.setsubinputwidth, { color: 'white' }]}
                 placeholder={t("Subject")}
-                placeholderTextColor="black"
+                placeholderTextColor="white"
                 onChangeText={text => setSubject(text)}
                 value={subject}
               />
             </View>
             <View style={HelpStyles.settopspace}>
               <TextInput
-                style={[HelpStyles.settextinputwidth, { color: 'black' }]}
+                style={[HelpStyles.settextinputwidth, { color: 'white' }]}
                 placeholder={t("Type_Message")}
-                placeholderTextColor="black"
+                placeholderTextColor="white"
                 multiline
                 numberOfLines={4}
                 onChangeText={text => setMessage(text)}
@@ -99,7 +104,7 @@ const DoctoreHelpScreen = () => {
           message={t("Email_Has")}
           modalVisible={successModalVisible}
           setModalVisible={setSuccessModalVisible}
-          onPress={onPressHandle}
+          onPress={() => setSuccessModalVisible(false)}
           success={true}
           buttonText={t("OK")}
         />
