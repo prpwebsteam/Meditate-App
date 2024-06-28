@@ -1,7 +1,7 @@
-import { APIURLS, apiPostMethod, apiGetMethod } from '../../api';
+// import { APIURLS, apiPostMethod, apiGetMethod } from '../../api';
 import { AUTH_RESET_INITIAL_STATE, USERREGISTER_TYPE, OTP_SEND_TYPE, USERLOGIN_TYPE } from "../actiontypes";
 import { commonLoading_Action } from './CommonAction';
-
+// import { SET_CUSTOMER } from "../actiontypes";
 export const auth_reset_initial_state_reduser = () => dispatch => {
     dispatch({ type: AUTH_RESET_INITIAL_STATE });
 }
@@ -12,7 +12,7 @@ export const sendotp_Action = (mo_no) => dispatch => {
         '&mo_no=' + mo_no
     apiPostMethod({ endpoint: APIURLS.SEND_OTP_URL, params: params })
         .then((response) => {
-            dispatch({ type: OTP_SEND_TYPE, sendotpdata: response });
+            dispatch({ type: OTP_SEND_TYPE, sendotpdata: response }); 
         })
         .catch((error) => {
             dispatch({ type: OTP_SEND_TYPE, sendotpdata: error });
@@ -58,3 +58,9 @@ export const userLogin_Action = (mo_no) => dispatch => {
 export const Logout_action = () => dispatch => {
     dispatch({ type: AUTH_RESET_INITIAL_STATE });
 };
+
+// export const setCustomer = (customer) => ({
+//     type: 'SET_CUSTOMER',
+//     payload: customer,
+//   });
+  

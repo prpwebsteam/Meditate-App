@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { setCustomerId } from '../../../redux/action/CommonAction';
 import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Authentication } from '../../../styles';
 import { Button, Container, Spacing, Input, SweetAlertModal } from '../../../components';
@@ -8,6 +10,7 @@ import { SH, SF, Fonts, SW } from '../../../utils';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import axios from 'axios';
+import { SHOPIFY_ACCESS_TOKEN, STOREFRONT_ACCESS_TOKEN } from '../../../../env';
 
 const SignUpScreen = (props) => {
   const { Colors } = useTheme();
@@ -43,24 +46,105 @@ const SignUpScreen = (props) => {
     );
   };
 
+  const dispatch = useDispatch();
+
+  const accessToken = SHOPIFY_ACCESS_TOKEN;
+  const storefrontToken = STOREFRONT_ACCESS_TOKEN;
+
   const handleSignUp = async () => {
     setLoading(true);
+    const SIGN_UP_MUTATION = `
+      mutation RegisterAccount(
+        $email: String!, 
+        $password: String!,  
+        $firstName: String!, 
+        $lastName: String!, 
+        $acceptsMarketing: Boolean = false,
+      ) {
+        customerCreate(input: {
+            email: $email, 
+            password: $password, 
+            firstName: $firstName,  
+            lastName: $lastName,
+            acceptsMarketing: $acceptsMarketing, 
+        }) {
+            customer {
+                id
+            }
+            customerUserErrors {
+                code
+                message
+            }
+        }
+      }
+    `;
+
+    const variables = {
+      email: inputEmail,
+      password: inputPassword,
+      firstName: inputName.split(" ")[0],
+      lastName: inputName.split(" ")[1] || '',
+      acceptsMarketing: false,
+    };
+
     try {
-      const response = await axios.post('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/register', {
-        username: inputName,
-        email: inputEmail,
-        password: inputPassword,
-        gender: gender,
-        age: age,
+      const response = await axios({
+        url: 'https://pw-dawn1.myshopify.com/api/2024-04/graphql.json',
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': storefrontToken,
+        },
+        data: {
+          query: SIGN_UP_MUTATION,
+          variables: variables,
+        }
       });
 
-      if (response.status === 200) {
+      if (response.data.data.customerCreate.customer) {
+        const customerId = response.data.data.customerCreate.customer.id.split('/').pop();
+
+        await axios({
+          url: `https://pw-dawn1.myshopify.com/admin/customers/${customerId}/metafields.json`,
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Access-Token': accessToken,
+          },
+          data: {
+            metafield: {
+              namespace: "custom",
+              key: "gender",
+              type: "single_line_text_field",
+              value: gender
+            }
+          }
+        });
+
+        await axios({
+          url: `https://pw-dawn1.myshopify.com/admin/customers/${customerId}/metafields.json`,
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Access-Token': accessToken,
+          },
+          data: {
+            metafield: {
+              namespace: "custom",
+              key: "age",
+              type: "number_integer",
+              value: age
+            }
+          }
+        });
+        dispatch(setCustomerId(customerId));
         setSuccessModalVisible(true);
       } else {
-        Alert.alert('Error', 'Something went wrong. Please try again.');
+        const errors = response.data.data.customerCreate.customerUserErrors.map(error => error.message).join('\n');
+        Alert.alert('Error', errors || 'Something went wrong. Please try again.');
       }
     } catch (error) {
-      Alert.alert('Error', error.response?.data?.message || 'Something went wrong. Please try again.');
+      Alert.alert('Error', error.response?.data?.errors[0]?.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -281,7 +365,7 @@ const SignUpScreen = (props) => {
           success={true}
           buttonText={t("OK")}
         />
-      </ImageBackground>
+      </ImageBackground> 
     </Container>
   );
 };

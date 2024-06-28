@@ -1,24 +1,32 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, StatusBar, Alert, StyleSheet, ScrollView } from 'react-native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '@react-navigation/native';
+import { useTranslation } from "react-i18next";
+import { useDispatch } from 'react-redux';
+
+import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Authentication } from '../../../styles';
 import { Button, Container, Spacing, Input, SweetAlertModal } from '../../../components';
 import images from '../../../index';
 import { RouteName } from '../../../routes';
 import { SH, SF } from '../../../utils';
-import { useTheme } from '@react-navigation/native';
-import { useTranslation } from "react-i18next";
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setCustomer } from '../../../redux/reducers/AuthReducer';
+import { STOREFRONT_ACCESS_TOKEN } from '../../../../env';
 
 const LoginScreen = (props) => {
   const { Colors } = useTheme();
   const Authentications = useMemo(() => Authentication(Colors), [Colors]);
   const { navigation } = props;
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
+
+  const storefrontToken = STOREFRONT_ACCESS_TOKEN;
+
   const [inputEmail, setInputEmail] = useState('');
   const [inputPassword, setInputPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [successModalVisible, setSuccessModalVisible] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
@@ -33,20 +41,78 @@ const LoginScreen = (props) => {
 
   const handleLogin = async () => {
     setLoading(true);
-    try {
-      const response = await axios.post('https://chitraguptp85.sg-host.com/wp-json/jwt-auth/v1/token', {
-        username: inputEmail,
+    const graphqlQuery = {
+      query: `
+        mutation SignInWithEmailAndPassword($email: String!, $password: String!) {
+          customerAccessTokenCreate(input: { email: $email, password: $password }) {
+            customerAccessToken {
+              accessToken
+              expiresAt
+            }
+            customerUserErrors {
+              code
+              message
+            }
+          }
+        }
+      `, 
+      variables: {
+        email: inputEmail,
         password: inputPassword,
+      }
+    };
+
+    try {
+      const response = await axios({
+        url: 'https://pw-dawn1.myshopify.com/api/2024-04/graphql.json', 
+        method: 'post',
+        headers: {
+          'X-Shopify-Storefront-Access-Token': storefrontToken,
+          'Content-Type': 'application/json'
+        },
+        data: graphqlQuery
       });
 
-      if (response.status === 200) {
-        await AsyncStorage.setItem('authToken', response.data.token);
+      const { data } = response;
+      if (data.data.customerAccessTokenCreate.customerAccessToken) {
+        const accessToken = data.data.customerAccessTokenCreate.customerAccessToken.accessToken;
+        await AsyncStorage.setItem('authToken', accessToken);
+
+        // Fetch customer details
+        const customerQuery = {
+          query: `
+            query {
+              customer(customerAccessToken: "${accessToken}") {
+                id
+                email
+                firstName
+                lastName
+              }
+            }
+          `
+        };
+
+        const customerResponse = await axios({
+          url: 'https://pw-dawn1.myshopify.com/api/2024-04/graphql.json', 
+          method: 'post',
+          headers: {
+            'X-Shopify-Storefront-Access-Token': storefrontToken,
+            'Content-Type': 'application/json'
+          },
+          data: customerQuery
+        });
+
+        const customerData = customerResponse.data.data.customer;
+        
+        dispatch(setCustomer(customerData));
+
         setSuccessModalVisible(true);
       } else {
-        Alert.alert('Error', 'Invalid credentials. Please try again.');
+        const errors = data.data.customerAccessTokenCreate.customerUserErrors.map(err => err.message).join(", ");
+        Alert.alert('Error', errors || 'Invalid credentials. Please try again.');
       }
     } catch (error) {
-      Alert.alert('Error', error.response?.data?.message || 'Something went wrong. Please try again.');
+      Alert.alert('Error', error.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
