@@ -26,6 +26,8 @@ import { ToggleProvider } from '../utils/ToggleContext';
 import AllCategoryScreen from '../screens/AllCategoryScreen/AllCategoryScreen';
 import QuizScreen from '../screens/QuizScreen/QuizScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import OrderListScreen from '../screens/Order/CustomerScreen';
+import OrderDetailsScreen from '../screens/Order/OrderDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -92,6 +94,9 @@ const RootNavigator = () => {
             <Stack.Screen name={RouteName.CHECKOUT_SCREEN} component={CheckoutScreen} />
             <Stack.Screen name={RouteName.WEBVIEW_SCREEN} component={WebViewScreen} />
             <Stack.Screen name={RouteName.CART_SCREEN} component={CartScreen} />
+            <Stack.Screen name={RouteName.CUSTOMER_SCREEN} component={OrderListScreen} />
+            <Stack.Screen name={RouteName.ORDERDETAILS_SCREEN} component={OrderDetailsScreen} />
+  
           </Stack.Navigator>
         </NavigationContainer>
       </SoundProvider>

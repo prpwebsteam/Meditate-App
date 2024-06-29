@@ -36,5 +36,7 @@ const RouteName = {
     ALL_CATEGORY_SCREEN: 'AllCategoryScreen',
     QUIZ_SCREEN: 'QuizScreen',
     JOURNAL_SCREEN: 'JournalScreen',
+    CUSTOMER_SCREEN: 'CustomerScreen',
+    ORDERDETAILS_SCREEN: 'OrderDetailsScreen',
 }
 export default RouteName;
