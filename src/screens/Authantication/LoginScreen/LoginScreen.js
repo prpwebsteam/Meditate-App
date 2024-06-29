@@ -1,26 +1,29 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from "react";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import { useDispatch } from 'react-redux';
+import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView, Keyboard, Dimensions } from 'react-native';
 
-import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Authentication } from '../../../styles';
-import { Button, Container, Spacing, Input, SweetAlertModal } from '../../../components';
+import { Button, Container, Spacing, Input } from '../../../components';
 import images from '../../../index';
 import { RouteName } from '../../../routes';
 import { SH, SF } from '../../../utils';
 import { setCustomer } from '../../../redux/reducers/AuthReducer';
 import { STOREFRONT_ACCESS_TOKEN } from '../../../../env';
+import FlashNotification from "../../../components/FlashNotification";
 
-const LoginScreen = (props) => {
+const { width: screenWidth } = Dimensions.get("window");
+
+const LoginScreen = ({ navigation }) => {
   const { Colors } = useTheme();
   const Authentications = useMemo(() => Authentication(Colors), [Colors]);
-  const { navigation } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [flashNotification, setFlashNotification] = useState(false);
+  const [flashNotificationMessage, setFlashNotificationMessage] = useState("");
 
   const storefrontToken = STOREFRONT_ACCESS_TOKEN;
 
@@ -39,7 +42,7 @@ const LoginScreen = (props) => {
     return password.length >= 5;
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (values) => {
     setLoading(true);
     const graphqlQuery = {
       query: `
@@ -106,13 +109,32 @@ const LoginScreen = (props) => {
         
         dispatch(setCustomer(customerData));
 
-        setSuccessModalVisible(true);
+        setFlashNotificationMessage(t("Logged in successfully"));
+        setFlashNotification(true);
+
+        setTimeout(() => {
+          setFlashNotification(false);
+          navigation.reset({
+            index: 0,
+            routes: [{ name: RouteName.HOME_SCREEN }],
+          });
+        }, 2000);
       } else {
         const errors = data.data.customerAccessTokenCreate.customerUserErrors.map(err => err.message).join(", ");
-        Alert.alert('Error', errors || 'Invalid credentials. Please try again.');
+        setFlashNotificationMessage(errors || 'Invalid credentials. Please try again.');
+        setFlashNotification(true);
+
+        setTimeout(() => {
+          setFlashNotification(false);
+        }, 2000);
       }
     } catch (error) {
-      Alert.alert('Error', error.message || 'Something went wrong. Please try again.');
+      setFlashNotificationMessage(error.message || 'Something went wrong. Please try again.');
+      setFlashNotification(true);
+
+      setTimeout(() => {
+        setFlashNotification(false);
+      }, 2000);
     } finally {
       setLoading(false);
     }
@@ -239,16 +261,9 @@ const LoginScreen = (props) => {
           </View>
           <Spacing space={SH(25)} />
         </ScrollView>
-        <SweetAlertModal
-          message={t("Logged in successfully")}
-          modalVisible={successModalVisible}
-          setModalVisible={setSuccessModalVisible}
-          onPress={() => navigation.reset({
-            index: 0,
-            routes: [{ name: RouteName.HOME_SCREEN }],
-          })}
-          success={true}
-          buttonText={t("OK")}
+        <FlashNotification
+          falshShow={flashNotification}
+          flashMessage={flashNotificationMessage}
         />
       </ImageBackground>
     </Container>

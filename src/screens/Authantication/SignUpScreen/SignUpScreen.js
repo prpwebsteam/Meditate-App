@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { setCustomerId } from '../../../redux/action/CommonAction';
 import { View, Text, ImageBackground, TouchableOpacity, StatusBar, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Authentication } from '../../../styles';
-import { Button, Container, Spacing, Input, SweetAlertModal } from '../../../components';
+import { Button, Container, Spacing, Input } from '../../../components';
 import images from '../../../index';
 import { RouteName } from '../../../routes';
 import { SH, SF, Fonts, SW } from '../../../utils';
@@ -11,6 +11,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import axios from 'axios';
 import { SHOPIFY_ACCESS_TOKEN, STOREFRONT_ACCESS_TOKEN } from '../../../../env';
+import FlashNotification from '../../../components/FlashNotification';
 
 const SignUpScreen = (props) => {
   const { Colors } = useTheme();
@@ -23,7 +24,8 @@ const SignUpScreen = (props) => {
   const [gender, setGender] = useState('');
   const [age, setAge] = useState('');
   const [loading, setLoading] = useState(false);
-  const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [flashNotification, setFlashNotification] = useState(false);
+  const [flashNotificationMessage, setFlashNotificationMessage] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
@@ -137,16 +139,29 @@ const SignUpScreen = (props) => {
             }
           }
         });
+
         dispatch(setCustomerId(customerId));
-        setSuccessModalVisible(true);
+        setFlashNotificationMessage(t("Account created successfully"));
+        setFlashNotification(true);
+
+        setTimeout(() => {
+          setFlashNotification(false);
+          navigation.navigate(RouteName.LOGIN_SCREEN);
+        }, 2000);
       } else {
         const errors = response.data.data.customerCreate.customerUserErrors.map(error => error.message).join('\n');
-        Alert.alert('Error', errors || 'Something went wrong. Please try again.');
+        setFlashNotificationMessage(errors || 'Something went wrong. Please try again.hhh');
+        setFlashNotification(true);
       }
     } catch (error) {
-      Alert.alert('Error', error.response?.data?.errors[0]?.message || 'Something went wrong. Please try again.');
+      console.log(error,"-----------------:error")
+      setFlashNotificationMessage(error.response?.data?.errors[0]?.message || 'Account created successfully');
+      setFlashNotification(true);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        setFlashNotification(false);
+      }, 2000);
     }
   };
 
@@ -357,15 +372,11 @@ const SignUpScreen = (props) => {
           </View>
           <Spacing space={SH(25)} />
         </ScrollView>
-        <SweetAlertModal
-          message={t("Account created successfully")}
-          modalVisible={successModalVisible}
-          setModalVisible={setSuccessModalVisible}
-          onPress={() => navigation.navigate(RouteName.LOGIN_SCREEN)}
-          success={true}
-          buttonText={t("OK")}
+        <FlashNotification
+          falshShow={flashNotification}
+          flashMessage={flashNotificationMessage}
         />
-      </ImageBackground> 
+      </ImageBackground>
     </Container>
   );
 };

@@ -204,7 +204,6 @@ export default HomeStyle = (Colors) => StyleSheet.create({
     color: Colors.theme_backgound_second,
     fontSize: SF(17),
     fontFamily: Fonts.RobotoCondensed_Regular,
-    paddingHorizontal: SW(10)
   },
   userIconBox: {
     overflow: 'hidden',
