@@ -18,7 +18,7 @@ const TodoScreen = () => {
             const storedTodos = await AsyncStorage.getItem('todoEntries');
             if (storedTodos) {
                 setTodos(JSON.parse(storedTodos));
-                
+
             }
         } catch (error) {
             console.error('Failed to load todos.', error);
@@ -56,6 +56,12 @@ const TodoScreen = () => {
         </View>
     );
 
+    const renderEmptyComponent = () => (
+        <View style={styles.emptyComponent}>
+            <Text style={styles.emptyText}>No journal entries found.</Text>
+        </View>
+    );
+
     return (
         <Container>
             <ImageBackground source={images.background1} resizeMode='cover' style={styles.backgroundImage}>
@@ -66,6 +72,7 @@ const TodoScreen = () => {
                         renderItem={renderTodoItem}
                         keyExtractor={(_, index) => index.toString()}
                         contentContainerStyle={styles.list}
+                        ListEmptyComponent={renderEmptyComponent}
                     />
                     <View style={styles.inputContainer}>
                         <TextInput
@@ -87,6 +94,17 @@ const TodoScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    emptyComponent: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    emptyText: {
+        fontSize: 18,
+        paddingTop: 20,
+        color: '#999',
+        textAlign: 'center',
     },
     backgroundImage: {
         flex: 1,

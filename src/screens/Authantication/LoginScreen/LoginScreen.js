@@ -187,7 +187,12 @@ const LoginScreen = ({ navigation }) => {
       fontSize: SF(12),
       marginTop: -5,
       marginLeft: 5
-    }
+    },
+    scrollViewContent: {
+      flexGrow: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   });
 
   return (
@@ -201,7 +206,7 @@ const LoginScreen = ({ navigation }) => {
         />
         <ScrollView
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={Authentications.ScrollViewStyles}>
+          contentContainerStyle={styles.ScrollViewStyles}>
           <View style={Authentications.loginTab}>
             <TouchableOpacity>
               <Text style={[Authentications.loginSignUpText, Authentications.activeBorder]}>{t("Login_Text")}</Text>
