@@ -14,6 +14,7 @@ import { SH, SF } from '../../../utils';
 import { setCustomer } from '../../../redux/reducers/AuthReducer';
 import { STOREFRONT_ACCESS_TOKEN } from '../../../../env';
 import FlashNotification from "../../../components/FlashNotification";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -32,6 +33,7 @@ const LoginScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -185,7 +187,12 @@ const LoginScreen = ({ navigation }) => {
       fontSize: SF(12),
       marginTop: -5,
       marginLeft: 5
-    }
+    },
+    scrollViewContent: {
+      flexGrow: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   });
 
   return (
@@ -199,7 +206,7 @@ const LoginScreen = ({ navigation }) => {
         />
         <ScrollView
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={Authentications.ScrollViewStyles}>
+          contentContainerStyle={styles.ScrollViewStyles}>
           <View style={Authentications.loginTab}>
             <TouchableOpacity>
               <Text style={[Authentications.loginSignUpText, Authentications.activeBorder]}>{t("Login_Text")}</Text>
@@ -220,14 +227,19 @@ const LoginScreen = ({ navigation }) => {
             <View style={{ paddingLeft: 10, marginTop: -20, marginBottom: 10 }}>
               {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
             </View>
-            <Input
-              title={t("Password_Text")}
-              placeholder={t("Password_Text")}
-              onChangeText={handlePasswordChange}
-              value={inputPassword}
-              secureTextEntry={true}
-              inputStyle={{ fontSize: SF(12) }}
-            />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Input
+                title={t("Password_Text")}
+                placeholder={t("Password_Text")}
+                onChangeText={handlePasswordChange}
+                value={inputPassword}
+                secureTextEntry={!passwordVisible}
+                inputStyle={{ fontSize: SF(12), flex: 1 }}
+              />
+              <TouchableOpacity style={{ position: 'absolute', right: 20 }} onPress={() => setPasswordVisible(!passwordVisible)}>
+                <Icon name={passwordVisible ? "visibility" : "visibility-off"} size={20} color={Colors.white} />
+              </TouchableOpacity>
+            </View>
             <View style={{ paddingLeft: 10, marginTop: -20, marginBottom: 10 }}>
               {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
             </View>

@@ -13,7 +13,6 @@ const SplashScreen = () => {
   const GetstartedSliderStyles = useMemo(() => GetstartedSliderStyle(Colors), [Colors]);
 
   return (
-    <Container>
       <FastImage 
         source={images.screenbg} 
         style={styles.background} 
@@ -27,13 +26,11 @@ const SplashScreen = () => {
           </View>
         </View>
       </FastImage>
-    </Container>
   );
 };
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,
     width: '100%',
     height: '100%',
   },
@@ -50,14 +47,14 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 28,
-    color: Colors.white,
+    color: Colors.off_white,
     textAlign: 'center',
     fontWeight: 'semibold',
     fontFamily: Fonts.Poppins_Medium,
   },
   text2: {
-    fontSize: 13,
-    color: Colors.white,
+    fontSize: 12,
+    color: Colors.off_white,
     textAlign: 'center',
     fontFamily: Fonts.Poppins_Medium,
   },

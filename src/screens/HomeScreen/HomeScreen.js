@@ -291,7 +291,7 @@ const HomeScreen = (props) => {
         fontWeight: 'bold',
       },
       recentlyPlayedItem: {
-        width: 150,
+        width: 140,
         height: 150,
         marginRight: 10,
         marginLeft: 10,
@@ -353,7 +353,7 @@ const HomeScreen = (props) => {
             <Spacing space={SH(20)} />
             <View style={HomeStyles.RecentAllView}>
               <FlatList
-                data={workoutData.slice(0, 3)}
+                data={workoutData.slice(0, 4)}
                 renderItem={({ item }) => (
                   <WorkOutView
                     onPress={() => onpressHandle(item.id, item.title)}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RouteName from './RouteName';
@@ -28,6 +28,7 @@ import QuizScreen from '../screens/QuizScreen/QuizScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import OrderListScreen from '../screens/Order/CustomerScreen';
 import OrderDetailsScreen from '../screens/Order/OrderDetailsScreen';
+import { Linking } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -69,10 +70,49 @@ const RootNavigator = () => {
     }
   }, [colorrdata, Colors]);
 
+  
+  const navigationRef = useRef();
+
+  const prefix = "meditation://";
+
+  useEffect(() => {
+    const handleDeepLink = (event) => {
+      let { url } = event;
+      if (url) {
+        const route = url.replace(/.*?:\/\//g, '');
+        const routeName = route.split('/')[0];
+        if (routeName) {
+          navigationRef.current?.navigate(routeName);
+        }
+      }
+    };
+
+    Linking?.addEventListener('url', handleDeepLink);
+
+    Linking?.getInitialURL()?.then((url) => {
+      if (url) {
+        handleDeepLink({ url });
+      }
+    });
+
+    return () => {
+      Linking?.removeEventListener('url', handleDeepLink);
+    };
+  }, []);
+
   return (
     <ToggleProvider>
       <SoundProvider>
-        <NavigationContainer theme={colorValue}>
+        <NavigationContainer linking={{
+        prefixes: [prefix],
+        config: {
+          screens: {
+            Home: 'HomeScreen',
+            Profile: 'profile',
+          },
+        },
+      }}
+      ref={navigationRef} theme={colorValue}>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name={RouteName.SPLSH_SCREEN} component={SplashScreenNavigator} />
             <Stack.Screen name={RouteName.GET_STARTED_SLIDER_SCREEN} component={GetstartedSliderscreen} />

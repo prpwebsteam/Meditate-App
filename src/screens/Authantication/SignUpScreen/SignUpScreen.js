@@ -12,12 +12,15 @@ import { useTranslation } from "react-i18next";
 import axios from 'axios';
 import { SHOPIFY_ACCESS_TOKEN, STOREFRONT_ACCESS_TOKEN } from '../../../../env';
 import FlashNotification from '../../../components/FlashNotification';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import MaterialIcons from react-native-vector-icons
 
 const SignUpScreen = (props) => {
   const { Colors } = useTheme();
   const Authentications = useMemo(() => Authentication(Colors), [Colors]);
   const { navigation } = props;
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+
   const [inputEmail, setInputEmail] = useState('');
   const [inputPassword, setInputPassword] = useState('');
   const [inputName, setInputName] = useState('');
@@ -28,6 +31,8 @@ const SignUpScreen = (props) => {
   const [flashNotificationMessage, setFlashNotificationMessage] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [ageError, setAgeError] = useState('');
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -38,17 +43,25 @@ const SignUpScreen = (props) => {
     return password.length >= 5;
   };
 
+  const handleAgeChange = (ageInput) => {
+    setAge(ageInput);
+    if (ageInput === '' || (Number(ageInput) >= 1 && Number(ageInput) <= 100)) {
+      setAgeError('');
+    } else {
+      setAgeError(t("Age must be between 1 and 100"));
+    }
+  };
+
   const validateForm = () => {
     return (
       inputName.length > 0 &&
       validateEmail(inputEmail) &&
       validatePassword(inputPassword) &&
       gender.length > 0 &&
-      age.length > 0
+      age !== '' &&
+      !ageError
     );
   };
-
-  const dispatch = useDispatch();
 
   const accessToken = SHOPIFY_ACCESS_TOKEN;
   const storefrontToken = STOREFRONT_ACCESS_TOKEN;
@@ -154,7 +167,7 @@ const SignUpScreen = (props) => {
         setFlashNotification(true);
       }
     } catch (error) {
-      console.log(error,"-----------------:error")
+      console.log(error, "-----------------:error")
       setFlashNotificationMessage(error.response?.data?.errors[0]?.message || 'Account created successfully');
       setFlashNotification(true);
     } finally {
@@ -181,6 +194,10 @@ const SignUpScreen = (props) => {
     } else {
       setPasswordError('');
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
   };
 
   const styles = StyleSheet.create({
@@ -219,6 +236,11 @@ const SignUpScreen = (props) => {
       fontSize: SF(12),
       marginTop: -5,
       marginLeft: 5
+    },
+    eyeIcon: {
+      position: 'absolute',
+      top: 43,
+      right: 20,
     }
   });
 
@@ -266,15 +288,28 @@ const SignUpScreen = (props) => {
               {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
             </View>
             <Spacing space={SH(20)} />
-            <Input
-              title={t("Password_Text")}
-              placeholder={t("Password_Text")}
-              onChangeText={handlePasswordChange}
-              value={inputPassword}
-              secureTextEntry={true}
-              containerStyle={Authentications.PassWordStyle}
-              inputStyle={{ fontSize: SF(12) }}
-            />
+
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Input
+                title={t("Password_Text")}
+                placeholder={t("Password_Text")}
+                onChangeText={handlePasswordChange}
+                value={inputPassword}
+                secureTextEntry={!passwordVisible}
+                containerStyle={Authentications.PassWordStyle}
+                inputStyle={{ fontSize: SF(12) }}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={togglePasswordVisibility}
+              >
+                <Icon
+                  name={passwordVisible ? 'visibility' : 'visibility-off'}
+                  size={20}
+                  color={Colors.white}
+                />
+              </TouchableOpacity>
+            </View>
             <View style={{ paddingLeft: 10 }}>
               {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
             </View>
@@ -339,12 +374,13 @@ const SignUpScreen = (props) => {
             <Input
               title={t("How Old Are You?")}
               placeholder={t("Type")}
-              onChangeText={setAge}
+              onChangeText={handleAgeChange}
               value={age}
               keyboardType='numeric'
               containerStyle={Authentications.PassWordStyle}
               inputStyle={{ fontSize: SF(12) }}
             />
+            {ageError ? <Text style={[styles.errorText, {paddingLeft: 10}]}>{ageError}</Text> : null}
             <Spacing space={SH(30)} />
             <View style={Authentications.buttonView}>
               <TouchableOpacity
