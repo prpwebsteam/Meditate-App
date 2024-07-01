@@ -60,7 +60,8 @@
     "rn-curved-navigation-bar": "1.1.0",
     "shopify-buy": "^2.11.0",
     "react-native-webview": "^11.6.4",
-    "@reduxjs/toolkit": "^1.6.2"
+    "@reduxjs/toolkit": "^1.6.2",
+    "react-native-country-picker-modal": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.12.9",
