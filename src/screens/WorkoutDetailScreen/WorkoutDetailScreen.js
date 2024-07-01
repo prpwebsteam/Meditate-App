@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground, StyleSheet, Share } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground, StyleSheet, Share, Platform } from 'react-native';
+import PushNotification from 'react-native-push-notification';
 import { WorkoutDetailStyle } from '../../styles';
 import { Button, Container, Spacing, LottieIcon } from '../../components';
 import images from '../../index';
