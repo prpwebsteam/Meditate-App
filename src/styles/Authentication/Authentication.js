@@ -65,6 +65,8 @@ export default Authentication = (Colors) => StyleSheet.create({
   },
   setbgMainView: {
     flex: 1,
+    width: '100%',
+    height: '100%',
   },
   setbgimage: {
     height: '100%',

@@ -17,7 +17,7 @@ const WorkOutView = ({ item, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: SH(140),
     margin: SH(10),
     borderRadius: SH(10),
     overflow: 'hidden',
