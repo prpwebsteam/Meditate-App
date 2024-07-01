@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { useToggle } from '../utils/ToggleContext';
 import ScanScreen from '../screens/ScanScreen/ScanScreen';
 import JournalScreen from '../screens/JournalScreen/JournalScreen';
-import OrderListScreen from '../screens/Order/CustomerScreen';
 
 const SideNavigator = () => {
   const { t } = useTranslation();
@@ -119,7 +118,7 @@ const SideNavigator = () => {
         })}
       />
       <Drawer.Screen
-        name={RouteName.CUSTOMER_SCREEN} component={OrderListScreen}
+        name={RouteName.HELP_SCREEN} component={HelpScreen}
         options={({ navigation }) => ({
           headerTitle: (props) => <AppHeader {...props} navigation={navigation} headerTitle={t("Help_Text")} />,
           ...styleArray,
@@ -127,7 +126,7 @@ const SideNavigator = () => {
           drawerLabel: ({ focused }) => drawerTitle(focused, t("Help_Text"))
         })}
       />
-    </Drawer.Navigator> 
+    </Drawer.Navigator>
   );
 }
 export default SideNavigator;

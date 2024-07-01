@@ -7,7 +7,10 @@ import { SH, SW } from '../../utils';
 import { useTranslation } from "react-i18next";
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { RouteName } from '../../routes';
+import axios from 'axios';
+import { STOREFRONT_ACCESS_TOKEN, SHOPIFY_ACCESS_TOKEN } from '../../../env';
+import CountryPicker from 'react-native-country-picker-modal';
+import { useSelector } from 'react-redux';
 
 const EditProfileScreen = (props) => {
   const { Colors } = useTheme();
@@ -17,118 +20,150 @@ const EditProfileScreen = (props) => {
   const [inputFirstName, setInputFirstName] = useState('');
   const [inputLastName, setInputLastName] = useState('');
   const [inputEmail, setInputEmail] = useState('');
+  const [countryCode, setCountryCode] = useState('+1'); // Default country code
+  const [country, setCountry] = useState(null);
+  const [isCountryPickerVisible, setIsCountryPickerVisible] = useState(false);
   const { t } = useTranslation();
-  const [customerDetail, setCustomerDetail] = useState({});
   const [originalCustomerDetail, setOriginalCustomerDetail] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [apiCustomerDetail, setApiCustomerDetail] = useState({});
+  const customer = useSelector(state => state.auth);
+  const storefrontToken = STOREFRONT_ACCESS_TOKEN;
+  const storeToken = SHOPIFY_ACCESS_TOKEN;
+
+  const [customerDetail, setCustomerDetail] = useState(null);
+  const [customerId, setCustomerId] = useState('');
 
   useEffect(() => {
     const fetchCustomerDetail = async () => {
-      const customer = JSON.parse(await AsyncStorage.getItem('customer'));
-      setCustomerDetail(customer);
-      setOriginalCustomerDetail(customer);
-      setInputFirstName(customer?.firstName || '');
-      setInputLastName(customer?.lastName || '');
-      setInputMobile(customer?.mobile || '');
-      setInputEmail(customer?.email || '');
+      try {
+        const customerData = await AsyncStorage.getItem('customer');
+        if (customerData) {
+          const parsedData = JSON.parse(customerData);
+          setCustomerDetail(parsedData);
+          const id = parsedData.id;
+          const extractedId = id.match(/\d+/)[0];
+          setCustomerId(extractedId);
+        }
+      } catch (error) {
+        console.error('Error fetching customer detail:', error);
+      }
     };
+
     fetchCustomerDetail();
   }, []);
 
-  const styles = StyleSheet.create({
-    backgroundImage: {
-      flex: 1,
-      width: '100%',
-      height: '100%',
-    },
-    overlay: {
-      ...StyleSheet.absoluteFillObject,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    },
-    buttonView: {
-      paddingHorizontal: SW(20),
-      flexDirection: 'column',
-      width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    button: {
-      width: '48%',
-      alignItems: 'center',
-      paddingVertical: 10,
-      borderRadius: 5,
-      marginBottom: 20,
-    },
-    buttonText: {
-      color: Colors.white,
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    inputView: {
-      paddingHorizontal: SH(10),
-      color: Colors.white,
-      marginBottom: 20,
-    },
-    headerText: {
-      paddingHorizontal: SH(10),
-      color: Colors.theme_backgound,
-      marginBottom: 20,
-      fontSize: 22,
-      textAlign: 'center'
-    },
-    table: {
-      marginBottom: 20,
-    },
-    tablebg: {
-      marginBottom: 20,
-      marginHorizontal: 20,
-      paddingHorizontal: 20,
-      backgroundColor: 'rgba(217, 217, 214, 0.2)',
-      borderRadius: 10
-    },
-    tableRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: 10,
-      borderBottomWidth: 1,
-      borderBottomColor: Colors.gray,
-    },
-    tableCell: {
-      color: Colors.white,
-      fontSize: 16,
-    },
-    tableCell2: {
-      color: Colors.white,
-      fontSize: 16,
-      fontWeight: 'bold'
-    },
-    editButton: {
-      width: '48%',
-      alignItems: 'center',
-      paddingVertical: 10,
-      borderRadius: 5,
-      backgroundColor: Colors.theme_backgound,
-      marginBottom: 20,
-    },
-    inputField: {
-      marginBottom: -10,
+  useEffect(() => {
+    if (customerId) {
+      fetchApiCustomerDetail();
     }
-  });
+  }, [customerId]);
+
+  const fetchApiCustomerDetail = async () => {
+    try {
+      const response = await axios.get(`https://pw-dawn1.myshopify.com/admin/customers/${customerId}.json`, {
+        headers: {
+          'X-Shopify-Access-Token': storeToken
+        }
+      });
+      const customerData = response.data.customer;
+      setApiCustomerDetail(customerData);
+      setInputFirstName(customerData.first_name || '');
+      setInputLastName(customerData.last_name || '');
+      setInputMobile(customerData.phone?.replace(/\D/g, '') || '');
+      setInputEmail(customerData.email || '');
+      setCountryCode(customerData.countryCode || '+91');
+    } catch (error) {
+      console.error('Failed to fetch customer detail from API:', error);
+    }
+  };
 
   const updateProfile = async () => {
     try {
+      const accessToken = await AsyncStorage.getItem('authToken');
+      if (!accessToken) {
+        alert('Authentication token not found');
+        return;
+      }
+
       const payload = {
+        customerAccessToken: accessToken,
+        email: inputEmail,
         firstName: inputFirstName,
         lastName: inputLastName,
-        mobile: inputMobile,
-        email: inputEmail,
+        phone: `${countryCode}${inputMobile}`,
+        acceptsMarketing: false,
       };
-      console.log('Updating profile with:', payload);
-      await AsyncStorage.setItem('customer', JSON.stringify(payload));
-      setCustomerDetail(payload);
-      setOriginalCustomerDetail(payload);
-      setIsEditing(false); 
+
+      const graphqlQuery = {
+        query: `
+          mutation UpdateCustomerInfo(
+            $customerAccessToken: String!,
+            $email: String,
+            $firstName: String,
+            $lastName: String,
+            $phone: String,
+            $acceptsMarketing: Boolean
+          ) {
+            customerUpdate(
+              customerAccessToken: $customerAccessToken,
+              customer: {
+                email: $email,
+                firstName: $firstName,
+                lastName: $lastName,
+                phone:  $phone,
+                acceptsMarketing: $acceptsMarketing
+              }
+            ) {
+              customer {
+                id
+              }
+              customerUserErrors {
+                code
+                message
+              }
+              userErrors {
+                message
+              }
+            }
+          }
+        `,
+        variables: payload,
+      };
+
+      const response = await axios({
+        url: 'https://pw-dawn1.myshopify.com/api/2024-04/graphql.json',
+        method: 'post',
+        headers: {
+          'X-Shopify-Storefront-Access-Token': storefrontToken,
+          'Content-Type': 'application/json',
+        },
+        data: graphqlQuery,
+      });
+
+      console.log('Response:', response);
+
+      const data = response.data;
+      if (!data || !data.data || !data.data.customerUpdate) {
+        throw new Error('Unexpected response structure');
+      }
+
+      const errors = data.data.customerUpdate.customerUserErrors;
+      if (errors.length) {
+        const errorMessage = errors.map(err => err.message).join(", ");
+        alert(errorMessage);
+        return;
+      }
+
+      const updatedCustomer = data.data.customerUpdate.customer;
+      await AsyncStorage.setItem('customer', JSON.stringify(updatedCustomer));
+      setCustomerDetail(updatedCustomer);
+      setOriginalCustomerDetail(updatedCustomer);
+      setIsEditing(false);
       alert('Profile updated successfully!');
+
+      // Fetch customer data again after saving changes
+      fetchApiCustomerDetail();
     } catch (error) {
       console.error('Failed to update profile:', error);
       alert('Failed to update profile.');
@@ -158,10 +193,137 @@ const EditProfileScreen = (props) => {
   const cancelEdit = () => {
     setInputFirstName(originalCustomerDetail.firstName);
     setInputLastName(originalCustomerDetail.lastName);
-    setInputMobile(originalCustomerDetail.mobile);
+    setInputMobile(originalCustomerDetail.phone?.replace(/\D/g, '') || '');
     setInputEmail(originalCustomerDetail.email);
+    setCountryCode(originalCustomerDetail.countryCode || '+91');
     setIsEditing(false);
   };
+
+  const styles = StyleSheet.create({
+    backgroundImage: {
+      flex: 1,
+      width: '100%',
+      height: '100%', 
+    },
+    overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    },
+    buttonView: {
+      paddingHorizontal: SW(20),
+      flexDirection: 'column',
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    button: {
+      width: '48%',
+      alignItems: 'center',
+      paddingVertical: 10,
+      borderRadius: 6,
+      marginBottom: 20,
+    },
+    buttonText: {
+      color: Colors.white,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    inputView: {
+      paddingHorizontal: SH(10),
+      color: Colors.white,
+      marginBottom: 20,
+      width: '100%',
+      marginBottom: 0,
+      maxWidth: 400,
+    },
+    headerText: {
+      paddingHorizontal: SH(10),
+      color: Colors.theme_backgound,
+      marginBottom: 20,
+      fontSize: 22,
+      textAlign: 'center',
+    },
+    table: {
+      marginBottom: 20,
+    },
+    tablebg: {
+      marginBottom: 20,
+      marginHorizontal: 20,
+      paddingHorizontal: 20,
+      backgroundColor: 'rgba(217, 217, 214, 0.2)',
+      borderRadius: 10,
+    },
+    tableRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: Colors.gray,
+    },
+    tableCell: {
+      color: Colors.white,
+      fontSize: 16,
+    },
+    tableCell2: {
+      color: Colors.white,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    editButton: {
+      width: '48%',
+      alignItems: 'center',
+      paddingVertical: 10,
+      borderRadius: 6,
+      backgroundColor: Colors.theme_backgound,
+      marginBottom: 20,
+    },
+    inputField: {
+      borderRadius: 10,
+      borderColor: Colors.gray,
+      borderWidth: 1,
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+      width: '100%',
+      maxWidth: '100%',
+      color: Colors.white,
+    },
+    phoneInputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '100%',
+      maxWidth: 277,
+   
+    },
+    phoneLabel: {
+      marginLeft: 20, 
+      color: Colors.white,
+      fontSize: 16,
+    },
+    
+    countryCodeButton: {
+      marginVertical: 0,
+      marginLeft: 14,
+      paddingVertical: 10,
+      paddingHorizontal: 10,
+      borderWidth: 1,
+      borderRadius: 6,
+      backgroundColor: Colors.theme_backgound,
+    },
+    countryCodeText: {
+      fontSize: 16,
+    },
+    phoneInput: {
+      flex: 1,
+      marginLeft: 10,
+      paddingVertical: 10,
+      marginBottom: 0,
+      borderRadius: 6,
+      borderColor: Colors.gray,
+      borderWidth: 1,
+      color: Colors.white,
+    },
+  });
+  
 
   return (
     <Container>
@@ -180,7 +342,7 @@ const EditProfileScreen = (props) => {
                   placeholder={t("First Name")}
                   onChangeText={setInputFirstName}
                   value={inputFirstName}
-                  autoCompleteType="tel"
+                  autoCompleteType="name"
                   style={styles.inputField}
                 />
                 <Input
@@ -188,76 +350,93 @@ const EditProfileScreen = (props) => {
                   placeholder={t("Last Name")}
                   onChangeText={setInputLastName}
                   value={inputLastName}
-                  autoCompleteType="tel"
+                  autoCompleteType="name"
                   style={styles.inputField}
                 />
-                <Input
-                  title={t("Mobile_Number")}
-                  placeholder={t("Mobile_Number")}
-                  onChangeText={setInputMobile}
-                  value={inputMobile}
-                  inputType='numeric'
-                  maxLength={10}
-                  autoCompleteType="tel"
-                  style={styles.inputField}
+                <View style={styles.phoneInputContainer}>
+                  <TouchableOpacity
+                    style={styles.countryCodeButton}
+                    onPress={() => setIsCountryPickerVisible(true)}
+                  >
+                    <Text style={styles.countryCodeText}>{countryCode}</Text>
+                  </TouchableOpacity>
+                  <Input
+                    title={t("Mobile Number")}
+                    placeholder={t("Mobile Number")}
+                    onChangeText={setInputMobile}
+                    value={inputMobile}
+                    inputType='numeric'
+                    maxLength={10}
+                    autoCompleteType="tel"
+                    style={styles.phoneInput}
+                  />
+                </View>
+                <CountryPicker
+                  withCallingCode
+                  withFilter
+                  withFlag
+                  withCountryNameButton
+                  withAlphaFilter
+                  withCurrencyButton={false}
+                  onSelect={country => {
+                    setCountryCode('+' + country.callingCode[0]);
+                    setCountry(country);
+                    setIsCountryPickerVisible(false);
+                  }}
+                  visible={isCountryPickerVisible}
+                  onClose={() => setIsCountryPickerVisible(false)}
+                  style={styles.countryCodeTextcount}
                 />
                 <Input
-                  title={t("Enter_Email")}
-                  placeholder={t("Enter_Email")}
+                  title={t("Email")}
+                  placeholder={t("Email")}
                   onChangeText={setInputEmail}
                   value={inputEmail}
-                  autoCompleteType="tel"
+                  keyboardType="email-address"
+                  autoCompleteType="email"
                   style={styles.inputField}
                 />
               </View>
             ) : (
-              <View style={styles.tablebg}>
-                <View style={styles.table}>
+              <View style={styles.table}>
+                <View style={styles.tablebg}>
                   <View style={styles.tableRow}>
-                    <Text style={styles.tableCell}>First Name:</Text>
-                    <Text style={styles.tableCell}>{customerDetail.firstName}</Text>
+                    <Text style={styles.tableCell2}>First Name:</Text>
+                    <Text style={styles.tableCell}>{inputFirstName || '-'}</Text>
                   </View>
                   <View style={styles.tableRow}>
-                    <Text style={styles.tableCell}>Last Name:</Text>
-                    <Text style={styles.tableCell}>{customerDetail.lastName}</Text>
+                    <Text style={styles.tableCell2}>Last Name:</Text>
+                    <Text style={styles.tableCell}>{inputLastName || '-'}</Text>
                   </View>
                   <View style={styles.tableRow}>
-                    <Text style={styles.tableCell}>Mobile:</Text>
-                    <Text style={styles.tableCell}>{customerDetail.mobile}</Text>
+                    <Text style={styles.tableCell2}>Mobile Number:</Text>
+                    <Text style={styles.tableCell}>{`${countryCode}${inputMobile || '-'}`}</Text>
                   </View>
                   <View style={styles.tableRow}>
-                    <Text style={styles.tableCell}>Email:</Text>
-                    <Text style={styles.tableCell}>{customerDetail.email}</Text>
+                    <Text style={styles.tableCell2}>Email:</Text>
+                    <Text style={styles.tableCell}>{inputEmail || '-'}</Text>
                   </View>
                 </View>
               </View>
             )}
 
-            {isEditing ? (
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: SW(30) }}>
-                <TouchableOpacity style={[styles.button, { backgroundColor: Colors.theme_backgound }]} onPress={validateAndUpdate}>
-                  <Text style={styles.buttonText}>{t("Update_Text")}</Text>
+            <Spacing space={SH(20)} />
+            <View style={styles.buttonView}>
+              {isEditing ? (
+                <>
+                  <TouchableOpacity style={styles.editButton} onPress={validateAndUpdate}>
+                    <Text style={styles.buttonText}>Save Changes</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.editButton} onPress={cancelEdit}>
+                    <Text style={styles.buttonText}>Cancel</Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
+                  <Text style={styles.buttonText}>Edit Profile</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { backgroundColor: 'red' }]} onPress={cancelEdit}>
-                  <Text style={styles.buttonText}>{t("Cancel")}</Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: SW(30) }}>
-                <TouchableOpacity
-                  style={[styles.editButton]}
-                  onPress={() => setIsEditing(true)}
-                >
-                  <Text style={styles.buttonText}>{t("Edit Details")}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.editButton]}
-                  onPress={() => navigation.navigate(RouteName.HOME_SCREEN)}
-                >
-                  <Text style={styles.buttonText}>{t("View Orders")}</Text>
-                </TouchableOpacity>
-              </View>
-            )}
+              )}
+            </View>
           </View>
         </ScrollView>
       </ImageBackground>

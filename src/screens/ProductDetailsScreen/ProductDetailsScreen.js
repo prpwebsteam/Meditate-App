@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Modal, ImageBackground } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Modal, AsyncStorage, ImageBackground } from 'react-native';
 import { fetchSingleProduct } from '../../services/productService';
 import { createCheckout, addItem } from '../../services/checkoutService';
-import { Container, Spacing, BottomTabMenu, CategoryView } from '../../components';
-import { useTheme } from '@react-navigation/native';
+import { Container } from '../../components';
 import images from '../../images';
 
 const screenWidth = Dimensions.get('window').width;
@@ -33,34 +32,53 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [zoomImageIndex, setZoomImageIndex] = useState(null);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
 
   useEffect(() => {
+    // Fetch product details
     fetchSingleProduct(productId).then(product => {
       setProduct(product);
       if (product.variants.length > 0) {
         setSelectedVariant(product.variants[0]);
       }
+      updateRecentlyViewed(product);
     });
   }, [productId]);
 
-  // const handleAddToCart = async () => {
-  //   if (!selectedVariant) {
-  //     console.error('No variant selected');
-  //     return;
-  //   }
-  //   try {
-  //     const checkout = await createCheckout();
-  //     if (!checkout) {
-  //       console.error('Failed to create checkout');
-  //       return;
-  //     }
-  //     await addItem(checkout.id, [{ variantId: selectedVariant.id, quantity }]);
-  //     navigation.navigate('CartScreen', { cart: [{ ...selectedVariant, productTitle: product.title, quantity }], updateCart: () => {} });
-  //   } catch (error) {
-  //     console.error('Error adding item to cart:', error);
-  //   }
-  // };
-  const handleAddToCart = async () => { 
+  useEffect(() => {
+    // Load recently viewed products from AsyncStorage
+    const loadRecentlyViewed = async () => {
+      try {
+        const storedProducts = await AsyncStorage.getItem('recentlyViewed');
+        if (storedProducts) {
+          setRecentlyViewed(JSON.parse(storedProducts));
+        }
+      } catch (error) {
+        console.error('Error loading recently viewed products:', error);
+      }
+    };
+    loadRecentlyViewed();
+  }, []);
+
+  const updateRecentlyViewed = async (product) => {
+    try {
+      const storedProducts = await AsyncStorage.getItem('recentlyViewed');
+      let products = storedProducts ? JSON.parse(storedProducts) : [];
+      // Remove product if already exists to re-add at the start
+      products = products.filter(p => p.id !== product.id);
+      // Add the current product to the start
+      products.unshift(product);
+      // Limit to the last 10 products
+      products = products.slice(0, 10);
+      // Save updated products to AsyncStorage
+      await AsyncStorage.setItem('recentlyViewed', JSON.stringify(products));
+      setRecentlyViewed(products);
+    } catch (error) {
+      console.error('Error updating recently viewed products:', error);
+    }
+  };
+
+  const handleAddToCart = async () => {
     if (!selectedVariant) {
       console.error('No variant selected');
       return;
@@ -72,28 +90,12 @@ const ProductDetailsScreen = ({ route, navigation }) => {
         return;
       }
       await addItem(checkout.id, [{ variantId: selectedVariant.id, quantity }]);
-      navigation.navigate('CartScreen', { cart: [{ ...selectedVariant, productTitle: product.title, quantity }], quantities: [quantity], updateCart: () => {} });
+      navigation.navigate('CartScreen', { cart: [{ ...selectedVariant, productTitle: product.title, quantity }], quantities: [quantity], updateCart: () => { } });
     } catch (error) {
       console.error('Error adding item to cart:', error);
     }
   };
-  // const handleBuyNow = async () => {
-  //   if (!selectedVariant) {
-  //     console.error('No variant selected');
-  //     return;
-  //   }
-  //   try {
-  //     const checkout = await createCheckout();
-  //     if (!checkout) {
-  //       console.error('Failed to create checkout');
-  //       return;
-  //     }
-  //     await addItem(checkout.id, [{ variantId: selectedVariant.id, quantity }]);
-  //     navigation.navigate('CheckoutScreen', { cart: [{ ...selectedVariant, productTitle: product.title, quantity }], quantities: [quantity] });
-  //   } catch (error) {
-  //     console.error('Error processing buy now:', error);
-  //   }
-  // };
+
   const handleBuyNow = async () => {
     if (!selectedVariant) {
       console.error('No variant selected');
@@ -111,7 +113,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
       console.error('Error processing buy now:', error);
     }
   };
-  
+
   const handleScroll = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const newIndex = Math.round(offsetX / screenWidth);
@@ -170,8 +172,8 @@ const ProductDetailsScreen = ({ route, navigation }) => {
                       {showFullDescription
                         ? product.description
                         : product.description.length > 200
-                        ? `${product.description.slice(0, 200)}...`
-                        : product.description}
+                          ? `${product.description.slice(0, 200)}...`
+                          : product.description}
                       <Text onPress={() => setShowFullDescription(!showFullDescription)} style={styles.loadMoreText}>
                         {showFullDescription ? ' Load Less' : ' Load More'}
                       </Text>
@@ -193,6 +195,25 @@ const ProductDetailsScreen = ({ route, navigation }) => {
                         </TouchableOpacity>
                       </View>
                     </View>
+
+                    {/* Recently Viewed Section */}
+                    <View style={styles.recentlyViewedContainer}>
+                      <Text style={styles.recentlyViewedTitle}>Recently Viewed</Text>
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        {recentlyViewed.map((item) => (
+                          <View key={item.id} style={styles.itemContainer}>
+                            <TouchableOpacity onPress={() => navigation.navigate('ProductDetailsScreen', { productId: item.id })}>
+                              <Image source={{ uri: item.images[0]?.src }} style={styles.itemImage} />
+                              <Text style={styles.productName} numberOfLines={2}>
+                                {item.title}
+                              </Text>
+                              <Text style={styles.itemPrice}>{item.variants[0]?.price.currencyCode} {item.variants[0]?.price.amount}</Text>
+                            </TouchableOpacity>
+                          </View>
+                        ))}
+                      </ScrollView>
+                    </View>
+
                   </>
                 ) : (
                   <Text style={styles.soldOutText}>Sold Out</Text>
@@ -211,7 +232,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
                       <TouchableOpacity onPress={closeZoomImage} style={styles.zoomCloseButton}>
                         <Text style={styles.zoomCloseButtonText}>✕</Text>
                       </TouchableOpacity>
-                      <Image source={{ uri: product.images[zoomImageIndex].src }} style={styles.zoomImage} resizeMode="contain" />
+                      <Image source={{ uri: product.images[zoomImageIndex].src }} style={styles.zoomImage} />
                     </ScrollView>
                   </View>
                 </Modal>
@@ -220,6 +241,8 @@ const ProductDetailsScreen = ({ route, navigation }) => {
           ) : (
             <Text style={styles.loadingText}>Loading...</Text>
           )}
+        </View>
+        {selectedVariant && (
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
               <Text style={styles.buttonText}>Add to Cart</Text>
@@ -228,7 +251,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
               <Text style={styles.buybuttonText}>Buy Now</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        )}
       </ImageBackground>
     </Container>
   );
@@ -253,7 +276,6 @@ const styles = StyleSheet.create({
   imageSlider: {
     height: 400,
     marginBottom: 16,
-    // marginTop: 30,
   },
   productImage: {
     width: screenWidth - 32,
@@ -294,7 +316,7 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
   loadMoreText: {
-    fontSize: 16, 
+    fontSize: 16,
     color: '#f79f80',
   },
   price: {
@@ -419,6 +441,47 @@ const styles = StyleSheet.create({
     width: screenWidth,
     height: screenHeight,
     borderRadius: 10,
+  },
+  recentlyViewedContainer: {
+    marginVertical: 20,
+  
+    paddingHorizontal: 16,
+  },
+  recentlyViewedTitle: {
+    fontSize: 18,
+    color: '#f79f80',
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  recentlyViewedScroll: {
+    flexDirection: 'row',
+  },
+  itemContainer: {
+    borderRadius: 8,
+    borderColor: '#f79f80', 
+    borderWidth: 1,
+    padding:5,
+    marginRight: 10,
+    alignItems: 'center',
+    width: 120,
+  },
+  itemImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+    marginBottom: 5,
+  },
+  productName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+     textAlign: 'left',
+    marginBottom: 3,
+    color: '#f79f80',
+  },
+  itemPrice: {
+    fontSize: 14,
+    color: '#f79f80',
+    textAlign: 'left',
   },
 });
 
