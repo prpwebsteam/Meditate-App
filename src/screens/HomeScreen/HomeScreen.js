@@ -37,7 +37,7 @@ const HomeScreen = (props) => {
   console.log("Bhairav2222:----", customerDetail)
   const fetchApiCustomerDetail = async () => {
     try {
-      const response = await axios.get(`https://pw-dawn1.myshopify.com/admin/customers/${customerDetail?.id?.match(/\d+/)[0]}.json`, {
+      const response = await axios.get(`https://themoonheart.com/admin/customers/${customerDetail?.id?.match(/\d+/)[0]}.json`, {
         headers: {
           'X-Shopify-Access-Token': storeToken
         }

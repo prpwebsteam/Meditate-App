@@ -104,7 +104,7 @@ const SignUpScreen = (props) => {
 
     try {
       const response = await axios({
-        url: 'https://pw-dawn1.myshopify.com/api/2024-04/graphql.json',
+        url: 'https://themoonheart.com/api/2024-04/graphql.json',
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ const SignUpScreen = (props) => {
         const customerId = response.data.data.customerCreate.customer.id.split('/').pop();
 
         await axios({
-          url: `https://pw-dawn1.myshopify.com/admin/customers/${customerId}/metafields.json`,
+          url: `https://themoonheart.com/admin/customers/${customerId}/metafields.json`,
           method: 'post',
           headers: {
             'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ const SignUpScreen = (props) => {
         });
 
         await axios({
-          url: `https://pw-dawn1.myshopify.com/admin/customers/${customerId}/metafields.json`,
+          url: `https://themoonheart.com/admin/customers/${customerId}/metafields.json`,
           method: 'post',
           headers: {
             'Content-Type': 'application/json',

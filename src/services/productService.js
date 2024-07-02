@@ -1,6 +1,6 @@
 import client from './shopifyClient';
 
-export async function fetchAllProducts(pageSize = 20) {
+export async function fetchAllProducts(pageSize = 250) {
   return client.product.fetchAll(pageSize);
 }
 

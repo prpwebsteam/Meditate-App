@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ImageBackground, ActivityIndicator, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ImageBackground,  ActivityIndicator, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -11,17 +11,40 @@ import images from '../../images';
 import { color } from 'react-native-reanimated';
 import { colors } from 'react-native-elements';
 import { useTranslation } from 'react-i18next';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Noorder from '../../images/noorder.png'
 const OrderListScreen = () => {
+
   const customer = useSelector(state => state.auth);
-  const customerId = customer?.customer?.id?.split('/').pop();
+
+  console.log(customer,'customerIdcustomerIdcustomerIdcustomerIdcustomerIdcustomerIdcustomerIdcustomerIdcustomerIdcustomerIdcustomerIdcustomerIdcustomerId');
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const accessToken = SHOPIFY_ACCESS_TOKEN;
   const { Colors } = useTheme();
   const { t } = useTranslation();
+  const [customerDetail, setCustomerDetail] = useState(null);
+  const [customerId, setCustomerId] = useState('');
 
+  useEffect(() => {
+    const fetchCustomerDetail = async () => {
+      try {
+        const customerData = await AsyncStorage.getItem('customer');
+        if (customerData) {
+          const parsedData = JSON.parse(customerData);
+          setCustomerDetail(parsedData);
+          const id = parsedData.id;
+          const extractedId = id.match(/\d+/)[0];
+          setCustomerId(extractedId);
+        }
+      } catch (error) {
+        console.error('Error fetching customer detail:', error);
+      }
+    };
+
+    fetchCustomerDetail();
+  }, []);
   console.log(orders, 'orders-pppppppppppppppppppppppppppppppppppppppp')
   useEffect(() => {
     if (!customerId) {
@@ -32,7 +55,7 @@ const OrderListScreen = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios({
-          url: `https://pw-dawn1.myshopify.com/admin/api/2024-04/orders.json?customer_id=${customerId}`,
+          url: `https://themoonheart.com/admin/api/2024-04/orders.json?customer_id=${customerId}`,
           method: 'get',
           headers: {
             'Content-Type': 'application/json',
@@ -85,32 +108,39 @@ const OrderListScreen = () => {
   );
 
 
-  return (
+  return ( 
     <Container>
-      <ImageBackground source={images.background1} style={styles.backgroundImage}>
-        <View style={styles.overlay} />
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image source={images.backArrow} style={styles.backArrow} />
-          </TouchableOpacity>
-          <Text style={[styles.title, { color: Colors.white }]}>{t("All Orders")}</Text>
+    <ImageBackground source={images.background1} style={styles.backgroundImage}>
+      <View style={styles.overlay} />
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#000" />
         </View>
-        <FlatList
-          data={orders}
-          renderItem={renderOrderItem}
-          keyExtractor={order => order.id.toString()}
-          contentContainerStyle={styles.container}
-          ListEmptyComponent={() => (
-            <View style={styles.noOrdersContainer}>
-              <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.noOrdersImage} />
-              <Text style={styles.noOrdersText}>No orders yet</Text>
-              <Text style={styles.noOrdersSubText}>Go to the store to place an order.</Text>
-            </View>
-
-          )}
-        />
-      </ImageBackground>
-    </Container>
+      ) : (
+        <>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image source={images.backArrow} style={styles.backArrow} />
+            </TouchableOpacity>
+            <Text style={[styles.title, { color: Colors.white }]}>{t("All Orders")}</Text>
+          </View>
+          <FlatList
+            data={orders}
+            renderItem={renderOrderItem}
+            keyExtractor={order => order.id.toString()}
+            contentContainerStyle={styles.container}
+            ListEmptyComponent={() => (
+              <View style={styles.noOrdersContainer}>
+                <Image source={Noorder} style={styles.noOrdersImage} />
+                <Text style={styles.noOrdersText}>No orders yet</Text>
+                <Text style={styles.noOrdersSubText}>Go to the store to place an order.</Text>
+              </View>
+            )}
+          />
+        </>
+      )}
+    </ImageBackground>
+  </Container>
   );
 };
 
@@ -133,6 +163,11 @@ const styles = StyleSheet.create({
     height: SH(20),
     marginTop: 3,
     marginRight: SW(10),
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: SH(24),
@@ -158,9 +193,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   noOrdersImage: {
-    width: 150,
+    width: 200,
     height: 150,
     marginBottom: 20,
+    tintColor: Colors.white
   },
   noOrdersText: {
     fontSize: 22,

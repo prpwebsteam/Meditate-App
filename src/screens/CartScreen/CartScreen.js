@@ -8,14 +8,16 @@ import {
   StyleSheet,
   ImageBackground,
 } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 import { addItem, createCheckout, updateItem } from '../../services/checkoutService';
 import EmptyCart from '../../images/EmptyCart.png';
 import { RouteName } from '../../routes';
 import { BottomTabMenu, Container } from '../../components';
 import images from '../../images';
 import DeleteIcon from '../../components/commonComponents/DeleteIcon';
-
+import { Colors } from '../../utils';
 const CartScreen = ({ route, navigation }) => {
+  const { Colors } = useTheme();
   const { cart: initialCart = [], quantities: initialQuantities = [], updateCart } = route.params;
 
   const [cart, setCart] = useState(initialCart);
@@ -210,7 +212,7 @@ const styles = StyleSheet.create({
     tintColor: 'white',
   },
   continueShoppingButton: {
-    backgroundColor: 'rgba(217, 217, 214, 0.2)',
+    backgroundColor: Colors.theme_backgound_second,
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -297,7 +299,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   checkoutButton: {
-    backgroundColor: 'rgba(217, 217, 214, 0.2)',
+    backgroundColor: Colors.theme_backgound_second,
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',

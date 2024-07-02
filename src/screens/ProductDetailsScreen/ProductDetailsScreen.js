@@ -35,7 +35,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   const [recentlyViewed, setRecentlyViewed] = useState([]);
 
   useEffect(() => {
-    // Fetch product details
+  
     fetchSingleProduct(productId).then(product => {
       setProduct(product);
       if (product.variants.length > 0) {
@@ -46,7 +46,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   }, [productId]);
 
   useEffect(() => {
-    // Load recently viewed products from AsyncStorage
+ 
     const loadRecentlyViewed = async () => {
       try {
         const storedProducts = await AsyncStorage.getItem('recentlyViewed');
@@ -64,13 +64,13 @@ const ProductDetailsScreen = ({ route, navigation }) => {
     try {
       const storedProducts = await AsyncStorage.getItem('recentlyViewed');
       let products = storedProducts ? JSON.parse(storedProducts) : [];
-      // Remove product if already exists to re-add at the start
+
       products = products.filter(p => p.id !== product.id);
-      // Add the current product to the start
+      
       products.unshift(product);
-      // Limit to the last 10 products
+     
       products = products.slice(0, 10);
-      // Save updated products to AsyncStorage
+
       await AsyncStorage.setItem('recentlyViewed', JSON.stringify(products));
       setRecentlyViewed(products);
     } catch (error) {
@@ -196,7 +196,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
                       </View>
                     </View>
 
-                    {/* Recently Viewed Section */}
+ 
                     <View style={styles.recentlyViewedContainer}>
                       <Text style={styles.recentlyViewedTitle}>Recently Viewed</Text>
                       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -438,8 +438,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   zoomImage: {
-    width: screenWidth,
-    height: screenHeight,
+    width: screenWidth - 10,
+    height: screenHeight - 10,
     borderRadius: 10,
   },
   recentlyViewedContainer: {

@@ -42,7 +42,7 @@ const OtpVerifyScreen = ({ navigation }) => {
       };
 
       const response = await axios({
-        url: 'https://pw-dawn1.myshopify.com/api/2024-04/graphql.json',
+        url: 'https://themoonheart.com/api/2024-04/graphql.json',
         method: 'post',
         headers: {
           'X-Shopify-Storefront-Access-Token': accessToken,
@@ -69,7 +69,7 @@ const OtpVerifyScreen = ({ navigation }) => {
 
   const onPressHandle = () => {
     setSuccessModalVisible(false);
-    navigation.navigate(RouteName.RESET_PASSWORD_SCREEN);
+    navigation.navigate(RouteName.LOGIN_SCREEN);
   };
 
   return (

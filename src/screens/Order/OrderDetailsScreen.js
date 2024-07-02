@@ -7,14 +7,14 @@ import images from '../../images';
 import { Colors, SH, SW } from '../../utils';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-
+import { useNavigation } from '@react-navigation/native';
 const OrderDetailsScreen = ({ route }) => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const orderId = route.params.orderId;
   const accessToken = SHOPIFY_ACCESS_TOKEN;
   const { t } = useTranslation();
-
+  const navigation = useNavigation();
   const { Colors } = useTheme();
   useEffect(() => {
     if (!orderId) {
@@ -25,7 +25,7 @@ const OrderDetailsScreen = ({ route }) => {
     const fetchOrder = async () => {
       try {
         const response = await axios({
-          url: `https://pw-dawn1.myshopify.com/admin/api/2024-04/orders/${orderId}.json`,
+          url: `https://themoonheart.com/admin/api/2024-04/orders/${orderId}.json`,
           method: 'get',
           headers: {
             'Content-Type': 'application/json',
@@ -55,13 +55,8 @@ const OrderDetailsScreen = ({ route }) => {
         <Text>No order details available</Text>
       </View>
     );
-  }
+  } 
 
-  const handleBuyAgain = () => {
-    // Implement the buy again functionality here
-    // This can be navigating to the product page or adding items to the cart
-    console.log("Buy Again clicked");
-  };
 
   const renderShipmentStatus = () => {
     if (!order.fulfillments || order.fulfillments.length === 0) {
@@ -157,7 +152,7 @@ const OrderDetailsScreen = ({ route }) => {
             <Text style={styles.status}>Confirmed {new Date(order.created_at).toDateString()}</Text>
           </View>
           <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.button} onPress={handleBuyAgain}>
+            <TouchableOpacity style={styles.button}   onPress={() => navigation.navigate('ProductListScreen')}>
               <Text style={styles.buttonText}>Buy Again</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => Linking.openURL(order.order_status_url)}>

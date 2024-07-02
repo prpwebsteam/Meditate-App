@@ -3,11 +3,12 @@ import { View, Text, FlatList, Button, StyleSheet, Image, TouchableOpacity,Image
 import { fetchCheckout } from '../../services/checkoutService';
 import { BottomTabMenu, Container } from '../../components';
 import images from '../../images';
-
+import { useTheme } from '@react-navigation/native';
+import { Colors } from '../../utils';
 const CheckoutScreen = ({ route, navigation }) => {
   const { cart, quantities, checkoutId } = route.params || {};
   const [checkout, setCheckout] = useState(null);
-
+  const { Colors } = useTheme();
   useEffect(() => {
     const loadCheckout = async () => {
       const checkoutData = await fetchCheckout(checkoutId);
@@ -21,7 +22,7 @@ const CheckoutScreen = ({ route, navigation }) => {
     <View style={styles.itemContainer}>
       <Image source={{ uri: item.productImage }} style={styles.itemImage} resizeMode="center" />
       <View style={styles.itemDetails}>
-        <Text style={styles.itemTitle}>{item.productTitle}</Text>
+        <Text style={styles.itemTitle} numberOfLines={2} ellipsizeMode='tail'>{item.productTitle}</Text>
         <Text style={styles.itemVariant}>{item.title}</Text>
         <Text style={styles.itemPrice}>
           Price: {item.priceV2.currencyCode} {item.priceV2.amount} 
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   itemImage: {
-    width: 100,
+    width: 160,
     height: '100%',
     borderRadius: 8,
     marginRight: 16,
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 0,
     padding: 10,
-    backgroundColor: 'rgba(217, 217, 214, 0.2)',
+    backgroundColor: Colors.theme_backgound_second,
     borderRadius: 8,
   },
 });

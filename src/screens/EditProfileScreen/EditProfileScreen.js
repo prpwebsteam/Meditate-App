@@ -62,7 +62,7 @@ const EditProfileScreen = (props) => {
 
   const fetchApiCustomerDetail = async () => {
     try {
-      const response = await axios.get(`https://pw-dawn1.myshopify.com/admin/customers/${customerId}.json`, {
+      const response = await axios.get(`https://themoonheart.com/admin/customers/${customerId}.json`, {
         headers: {
           'X-Shopify-Access-Token': storeToken
         }
@@ -143,7 +143,7 @@ const EditProfileScreen = (props) => {
       };
   
       const response = await axios({
-        url: 'https://pw-dawn1.myshopify.com/api/2024-04/graphql.json',
+        url: 'https://themoonheart.com/api/2024-04/graphql.json',
         method: 'post',
         headers: {
           'X-Shopify-Storefront-Access-Token': storefrontToken,
