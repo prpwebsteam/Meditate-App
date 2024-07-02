@@ -11,6 +11,7 @@ import axios from 'axios';
 import { STOREFRONT_ACCESS_TOKEN, SHOPIFY_ACCESS_TOKEN } from '../../../env';
 import CountryPicker from 'react-native-country-picker-modal';
 import { useSelector } from 'react-redux';
+import { RouteName } from '../../routes';
 
 const EditProfileScreen = (props) => {
   const { Colors } = useTheme();
@@ -68,11 +69,21 @@ const EditProfileScreen = (props) => {
       });
       const customerData = response.data.customer;
       setApiCustomerDetail(customerData);
+
+      // Extract country code and mobile number
+      const phone = customerData.phone || '';
+      const phoneMatch = phone.match(/^(\+\d{1,3})(\d{10})$/);
+      if (phoneMatch) {
+        setCountryCode(phoneMatch[1]);
+        setInputMobile(phoneMatch[2]);
+      } else {
+        setCountryCode('+91'); // default country code
+        setInputMobile(phone.replace(/\D/g, ''));
+      }
+
       setInputFirstName(customerData.first_name || '');
       setInputLastName(customerData.last_name || '');
-      setInputMobile(customerData.phone?.replace(/\D/g, '') || '');
       setInputEmail(customerData.email || '');
-      setCountryCode(customerData.countryCode || '+91');
     } catch (error) {
       console.error('Failed to fetch customer detail from API:', error);
     }
@@ -85,7 +96,7 @@ const EditProfileScreen = (props) => {
         alert('Authentication token not found');
         return;
       }
-
+  
       const payload = {
         customerAccessToken: accessToken,
         email: inputEmail,
@@ -94,7 +105,7 @@ const EditProfileScreen = (props) => {
         phone: `${countryCode}${inputMobile}`,
         acceptsMarketing: false,
       };
-
+  
       const graphqlQuery = {
         query: `
           mutation UpdateCustomerInfo(
@@ -130,7 +141,7 @@ const EditProfileScreen = (props) => {
         `,
         variables: payload,
       };
-
+  
       const response = await axios({
         url: 'https://pw-dawn1.myshopify.com/api/2024-04/graphql.json',
         method: 'post',
@@ -140,28 +151,36 @@ const EditProfileScreen = (props) => {
         },
         data: graphqlQuery,
       });
-
+  
       console.log('Response:', response);
-
+  
       const data = response.data;
       if (!data || !data.data || !data.data.customerUpdate) {
         throw new Error('Unexpected response structure');
       }
-
+  
       const errors = data.data.customerUpdate.customerUserErrors;
       if (errors.length) {
         const errorMessage = errors.map(err => err.message).join(", ");
         alert(errorMessage);
         return;
       }
-
+  
       const updatedCustomer = data.data.customerUpdate.customer;
       await AsyncStorage.setItem('customer', JSON.stringify(updatedCustomer));
       setCustomerDetail(updatedCustomer);
       setOriginalCustomerDetail(updatedCustomer);
+  
+      // Update state variables with the new details
+      setInputFirstName(updatedCustomer.firstName || '');
+      setInputLastName(updatedCustomer.lastName || '');
+      setInputMobile(updatedCustomer.phone?.replace(/\D/g, '') || '');
+      setInputEmail(updatedCustomer.email || '');
+      setCountryCode(updatedCustomer.countryCode || '+91');
+  
       setIsEditing(false);
       alert('Profile updated successfully!');
-
+  
       // Fetch customer data again after saving changes
       fetchApiCustomerDetail();
     } catch (error) {
@@ -169,7 +188,7 @@ const EditProfileScreen = (props) => {
       alert('Failed to update profile.');
     }
   };
-
+  
   const validateAndUpdate = () => {
     if (!inputFirstName.trim()) {
       alert("First Name is required");
@@ -191,19 +210,31 @@ const EditProfileScreen = (props) => {
   };
 
   const cancelEdit = () => {
-    setInputFirstName(originalCustomerDetail.firstName);
-    setInputLastName(originalCustomerDetail.lastName);
-    setInputMobile(originalCustomerDetail.phone?.replace(/\D/g, '') || '');
+    setInputFirstName(originalCustomerDetail.first_name);
+    setInputLastName(originalCustomerDetail.last_name);
+    
+    const phone = originalCustomerDetail.phone || '';
+    const phoneMatch = phone.match(/^(\+\d{1,3})(\d{10})$/);
+    if (phoneMatch) {
+      setCountryCode(phoneMatch[1]);
+      setInputMobile(phoneMatch[2]);
+      fetchApiCustomerDetail();
+    } else {
+      setCountryCode('+91'); 
+      setInputMobile(phone.replace(/\D/g, ''));
+    }
+
     setInputEmail(originalCustomerDetail.email);
-    setCountryCode(originalCustomerDetail.countryCode || '+91');
+    fetchApiCustomerDetail();
     setIsEditing(false);
   };
 
+  console.log("inputMobile:_______",inputMobile)
   const styles = StyleSheet.create({
     backgroundImage: {
       flex: 1,
       width: '100%',
-      height: '100%', 
+      height: '100%',
     },
     overlay: {
       ...StyleSheet.absoluteFillObject,
@@ -269,6 +300,14 @@ const EditProfileScreen = (props) => {
       fontSize: 16,
       fontWeight: 'bold',
     },
+    cancelButton: {
+      width: '48%',
+      alignItems: 'center',
+      paddingVertical: 10,
+      borderRadius: 6,
+      backgroundColor: Colors.red,
+      marginBottom: 20,
+    },
     editButton: {
       width: '48%',
       alignItems: 'center',
@@ -292,14 +331,14 @@ const EditProfileScreen = (props) => {
       alignItems: 'center',
       width: '100%',
       maxWidth: 277,
-   
+
     },
     phoneLabel: {
-      marginLeft: 20, 
+      marginLeft: 20,
       color: Colors.white,
       fontSize: 16,
     },
-    
+
     countryCodeButton: {
       marginVertical: 0,
       marginLeft: 14,
@@ -323,7 +362,6 @@ const EditProfileScreen = (props) => {
       color: Colors.white,
     },
   });
-  
 
   return (
     <Container>
@@ -423,18 +461,23 @@ const EditProfileScreen = (props) => {
             <Spacing space={SH(20)} />
             <View style={styles.buttonView}>
               {isEditing ? (
-                <>
-                  <TouchableOpacity style={styles.editButton} onPress={validateAndUpdate}>
+                <View style={{ flex: 1, flexDirection: 'row', gap: 4 }}>
+                  <TouchableOpacity style={[styles.editButton, { marginRight: 8 }]} onPress={validateAndUpdate}>
                     <Text style={styles.buttonText}>Save Changes</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.editButton} onPress={cancelEdit}>
+                  <TouchableOpacity style={styles.cancelButton} onPress={cancelEdit}>
                     <Text style={styles.buttonText}>Cancel</Text>
                   </TouchableOpacity>
-                </>
+                </View>
               ) : (
-                <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
-                  <Text style={styles.buttonText}>Edit Profile</Text>
-                </TouchableOpacity>
+                <View style={{ flex: 1, flexDirection: 'row', gap: 4 }}>
+                  <TouchableOpacity style={[styles.editButton, { marginRight: 8 }]} onPress={() => setIsEditing(true)}>
+                    <Text style={styles.buttonText}>Edit Profile</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate(RouteName.CUSTOMER_SCREEN)}>
+                    <Text style={styles.buttonText}>View Orders</Text>
+                  </TouchableOpacity>
+                </View>
               )}
             </View>
           </View>

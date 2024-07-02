@@ -4,14 +4,17 @@ import axios from 'axios';
 import { SHOPIFY_ACCESS_TOKEN } from '../../../env';
 import { Container } from '../../components';
 import images from '../../images';
-import { Colors } from '../../utils';
+import { Colors, SH, SW } from '../../utils';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 const OrderDetailsScreen = ({ route }) => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const orderId = route.params.orderId;
   const accessToken = SHOPIFY_ACCESS_TOKEN;
+  const { t } = useTranslation();
+
   const { Colors } = useTheme();
   useEffect(() => {
     if (!orderId) {
@@ -126,10 +129,10 @@ const OrderDetailsScreen = ({ route }) => {
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
-      <Image
+      {/* <Image
         source={{ uri: item.image ? item.image : 'https://via.placeholder.com/50' }}
         style={styles.itemImage}
-      />
+      /> */}
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.itemQuantity}>Qty: {item.quantity}</Text>
@@ -142,6 +145,12 @@ const OrderDetailsScreen = ({ route }) => {
     <Container>
       <ImageBackground source={images.background1} style={styles.backgroundImage}>
         <View style={styles.overlay} />
+        <View style={styles.header2}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={images.backArrow} style={styles.backArrow} />
+          </TouchableOpacity>
+          <Text style={[styles.title, { color: Colors.white }]}>{t("Order Detail")}</Text>
+        </View>
         <ScrollView style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.headerText}>Order #{order.order_number}</Text>
@@ -231,6 +240,23 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
+  },
+  header2: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.theme_backgound,
+    paddingVertical: 10,
+    paddingTop: 10,
+    paddingHorizontal: 20,
+  },
+  backArrow: {
+    width: SH(20),
+    height: SH(20),
+    marginTop: 3,
+    marginRight: SW(10),
+  },
+  title: {
+    fontSize: SH(24),
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -322,6 +348,7 @@ const styles = StyleSheet.create({
   },
   itemDetails: {
     flex: 1,
+    gap: 5,
     color: Colors.white,
     alignItems: 'flex-start'
   },
@@ -331,6 +358,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     textAlign: 'left',
     color: Colors.white,
+    marginBottom: 15,
   },
   itemQuantity: {
     fontSize: 12,

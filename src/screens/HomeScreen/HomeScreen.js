@@ -13,6 +13,7 @@ import axios from 'axios';
 import { SoundContext } from '../../utils/SoundContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector } from 'react-redux';
+import { SHOPIFY_ACCESS_TOKEN } from '../../../env';
 
 const HomeScreen = (props) => {
   const { Colors } = useTheme();
@@ -21,7 +22,8 @@ const HomeScreen = (props) => {
   const { t } = useTranslation();
   const { isPlaying, currentTrack, pauseTrack, resumeTrack, currentTime, duration } = useContext(SoundContext);
   const [customerDetail, setCustomerDetail] = useState('');
-
+  const [inputFirstName, setInputFirstName] = useState('');
+  const storeToken = SHOPIFY_ACCESS_TOKEN;
   useEffect(async () => {
     setCustomerDetail(JSON.parse(await AsyncStorage.getItem('customer')));
   }, [])
@@ -32,25 +34,35 @@ const HomeScreen = (props) => {
   const [greeting, setGreeting] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState({});
-  console.log("Bhairav:----", customerDetail)
+  console.log("Bhairav2222:----", customerDetail)
+  const fetchApiCustomerDetail = async () => {
+    try {
+      const response = await axios.get(`https://pw-dawn1.myshopify.com/admin/customers/${customerDetail?.id?.match(/\d+/)[0]}.json`, {
+        headers: {
+          'X-Shopify-Access-Token': storeToken
+        }
+      });
+      const customerData = response.data.customer;
+      setInputFirstName(customerData.first_name || '');
+    } catch (error) {
+      console.error('Failed to fetch customer detail from API:', error);
+    }
+  };
+
+  useEffect(()=>{
+    fetchApiCustomerDetail();
+  },[customerDetail])
   const fetchTags = async () => {
     try {
       const response = await axios.get('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/tags');
-      console.log('Tags API Response:', response);
-
-      const defaultImages = [
-        'http://chitraguptp85.sg-host.com/wp-content/uploads/2024/06/med-6.png',
-        'http://chitraguptp85.sg-host.com/wp-content/uploads/2024/06/buddha-statue-mediation-relaxation-scaled.jpg',
-        'http://chitraguptp85.sg-host.com/wp-content/uploads/2024/06/3d-rendering-buddha-statute-sunset-scaled.jpg'
-      ];
-
+      console.log("response222:--------",response)
       if (response.status === 200) {
         if (Array.isArray(response.data) && response.data.length > 0) {
           setTagData(response.data.map((tag, index) => ({
             id: tag.id.toString(),
             title: tag.name,
             description: tag.description,
-            imageUrl: defaultImages[index % defaultImages.length],
+            imageUrl: tag.thumbnail,
           })));
         } else {
           console.error('Empty or invalid tags response data:', response.data);
@@ -333,7 +345,7 @@ const HomeScreen = (props) => {
           <View style={HomeStyles.textcenterview}>
             <Spacing space={SH(20)} />
             <View style={HomeStyles.userIconView}>
-              <Text style={HomeStyles.userTitle}>{t(`Hey ${customerDetail?.firstName || ""}, `)}{greeting}</Text>
+              <Text style={HomeStyles.userTitle}>{t(`Hey ${inputFirstName || customerDetail.first_name }, `)}{greeting}</Text>
             </View>
             <Spacing space={SH(20)} />
             <Spacing space={SH(30)} />
