@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity,ImageBackground, ActivityIndicator, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ImageBackground, ActivityIndicator, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { SHOPIFY_ACCESS_TOKEN } from '../../../env';
 import { useTheme } from '@react-navigation/native';
-import { Colors } from '../../utils';
+import { Colors, SH, SW } from '../../utils';
 import { Container } from '../../components';
 import images from '../../images';
 import { color } from 'react-native-reanimated';
 import { colors } from 'react-native-elements';
+import { useTranslation } from 'react-i18next';
+
 const OrderListScreen = () => {
   const customer = useSelector(state => state.auth);
   const customerId = customer?.customer?.id?.split('/').pop();
@@ -18,7 +20,9 @@ const OrderListScreen = () => {
   const navigation = useNavigation();
   const accessToken = SHOPIFY_ACCESS_TOKEN;
   const { Colors } = useTheme();
-  console.log(orders,'orders-pppppppppppppppppppppppppppppppppppppppp')
+  const { t } = useTranslation();
+
+  console.log(orders, 'orders-pppppppppppppppppppppppppppppppppppppppp')
   useEffect(() => {
     if (!customerId) {
       setLoading(false);
@@ -47,18 +51,18 @@ const OrderListScreen = () => {
   }, [customerId]);
 
   const handleOrderPress = (order) => {
-    navigation.navigate('OrderDetailsScreen', { orderId: order.id });
+    navigation.navigate('OrderDetailsScreen', { orderId: order?.id });
   };
 
   if (loading) {
     return (
       <Container>
-      <ImageBackground source={images.background1} style={styles.backgroundImage}>
-        <View style={styles.overlay} />
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#000" />
-      </View>
-      </ImageBackground>
+        <ImageBackground source={images.background1} style={styles.backgroundImage}>
+          <View style={styles.overlay} />
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#000" />
+          </View>
+        </ImageBackground>
       </Container>
     );
   }
@@ -69,38 +73,44 @@ const OrderListScreen = () => {
         <Text style={styles.orderStatus}>Confirmed</Text>
         <Text style={styles.orderDate}>Last updated {new Date(order.updated_at).toLocaleDateString()}</Text>
       </View>
-      <Image source={{ uri: order.image_url || 'https://via.placeholder.com/150' }} style={styles.orderImage} />
+      {/* <Image source={{ uri: order.image_url || 'https://via.placeholder.com/150' }} style={styles.orderImage} /> */}
       <View style={styles.orderDetails}>
         <Text style={styles.orderText}>Order #{order.order_number}</Text>
         <Text style={styles.orderPrice}>{order.currency}{order.current_total_price}</Text>
         <TouchableOpacity style={styles.buyAgainButton} onPress={() => navigation.navigate('ProductListScreen')}>
           <Text style={styles.buyAgainText}>Buy again</Text>
-        </TouchableOpacity> 
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
-  
+
 
   return (
     <Container>
-    <ImageBackground source={images.background1} style={styles.backgroundImage}>
-      <View style={styles.overlay} />
-    <FlatList
-      data={orders}
-      renderItem={renderOrderItem}
-      keyExtractor={order => order.id.toString()}
-      contentContainerStyle={styles.container}
-      ListEmptyComponent={() => (
-        <View style={styles.noOrdersContainer}>
-          <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.noOrdersImage} />
-          <Text style={styles.noOrdersText}>No orders yet</Text>
-          <Text style={styles.noOrdersSubText}>Go to the store to place an order.</Text>
+      <ImageBackground source={images.background1} style={styles.backgroundImage}>
+        <View style={styles.overlay} />
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={images.backArrow} style={styles.backArrow} />
+          </TouchableOpacity>
+          <Text style={[styles.title, { color: Colors.white }]}>{t("All Orders")}</Text>
         </View>
+        <FlatList
+          data={orders}
+          renderItem={renderOrderItem}
+          keyExtractor={order => order.id.toString()}
+          contentContainerStyle={styles.container}
+          ListEmptyComponent={() => (
+            <View style={styles.noOrdersContainer}>
+              <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.noOrdersImage} />
+              <Text style={styles.noOrdersText}>No orders yet</Text>
+              <Text style={styles.noOrdersSubText}>Go to the store to place an order.</Text>
+            </View>
 
-      )}
-    />
-    </ImageBackground>
-  </Container>
+          )}
+        />
+      </ImageBackground>
+    </Container>
   );
 };
 
@@ -110,6 +120,23 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.theme_backgound,
+    paddingVertical: 10,
+    paddingTop: 10,
+    paddingHorizontal: 20,
+  },
+  backArrow: {
+    width: SH(20),
+    height: SH(20),
+    marginTop: 3,
+    marginRight: SW(10),
+  },
+  title: {
+    fontSize: SH(24),
+  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -117,7 +144,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 10,
-
+    paddingBottom: 50
   },
   loadingContainer: {
     flex: 1,
@@ -138,7 +165,7 @@ const styles = StyleSheet.create({
   noOrdersText: {
     fontSize: 22,
     fontWeight: 'bold',
-   color: Colors.white,
+    color: Colors.white,
     marginBottom: 10,
   },
   noOrdersSubText: {
@@ -163,17 +190,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 10,
     backgroundColor: 'rgba(217, 217, 214, 0.2)',
-    borderBottomWidth: 1, 
-    borderBottomColor:  Colors.border,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
   },
   orderStatus: {
     fontSize: 14,
     fontWeight: 'bold',
-   color: Colors.white,
+    color: Colors.white,
   },
   orderDate: {
     fontSize: 12,
-   color: Colors.white,
+    color: Colors.white,
   },
   orderImage: {
     width: '100%',
@@ -184,12 +211,12 @@ const styles = StyleSheet.create({
   },
   orderText: {
     fontSize: 16,
-   color: Colors.white,
+    color: Colors.white,
   },
   orderPrice: {
     fontSize: 18,
-    fontWeight: 'bold', 
-   color: Colors.white,
+    fontWeight: 'bold',
+    color: Colors.white,
     marginVertical: 5,
   },
   buyAgainButton: {
@@ -201,7 +228,7 @@ const styles = StyleSheet.create({
   },
   buyAgainText: {
     fontSize: 16,
-   color: Colors.white,
+    color: Colors.white,
   },
 });
 
