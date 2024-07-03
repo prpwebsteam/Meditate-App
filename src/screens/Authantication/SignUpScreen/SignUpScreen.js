@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import axios from 'axios';
 import { SHOPIFY_ACCESS_TOKEN, STOREFRONT_ACCESS_TOKEN } from '../../../../env';
 import FlashNotification from '../../../components/FlashNotification';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Import MaterialIcons from react-native-vector-icons
+import Icon from 'react-native-vector-icons/MaterialIcons'; 
 
 const SignUpScreen = (props) => {
   const { Colors } = useTheme();
@@ -104,7 +104,7 @@ const SignUpScreen = (props) => {
 
     try {
       const response = await axios({
-        url: 'https://themoonheart.com/api/2024-04/graphql.json',
+        url: 'https://themoonheart.myshopify.com/api/2024-04/graphql.json',
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -118,9 +118,9 @@ const SignUpScreen = (props) => {
 
       if (response.data.data.customerCreate.customer) {
         const customerId = response.data.data.customerCreate.customer.id.split('/').pop();
-
+console.log(customerId,'punit-----------------------');
         await axios({
-          url: `https://themoonheart.com/admin/customers/${customerId}/metafields.json`,
+          url: `https://lilly-paris-shop.myshopify.com/admin/customers/${customerId}/metafields.json`,
           method: 'post',
           headers: {
             'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ const SignUpScreen = (props) => {
         });
 
         await axios({
-          url: `https://themoonheart.com/admin/customers/${customerId}/metafields.json`,
+          url: `https://lilly-paris-shop.myshopify.com/admin/customers/${customerId}/metafields.json`,
           method: 'post',
           headers: {
             'Content-Type': 'application/json',

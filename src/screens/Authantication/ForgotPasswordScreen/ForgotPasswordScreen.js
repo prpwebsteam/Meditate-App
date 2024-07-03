@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, ImageBackground, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, ScrollView, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import axios from 'axios';
-import { Button, Container, Input, SweetAlertModal } from '../../../components';
+import { Container, Input, SweetAlertModal } from '../../../components';
 import { RouteName } from '../../../routes';
 import images from '../../../index';
 import { STOREFRONT_ACCESS_TOKEN } from '../../../../env';
+import { SH, SF, Fonts, SW } from '../../../utils';
 
 const OtpVerifyScreen = ({ navigation }) => {
   const { Colors } = useTheme();
@@ -42,7 +43,7 @@ const OtpVerifyScreen = ({ navigation }) => {
       };
 
       const response = await axios({
-        url: 'https://themoonheart.com/api/2024-04/graphql.json',
+        url: 'https://themoonheart.myshopify.com/api/2024-04/graphql.json',
         method: 'post',
         headers: {
           'X-Shopify-Storefront-Access-Token': accessToken,
@@ -77,21 +78,29 @@ const OtpVerifyScreen = ({ navigation }) => {
       <ImageBackground source={images.loginBG} resizeMode='cover' style={styles.backgroundImage}>
         <ScrollView contentContainerStyle={styles.scrollView}>
           <View style={styles.container}>
-            <Text style={styles.title}>{t("Forgot_Password_TWO")}</Text>
-            <Input
-              title={t("Enter_Email")}
-              placeholder={t("Enter_Email")}
-              onChangeText={setEmail}
-              value={email}
-              keyboardType='email-address'
-              inputStyle={styles.input}
-            />
-            <Button
-              title={t("Send_Text")}
-              onPress={sendCode}
-              loading={loading}
-              buttonStyle={styles.button}
-            />
+            <View style={[styles.containerinner]}>
+              <Text style={styles.title}>{t("Forgot_Password_TWO")}</Text>
+              <Input
+                title={t("Enter_Email")}
+                placeholder={t("Enter_Email")}
+                onChangeText={setEmail}
+                value={email}
+                keyboardType='email-address'
+                inputStyle={styles.input}
+              />
+                  
+              <TouchableOpacity
+                style={styles.button}
+                onPress={sendCode}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.buttonText}>{t("Send_Text")}</Text>
+                )}
+              </TouchableOpacity>
+            </View>
             <SweetAlertModal
               message={t("Email_Successfull")}
               modalVisible={successModalVisible}
@@ -113,28 +122,46 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  containerinner: {
+    flex: 1,
+    justifyContent: 'center',
+    width: '100%',
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
   scrollView: {
     flexGrow: 1,
+    width: '100%',
     justifyContent: 'center',
   },
   container: {
     width: '100%',
     alignItems: 'center',
-    paddingHorizontal: 20,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 30,
     textAlign: 'center',
+    color: '#fff',
   },
   input: {
     fontSize: 16,
-    width: '100%', 
+    width: '100%',
     marginBottom: 20,
   },
   button: {
     width: '100%',
+    paddingVertical: 15,
+    paddingHorizontal: 118,
+    backgroundColor: '#f79f80',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
