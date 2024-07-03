@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, useContext } from 'react';
-import { View, Text, FlatList, ScrollView, Image, ImageBackground, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, FlatList, ScrollView, Image, ImageBackground, StyleSheet, TouchableOpacity, Modal, StatusBar } from 'react-native';
 import { HomeStyle } from '../../styles';
 import { Picker } from '@react-native-picker/picker';
 import CheckBox from '@react-native-community/checkbox';
@@ -349,6 +349,7 @@ const HomeScreen = (props) => {
 
   return (
     <Container>
+      <StatusBar backgroundColor={Colors.theme_backgound} />
       <ImageBackground source={images.background1} style={styles.backgroundImage}>
         <View style={styles.overlay} />
         <BottomTabMenu {...props} selected={0} />
@@ -420,7 +421,7 @@ const HomeScreen = (props) => {
 
 
 
-            <View style={HomeStyles.HomeCommonView}>
+            {/* <View style={HomeStyles.HomeCommonView}>
               <Text style={HomeStyles.HomeCommonTitle}>{t("Your Favorites")}</Text>
             </View>
             <Spacing space={SH(20)} />
@@ -439,7 +440,7 @@ const HomeScreen = (props) => {
               horizontal={true}
             />
 
-            <Spacing space={SH(20)} />
+            <Spacing space={SH(20)} /> */}
 
             <View style={HomeStyles.HomeCommonView}>
               <Text style={HomeStyles.HomeCommonTitle}>{t("Select Tag")}</Text>

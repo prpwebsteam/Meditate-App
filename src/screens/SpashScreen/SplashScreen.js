@@ -8,11 +8,12 @@ import { Colors, Fonts } from '../../utils';
 import { Container } from '../../components';
 import { GetstartedSliderStyle } from '../../styles/GetstartedSliderscreen';
 
-StatusBar.setBackgroundColor(Colors.theme_backgound);
 const SplashScreen = () => {
   const GetstartedSliderStyles = useMemo(() => GetstartedSliderStyle(Colors), [Colors]);
 
   return (
+    <View style={styles.container}>
+      <StatusBar translucent backgroundColor="transparent" />
       <FastImage 
         source={images.screenbg} 
         style={styles.background} 
@@ -26,10 +27,14 @@ const SplashScreen = () => {
           </View>
         </View>
       </FastImage>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   background: {
     width: '100%',
     height: '100%',
@@ -38,7 +43,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingHorizontal: 30
+    paddingHorizontal: 30,
   },
   logo: {
     width: 300,
