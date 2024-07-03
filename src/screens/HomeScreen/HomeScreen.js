@@ -345,7 +345,7 @@ const HomeScreen = (props) => {
           <View style={HomeStyles.textcenterview}>
             <Spacing space={SH(20)} />
             <View style={HomeStyles.userIconView}>
-              <Text style={HomeStyles.userTitle}>{t(`Hey ${inputFirstName || customerDetail.first_name }, `)}{greeting}</Text>
+              <Text style={HomeStyles.userTitle}>{t(`Hey ${inputFirstName || customerDetail?.first_name }, `)}{greeting}</Text>
             </View>
             <Spacing space={SH(20)} />
             <Spacing space={SH(30)} />

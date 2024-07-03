@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
-import { Camera, useCameraDevices } from 'react-native-vision-camera';
-import { HomeStyle } from '../../styles';
+import { Camera, useCameraDevices, useCodeScanner } from 'react-native-vision-camera';
 import { Container, BottomTabMenu } from '../../components';
-import { RouteName } from '../../routes';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
 import images from '../../index';
 
 const ScanScreen = (props) => {
   const { Colors } = useTheme();
-  const HomeStyles = useMemo(() => HomeStyle(Colors), [Colors]);
   const { navigation } = props;
   const { t } = useTranslation();
   const [hasPermission, setHasPermission] = useState(false);
@@ -19,61 +16,35 @@ const ScanScreen = (props) => {
   const cameraRef = useRef(null);
 
   useEffect(() => {
-    (async () => {
+    const requestPermission = async () => {
       if (Platform.OS === 'android') {
-        const status = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA);
-        console.log('Initial permission status:', status ? 'authorized' : 'denied');
-        setHasPermission(status);
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: "Camera Permission",
+            message: "This app needs access to your camera to scan barcodes",
+            buttonNeutral: "Ask Me Later",
+            buttonNegative: "Cancel",
+            buttonPositive: "OK"
+          }
+        );
+        setHasPermission(granted === PermissionsAndroid.RESULTS.GRANTED);
       } else {
-        const status = await Camera.getCameraPermissionStatus();
-        console.log('Initial permission status:', status);
-        setHasPermission(status === 'authorized');
+        const status = await Camera.requestCameraPermission();
+        setHasPermission(status === 'authorized' || status === 'limited');
       }
-    })();
+    };
+
+    requestPermission();
   }, []);
 
-  const requestCameraPermission = async () => {
-    if (Platform.OS === 'android') {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: "Camera Permission",
-          message: "This app needs access to your camera to scan barcodes",
-          buttonNeutral: "Ask Me Later",
-          buttonNegative: "Cancel",
-          buttonPositive: "OK"
-        }
-      );
-      console.log('Permission status after request:', granted);
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        setHasPermission(true);
-      } else {
-        Alert.alert(
-          'Permission Denied',
-          'Camera permission is required to scan barcodes. Please enable it in the app settings.',
-          [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Open Settings', onPress: () => Linking.openSettings() },
-          ],
-        );
-      }
-    } else {
-      const status = await Camera.requestCameraPermission();
-      console.log('Permission status after request:', status);
-      if (status === 'authorized' || status === 'limited') {
-        setHasPermission(true);
-      } else {
-        Alert.alert(
-          'Permission Denied',
-          'Camera permission is required to scan barcodes. Please enable it in the app settings.',
-          [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Open Settings', onPress: () => Linking.openSettings() },
-          ],
-        );
-      }
-    }
-  };
+  const codeScanner = useCodeScanner({
+    codeTypes: ['qr', 'ean-13'],
+    onCodeScanned: codes => {
+      console.log(codes, "codes")
+      navigation.navigate('HomeScreen');
+    },
+  });
 
   const styles = useMemo(() =>
     StyleSheet.create({
@@ -101,7 +72,6 @@ const ScanScreen = (props) => {
         borderWidth: 2
       },
       capture: {
-        flex: 0,
         backgroundColor: '#f79f80',
         borderRadius: 5,
         color: '#fff',
@@ -112,7 +82,6 @@ const ScanScreen = (props) => {
         fontWeight: 'bold',
       },
       permissionButton: {
-        flex: 0,
         backgroundColor: '#fff',
         borderRadius: 5,
         padding: 15,
@@ -131,7 +100,7 @@ const ScanScreen = (props) => {
       const photo = await cameraRef.current.takePhoto({
         qualityPrioritization: 'speed',
       });
-      console.log("Photo path:------", photo.path);
+      console.log("Photo path:", photo.path);
     }
   };
 
@@ -152,10 +121,8 @@ const ScanScreen = (props) => {
                 isActive={true}
                 photo={true}
                 ref={cameraRef}
-              >
-                <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                </View>
-              </Camera>
+                codeScanner={codeScanner}
+              />
             </View>
           )
         )}
