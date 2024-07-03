@@ -20,7 +20,7 @@ const { width: screenWidth } = Dimensions.get("window");
 
 const LoginScreen = ({ navigation }) => {
   const { Colors } = useTheme();
-  const Authentications = useMemo(() => Authentication(Colors), [Colors]);
+  const Authentications = useMemo(() => Authentication(Colors), [Colors]); 
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [flashNotification, setFlashNotification] = useState(false);
@@ -69,7 +69,7 @@ const LoginScreen = ({ navigation }) => {
 
     try {
       const response = await axios({
-        url: 'https://themoonheart.com/api/2024-04/graphql.json', 
+        url: 'https://themoonheart.myshopify.com/api/2024-04/graphql.json', 
         method: 'post',
         headers: {
           'X-Shopify-Storefront-Access-Token': storefrontToken,
@@ -98,7 +98,7 @@ const LoginScreen = ({ navigation }) => {
         };
 
         const customerResponse = await axios({
-          url: 'https://themoonheart.com/api/2024-04/graphql.json', 
+          url: 'https://themoonheart.myshopify.com/api/2024-04/graphql.json', 
           method: 'post',
           headers: {
             'X-Shopify-Storefront-Access-Token': storefrontToken,
