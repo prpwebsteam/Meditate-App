@@ -6,6 +6,7 @@ const images = {
     selectionRound: require('./lottieAnimation/selectionRound.json'),
     leftArrowIcon: require('./lottieAnimation/leftArrowS.json'),
     male: require('./male.png'),
+    coming_soon: require('./coming_soon.png'),
     shareIcon: require('./share.png'),
     female: require('./female.png'),
     login: require('./hundred.png'),

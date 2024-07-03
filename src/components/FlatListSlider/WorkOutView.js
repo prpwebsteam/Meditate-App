@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
-import { SH, SF } from '../../utils';
+import { SH, SF, SW } from '../../utils';
 
 const WorkOutView = ({ item, onPress }) => {
   return (
@@ -17,7 +17,7 @@ const WorkOutView = ({ item, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: SH(140),
+    width: '44%',
     margin: SH(10),
     borderRadius: SH(10),
     overflow: 'hidden',

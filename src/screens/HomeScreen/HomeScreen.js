@@ -49,13 +49,13 @@ const HomeScreen = (props) => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchApiCustomerDetail();
-  },[customerDetail])
+  }, [customerDetail])
   const fetchTags = async () => {
     try {
       const response = await axios.get('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/tags');
-      console.log("response222:--------",response)
+      console.log("response222:--------", response)
       if (response.status === 200) {
         if (Array.isArray(response.data) && response.data.length > 0) {
           setTagData(response.data.map((tag, index) => ({
@@ -323,6 +323,17 @@ const HomeScreen = (props) => {
         padding: 5,
         borderRadius: 5,
       },
+      description: {
+        color: 'white',
+        fontSize: SF(12),
+        textAlign: 'left',
+        marginTop: SH(5),
+      },
+      overlay2: {
+        width: '100%',
+        padding: SH(10),
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      },
     }), [Colors]);
 
   const progress = (currentTime / (duration || 1)) * 100;
@@ -345,7 +356,7 @@ const HomeScreen = (props) => {
           <View style={HomeStyles.textcenterview}>
             <Spacing space={SH(20)} />
             <View style={HomeStyles.userIconView}>
-              <Text style={HomeStyles.userTitle}>{t(`Hey ${inputFirstName || customerDetail?.first_name }, `)}{greeting}</Text>
+              <Text style={HomeStyles.userTitle}>{t(`Hey ${inputFirstName || customerDetail?.first_name}, `)}{greeting}</Text>
             </View>
             <Spacing space={SH(20)} />
             <Spacing space={SH(30)} />
@@ -416,10 +427,13 @@ const HomeScreen = (props) => {
             <FlatList
               data={workoutData}
               renderItem={({ item }) => (
-                <WorkOutView
-                  onPress={() => onpressHandle(item.id, item.title)}
-                  item={item}
-                />
+                <TouchableOpacity style={styles.recentlyPlayedItem} onPress={() => onpressHandle(item.id, item.title)}>
+                  <ImageBackground source={{ uri: item.imageUrl }}
+                    style={{ flex: 1, justifyContent: 'flex-end' }}
+                    imageStyle={{ borderRadius: 10 }}>
+                      <Text style={styles.recentlyPlayedText}>{item.title}</Text>
+                  </ImageBackground>
+                </TouchableOpacity>
               )}
               keyExtractor={(item) => item.id}
               horizontal={true}
@@ -434,10 +448,13 @@ const HomeScreen = (props) => {
             <FlatList
               data={tagData}
               renderItem={({ item }) => (
-                <WorkOutView
-                  onPress={() => onTagPressHandle(item.id, item.title)}
-                  item={item}
-                />
+                <TouchableOpacity style={styles.recentlyPlayedItem} onPress={() => onTagPressHandle(item.id, item.title)}>
+                  <ImageBackground source={{ uri: item.imageUrl }}
+                    style={{ flex: 1, justifyContent: 'flex-end' }}
+                    imageStyle={{ borderRadius: 10 }}>
+                      <Text style={styles.recentlyPlayedText}>{item.title}</Text>
+                  </ImageBackground>
+                </TouchableOpacity>
               )}
               keyExtractor={(item) => item.id}
               horizontal={true}
