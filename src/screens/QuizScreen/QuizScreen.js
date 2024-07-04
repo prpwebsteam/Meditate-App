@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, ImageBackground, Platform, useColorScheme } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import CheckBox from '@react-native-community/checkbox';
 import axios from 'axios';
@@ -13,6 +13,8 @@ import { SoundContext } from '../../utils/SoundContext';
 
 const QuizScreen = ({ navigation }) => {
     const { Colors } = useTheme();
+    const colorScheme = useColorScheme();
+    const isDarkMode = colorScheme === 'dark';
     const { t } = useTranslation();
     const [quizQuestions, setQuizQuestions] = useState([]);
     const [quizAnswers, setQuizAnswers] = useState({});
@@ -126,7 +128,7 @@ const QuizScreen = ({ navigation }) => {
                                     <CheckBox
                                         value={quizAnswers[currentQuestion.id] === optionKey}
                                         onValueChange={() => handleQuizAnswerChange(currentQuestion.id, optionKey)}
-                                        style={styles.CheckBox}
+                                        tintColors={{ true: '#999', false: '#999' }}
                                     />
                                     <Text style={styles.optionText}>{currentQuestion.questions[optionKey]}</Text>
                                 </View>
@@ -138,11 +140,11 @@ const QuizScreen = ({ navigation }) => {
                                 onPress={handlePreviousQuestion}
                                 disabled={currentQuestionIndex === 0}
                             >
-                                <VectoreIcons icon="MaterialCommunityIcons" name="chevron-left" color={Colors.white} size={SF(25)} />
+                                <Image source={images.backArrowQuiz} style={styles.backArrowQuiz} />
                             </TouchableOpacity>
                             {currentQuestionIndex < quizQuestions.length - 1 ? (
                                 <TouchableOpacity style={styles.arrowButton} onPress={handleNextQuestion}>
-                                    <VectoreIcons icon="MaterialCommunityIcons" name="chevron-right" color={Colors.white} size={SF(25)} />
+                                    <Image source={images.forwardArrowQuiz} style={styles.backArrowQuiz} />
                                 </TouchableOpacity>
                             ) : (
                                 <TouchableOpacity style={styles.submitButton} onPress={handleSubmitQuiz}>
@@ -182,6 +184,11 @@ const styles = StyleSheet.create({
         marginTop: 3,
         marginRight: SW(10),
     },
+    backArrowQuiz: {
+        width: SH(40),
+        height: SH(40),
+        marginRight: SW(10),
+    },
     title: {
         fontSize: SH(24),
     },
@@ -190,9 +197,9 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
     },
-    CheckBox:{
-        color:'#fff',
-        borderColor:'#FFF'
+    CheckBox: {
+        color: '#fff',
+        borderWidth: 1, 
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,

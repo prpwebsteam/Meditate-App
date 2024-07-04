@@ -34,7 +34,6 @@ const HomeScreen = (props) => {
   const [greeting, setGreeting] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState({});
-  console.log("Bhairav2222:----", customerDetail)
   const fetchApiCustomerDetail = async () => {
     try {
       const response = await axios.get(`https://themoonheart.com/admin/customers/${customerDetail?.id?.match(/\d+/)[0]}.json`, {

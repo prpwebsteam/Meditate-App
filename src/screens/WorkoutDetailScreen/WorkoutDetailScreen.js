@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useContext, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground, StyleSheet, Share, Platform } from 'react-native';
-import PushNotification from 'react-native-push-notification';
 import { WorkoutDetailStyle } from '../../styles';
 import { Button, Container, Spacing, LottieIcon } from '../../components';
 import images from '../../index';
@@ -94,6 +93,9 @@ const WorkoutDetailScreen = (props) => {
     }
   };
 
+  useEffect(() => {
+    console.log("similarTracks", similarTracks);
+  }, [similarTracks])
   const storeRecentlyPlayed = async (track) => {
     try {
       let recentTracks = await AsyncStorage.getItem('recentlyPlayedTracks');
@@ -124,29 +126,18 @@ const WorkoutDetailScreen = (props) => {
     }
 
     const isWishlisted = wishlist.includes(currentTrack.id.toString());
-    const url = `https://chitraguptp85.sg-host.com/wp-json/meditate/v2/wishlist${isWishlisted ? '' : ''}`;
-    const method = isWishlisted ? 'put' : 'post';
-    const message = isWishlisted ? 'remove from' : 'add to';
 
     try {
-      const response = await axios({
-        method,
-        url,
-        params: {
-          user_id: 9,
-          song_id: currentTrack.id,
-        },
-      });
-
-      if (response.status === 200) {
-        setWishlist((prevWishlist) =>
-          isWishlisted ? prevWishlist.filter(id => id !== currentTrack.id.toString()) : [...prevWishlist, currentTrack.id.toString()]
-        );
+      let updatedWishlist;
+      if (isWishlisted) {
+        updatedWishlist = wishlist.filter(id => id !== currentTrack.id.toString());
       } else {
-        console.error(`Failed to ${message} wishlist. Response status:`, response.status, 'Response data:', response.data);
+        updatedWishlist = [...wishlist, currentTrack.id.toString()];
       }
+      setWishlist(updatedWishlist);
+      await AsyncStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
     } catch (error) {
-      console.error(`Error trying to ${message} wishlist:`, error);
+      console.error(`Error updating wishlist:`, error);
     }
   };
 
@@ -206,6 +197,14 @@ const WorkoutDetailScreen = (props) => {
     }
   }, [categoryId, tagId, fromRecentlyPlayed, track, relatedSongs]);
 
+  useEffect(() => {
+    if (track) {
+      handlePlayTrack(track);
+    } else {
+      fetchSongs();
+    }
+  }, [track]);
+
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -214,17 +213,8 @@ const WorkoutDetailScreen = (props) => {
 
   const fetchWishlistItems = async () => {
     try {
-      const response = await axios.get('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/wishlist-items/', {
-        params: {
-          user_id: 9,
-        },
-      });
-
-      if (response.status === 200 && Array.isArray(response.data)) {
-        setWishlist(response.data.map(String)); // Ensure all IDs are strings
-      } else {
-        console.error('Failed to fetch wishlist items or invalid response data:', response.data);
-      }
+      const storedWishlist = await AsyncStorage.getItem('wishlist');
+      setWishlist(storedWishlist ? JSON.parse(storedWishlist) : []);
     } catch (error) {
       console.error('Error fetching wishlist items:', error);
     }
@@ -383,71 +373,44 @@ const WorkoutDetailScreen = (props) => {
               <Spacing space={SH(20)} />
             </View>
             <Spacing space={SH(20)} />
-            {relatedSongs ? (
-              <View>
-                <Text style={[WorkoutDetailStyles.boxText]}>{t("Related Music")}</Text>
-                <View style={WorkoutDetailStyles.similarMusicContainer}>
-                  {similarTracks.length === 0 ? (
-                    <Text style={{
-                      color: Colors.white,
-                      fontSize: SH(16),
-                      textAlign: 'center',
-                      marginVertical: SH(20),
-                      marginHorizontal: SH(20),
-                    }}>{t("No similar music found")}</Text>
-                  ) : (
-                    similarTracks.map((item) => (
-                      <TouchableOpacity key={item.id} onPress={() => handlePlayTrack(item)} style={WorkoutDetailStyles.trackItem}>
-                        {item.thumbnail ? (
-                          <Image source={{ uri: item.thumbnail }} style={WorkoutDetailStyles.trackThumbnail} />
-                        ) : (
-                          <Image source={images.dummyImage2} style={WorkoutDetailStyles.trackThumbnail} />
-                        )}
-                        <View style={WorkoutDetailStyles.trackInfo}>
-                          <Text style={WorkoutDetailStyles.trackTitle}>{item.title}</Text>
-                          <Text style={WorkoutDetailStyles.singer}>{item.artist?.title || "Unknown Artist"}</Text>
-                        </View>
-                        {currentTrack?.id === item.id && isPlaying ? (
-                          <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
-                        ) : (
-                          <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
-                        )}
-                      </TouchableOpacity>
-                    ))
-                  )}
-                </View>
+            <View>
+              <Text style={[WorkoutDetailStyles.boxText]}>
+                {relatedSongs ? t("Related Music") : t("Similar Music")}
+              </Text>
+              <View style={WorkoutDetailStyles.similarMusicContainer}>
+                {similarTracks.length === 0 && !relatedSongs && (
+                  <Text style={{
+                    color: Colors.white,
+                    fontSize: SH(16),
+                    textAlign: 'center',
+                    marginVertical: SH(20),
+                    marginHorizontal: SH(20),
+                  }}>{t("No similar music found")}</Text>
+                )}
+                {similarTracks.map((item) => (
+                  <View key={item.id} style={WorkoutDetailStyles.trackItem}>
+                    {item.thumbnail ? (
+                      <Image source={{ uri: item.thumbnail }} style={WorkoutDetailStyles.trackThumbnail} />
+                    ) : (
+                      <Image source={images.dummyImage2} style={WorkoutDetailStyles.trackThumbnail} />
+                    )}
+                    <View style={WorkoutDetailStyles.trackInfo}>
+                      <Text style={WorkoutDetailStyles.trackTitle}>{item.title}</Text>
+                      <Text style={WorkoutDetailStyles.singer}>{item.artist?.title || "Unknown Artist"}</Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => currentTrack?.id === item.id && isPlaying ? pauseTrack() : handlePlayTrack(item)}
+                    >
+                      {currentTrack?.id === item.id && isPlaying ? (
+                        <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
+                      ) : (
+                        <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                ))}
               </View>
-            ) : (
-              <View>
-                <Text style={[WorkoutDetailStyles.boxText]}>{t("Similar Music")}</Text>
-                <View style={WorkoutDetailStyles.similarMusicContainer}>
-                  {
-                    similarTracks.map((item) => (
-                      <View key={item.id} style={WorkoutDetailStyles.trackItem}>
-                        {item.thumbnail ? (
-                          <Image source={{ uri: item.thumbnail }} style={WorkoutDetailStyles.trackThumbnail} />
-                        ) : (
-                          <Image source={images.dummyImage2} style={WorkoutDetailStyles.trackThumbnail} />
-                        )}
-                        <View style={WorkoutDetailStyles.trackInfo}>
-                          <Text style={WorkoutDetailStyles.trackTitle}>{item.title}</Text>
-                          <Text style={WorkoutDetailStyles.singer}>{item.artist?.title || "Unknown Artist"}</Text>
-                        </View>
-                        <TouchableOpacity
-                          onPress={() => currentTrack?.id === item.id && isPlaying ? pauseTrack() : handlePlayTrack(item)}
-                        >
-                          {currentTrack?.id === item.id && isPlaying ? (
-                            <Image source={images.pause} style={WorkoutDetailStyles.trackIcon} />
-                          ) : (
-                            <Image source={images.play} style={WorkoutDetailStyles.trackIcon} />
-                          )}
-                        </TouchableOpacity>
-                      </View>
-                    ))
-                  }
-                </View>
-              </View>
-            )}
+            </View>
             <Spacing space={SH(20)} />
           </ScrollView>
           <View style={WorkoutDetailStyles.stickyButton}>

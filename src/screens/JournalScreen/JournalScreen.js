@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, StyleSheet, ImageBackground, KeyboardAvoidingView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, TextInput, FlatList, StyleSheet, ImageBackground, KeyboardAvoidingView, TouchableOpacity, Platform, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Container } from '../../components';
 import images from '../../images';
 import { VectoreIcons } from '../../components';
+import { Input } from 'react-native-elements';
+import { SF } from '../../utils';
+import { t } from 'i18next';
 
 const TodoScreen = () => {
     const [todoEntry, setTodoEntry] = useState('');
     const [todos, setTodos] = useState([]);
+    const colorScheme = useColorScheme();
+    const isDarkMode = colorScheme === 'dark';
 
     useEffect(() => {
         loadTodos();
@@ -18,7 +23,6 @@ const TodoScreen = () => {
             const storedTodos = await AsyncStorage.getItem('todoEntries');
             if (storedTodos) {
                 setTodos(JSON.parse(storedTodos));
-
             }
         } catch (error) {
             console.error('Failed to load todos.', error);
@@ -46,8 +50,8 @@ const TodoScreen = () => {
     const renderTodoItem = ({ item, index }) => (
         <View style={styles.entryItem}>
             <View style={{ width: '90%' }}>
-                <Text style={styles.entryText}>{item.text}</Text>
-                <Text style={styles.dateText}>{item.date}</Text>
+                <Text style={[styles.entryText, { color: isDarkMode ? '#fff' : '#999' }]}>{item.text}</Text>
+                <Text style={[styles.dateText, { color: isDarkMode ? '#ccc' : '#888' }]}>{item.date}</Text>
             </View>
 
             <TouchableOpacity onPress={() => deleteTodo(index)}>
@@ -58,7 +62,7 @@ const TodoScreen = () => {
 
     const renderEmptyComponent = () => (
         <View style={styles.emptyComponent}>
-            <Text style={styles.emptyText}>No journal entries found.</Text>
+            <Text style={[styles.emptyText, { color: isDarkMode ? '#999' : '#999' }]}>No journal entries found.</Text>
         </View>
     );
 
@@ -75,11 +79,14 @@ const TodoScreen = () => {
                         ListEmptyComponent={renderEmptyComponent}
                     />
                     <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
+                        <Input
+                            style={[styles.input, { color: isDarkMode ? '#999' : '#999' }]}
+                            inputStyle={{ fontSize: SF(12), flex: 1 }}
                             placeholder="Enter a journal..."
+                            placeholderTextColor={isDarkMode ? '#ccc' : '#999'}
                             value={todoEntry}
                             onChangeText={setTodoEntry}
+                            inputContainerStyle={{ borderBottomWidth: 0 }}
                         />
                         <TouchableOpacity style={styles.addButton} onPress={saveTodo}>
                             <Text style={styles.addButtonText}>Add a Journal</Text>
@@ -103,7 +110,6 @@ const styles = StyleSheet.create({
     emptyText: {
         fontSize: 18,
         paddingTop: 20,
-        color: '#999',
         textAlign: 'center',
     },
     backgroundImage: {
@@ -121,7 +127,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         padding: 20,
-        paddingBottom: 10,
+        paddingBottom: 20,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
     },
@@ -130,11 +136,12 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
         padding: 10,
         borderRadius: 5,
-        marginBottom: 10,
+        marginBottom: -15
     },
     addButton: {
         backgroundColor: '#f79f80',
         padding: 10,
+        marginHorizontal: 10,
         borderRadius: 5,
         alignItems: 'center',
     },
@@ -158,7 +165,6 @@ const styles = StyleSheet.create({
     },
     dateText: {
         fontSize: 12,
-        color: '#888',
     },
 });
 

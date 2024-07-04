@@ -4,65 +4,78 @@ import { Container } from '../../components';
 import { SH, SW, SF } from '../../utils';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from "react-i18next";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import images from '../../index';
+import { RouteName } from '../../routes';
 
 const Wishlist = ({ navigation }) => {
     const { Colors } = useTheme();
     const { t } = useTranslation();
     const [wishlist, setWishlist] = useState([]);
-    const [item, setItem] = useState('');
 
     useEffect(() => {
-        fetchSongs();
+        fetchWishlist();
     }, []);
 
-    const fetchSongs = async () => {
+    const fetchWishlist = async () => {
         try {
-            const userId = 9;
-            const url = `https://chitraguptp85.sg-host.com/wp-json/meditate/v2/wishlist?user_id=${userId}`;
-
-            const response = await axios.get(url);
-
-            if (response.status === 200 && Array.isArray(response.data)) {
-                const tracks = response.data.map((item) => ({
-                    id: item.id,
-                    title: item.title,
-                    url: item.song?.add_new || null,
-                    thumbnail: item.song?.thumbnail_image || null,
-                    artist: {
-                        image: item.artist?.image || null,
-                        title: item.artist?.title || null,
-                        description: item.artist?.description ? item.artist.description.replace(/<\/?[^>]+(>|$)/g, "") : null,
-                    }
-                })).filter(track => track.url);
-
-                setWishlist(tracks);
-            } else {
-                console.error('Failed to fetch songs or invalid response data:', response.data);
-            }
+            const storedWishlist = await AsyncStorage.getItem('wishlist');
+            const wishlistItems = storedWishlist ? JSON.parse(storedWishlist) : [];
+            console.log("storedWishlist:", storedWishlist);
+            console.log("parsed wishlistItems:", wishlistItems);
+            fetchSongsDetails(wishlistItems);
         } catch (error) {
-            console.error('Error fetching songs:', error);
+            console.error('Error fetching wishlist from AsyncStorage:', error);
+        }
+    };
+
+    const fetchSongsDetails = async (wishlistItems) => {
+        try {
+            const songDetailsPromises = wishlistItems.map(async (itemId) => {
+                const response = await axios.get(`https://chitraguptp85.sg-host.com/wp-json/meditate/v2/song?song_id=${itemId}`);
+                console.log('response.data for item:', itemId, response.data);
+                return response.data[0]; // Since response.data is an array, access the first item
+            });
+
+            const songsDetails = await Promise.all(songDetailsPromises);
+
+            const formattedSongs = songsDetails.map(song => ({
+                id: song.id,
+                title: song.title,
+                url: song.song?.add_new || null,
+                thumbnail: song.song?.thumbnail_image || null,
+                artist: {
+                    image: song.artist?.image || null,
+                    title: song.artist?.title || 'Unknown Artist',
+                    description: song.artist?.description ? song.artist.description.replace(/<\/?[^>]+(>|$)/g, "") : null,
+                }
+            })).filter(track => track.url);
+
+            console.log("formattedSongs:", formattedSongs);
+            setWishlist(formattedSongs);
+        } catch (error) {
+            console.error('Error fetching song details:', error);
         }
     };
 
     const removeItemFromWishlist = async (id) => {
         try {
-            const response = await axios.put('https://chitraguptp85.sg-host.com/wp-json/meditate/v2/wishlist', null, {
-                params: {
-                    user_id: 9,
-                    song_id: id,
-                },
-            });
-
-            if (response.status === 200) {
-                setWishlist((prevWishlist) => prevWishlist.filter(item => item.id !== id));
-            } else {
-                console.error('Failed to remove track from wishlist. Response status:', response.status, 'Response data:', response.data);
-            }
+            const updatedWishlist = wishlist.filter(item => item.id !== id);
+            setWishlist(updatedWishlist);
+            const updatedWishlistIds = updatedWishlist.map(item => item.id);
+            await AsyncStorage.setItem('wishlist', JSON.stringify(updatedWishlistIds));
         } catch (error) {
-            console.error('Error removing track from wishlist:', error);
+            console.error('Error removing item from wishlist:', error);
         }
+    };
+
+    useEffect(() => {
+        console.log("wishlist:__________", wishlist);
+    }, [wishlist]);
+
+    const onTagPressHandle = (track) => {
+        navigation.navigate(RouteName.WORKOUT_DETAIL_SCREEN, { track });
     };
 
     const styles = useMemo(() => StyleSheet.create({
@@ -130,7 +143,7 @@ const Wishlist = ({ navigation }) => {
             tintColor: '#fff',
             height: SH(20),
             marginRight: SW(10),
-            marginTop: 5
+            marginTop: 5,
         },
         headerTitleContainer: {
             flexDirection: 'row',
@@ -173,14 +186,14 @@ const Wishlist = ({ navigation }) => {
                     <Text style={styles.title}>{t('Wishlist')}</Text>
                 </View>
                 <View style={styles.container}>
-                    {wishlist.length === 0 ? (
+                    {wishlist?.length === 0 ? (
                         <Text style={styles.emptyMessage}>{t('No items added in wishlist')}</Text>
                     ) : (
                         <FlatList
                             data={wishlist}
-                            keyExtractor={(item) => item.id.toString()}
+                            keyExtractor={(item) => item?.id?.toString()}
                             renderItem={({ item }) => (
-                                <View style={styles.wishlistItem}>
+                                <TouchableOpacity style={styles.wishlistItem} onPress={() => onTagPressHandle(item)}>
                                     <Image source={item.thumbnail ? { uri: item.thumbnail } : images.dummyImage} style={styles.thumbnail} />
                                     <View style={styles.trackInfo}>
                                         <Text style={styles.trackTitle}>{item.title}</Text>
@@ -189,7 +202,7 @@ const Wishlist = ({ navigation }) => {
                                     <TouchableOpacity onPress={() => removeItemFromWishlist(item.id)} style={styles.removeButton}>
                                         <Text style={styles.removeButtonText}>{t("Remove")}</Text>
                                     </TouchableOpacity>
-                                </View>
+                                </TouchableOpacity>
                             )}
                             style={styles.list}
                         />

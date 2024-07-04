@@ -47,6 +47,8 @@ const images = {
     loginSuccess: require('./lottieAnimation/loginSuccess.json'),
     userIcon: require('./user_img.png'),
     backArrow: require('./back.png'),
+    backArrowQuiz: require('./previousquiz.png'),
+    forwardArrowQuiz: require('./forwardquiz.png'),
     slideimage1: require('./mind.png'),
     slideimage2: require('./sleep.png'),
     slideimage3: require('./relax.png'),

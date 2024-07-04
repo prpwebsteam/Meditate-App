@@ -32,8 +32,8 @@ const ScanScreen = (props) => {
         alignItems: 'center',
       },
       comingSoonImage: {
-        width: 300,
-        height: 300,
+        width: 250,
+        height: 250,
         resizeMode: 'contain',
       },
       comingSoonText: {

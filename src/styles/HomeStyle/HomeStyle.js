@@ -8,6 +8,7 @@ export default HomeStyle = (Colors) => StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     paddingHorizontal: SW(20),
+    paddingBottom: 50
   },
   HomeCommonTitle: {
     color: Colors.theme_backgound,
