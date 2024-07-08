@@ -15,7 +15,7 @@ const WorkoutDetailScreen = (props) => {
   const { Colors } = useTheme();
   const WorkoutDetailStyles = useMemo(() => WorkoutDetailStyle(Colors), [Colors]);
   const { navigation, route } = props;
-  const { categoryId, categoryName, tagId, tagName, track, fromRecentlyPlayed, relatedSongs } = route.params;
+  const { categoryId, categoryName, tagId, tagName, track, fromRecentlyPlayed, relatedSongs, disableNavigation } = route.params;
   const { t } = useTranslation();
   const [wishlist, setWishlist] = useState([]);
 
@@ -121,7 +121,7 @@ const WorkoutDetailScreen = (props) => {
 
   const toggleWishlist = async () => {
     if (!currentTrack) {
-      console.error("No track is currently playing");
+      alert("No track is currently playing");
       return;
     }
 
@@ -143,7 +143,7 @@ const WorkoutDetailScreen = (props) => {
 
   const shareSong = async () => {
     if (!currentTrack) {
-      console.error("No track is currently playing");
+      alert("No track is currently playing");
       return;
     }
 
@@ -327,11 +327,11 @@ const WorkoutDetailScreen = (props) => {
                   </TouchableOpacity>
                   <Spacing space={SH(20)} />
                   <View style={WorkoutDetailStyles.playView}>
-                    <TouchableOpacity onPress={rewind}>
-                      <Image source={images.rewind_button} style={WorkoutDetailStyles.playViewIcon3} />
+                    <TouchableOpacity onPress={rewind} disabled={disableNavigation}>
+                      <Image source={images.rewind_button} style={[WorkoutDetailStyles.playViewIcon3, disableNavigation && { opacity: 0.3 }]} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={playPreviousTrack}>
-                      <Image source={images.backward} style={WorkoutDetailStyles.playViewIcon} />
+                    <TouchableOpacity onPress={playPreviousTrack} disabled={disableNavigation}>
+                      <Image source={images.backward} style={[WorkoutDetailStyles.playViewIcon, disableNavigation && { opacity: 0.3 }]} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={isPlaying ? pauseTrack : resumeTrack} style={WorkoutDetailStyles.playCenter}>
                       <Image
@@ -339,11 +339,11 @@ const WorkoutDetailScreen = (props) => {
                         style={isPlaying ? WorkoutDetailStyles.playViewIconCenterPause : WorkoutDetailStyles.playViewIconCenter}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={playNextTrack}>
-                      <Image source={images.forward} style={WorkoutDetailStyles.playViewIcon} />
+                    <TouchableOpacity onPress={playNextTrack} disabled={disableNavigation}>
+                      <Image source={images.forward} style={[WorkoutDetailStyles.playViewIcon, disableNavigation && { opacity: 0.3 }]} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={fastForward}>
-                      <Image source={images.forward_button} style={WorkoutDetailStyles.playViewIcon2} />
+                    <TouchableOpacity onPress={fastForward} disabled={disableNavigation}>
+                      <Image source={images.forward_button} style={[WorkoutDetailStyles.playViewIcon2, disableNavigation && { opacity: 0.3 }]} />
                     </TouchableOpacity>
                   </View>
                   <Spacing space={SH(20)} />
@@ -367,16 +367,18 @@ const WorkoutDetailScreen = (props) => {
                   color: Colors.white,
                   fontSize: SH(16),
                   textAlign: 'center',
-                  marginVertical: SH(20),
+                  marginVertical: SH(100),
                 }}>{t("No music found")}</Text>
               )}
               <Spacing space={SH(20)} />
             </View>
             <Spacing space={SH(20)} />
             <View>
-              <Text style={[WorkoutDetailStyles.boxText]}>
-                {relatedSongs ? t("Related Music") : t("Similar Music")}
-              </Text>
+              {!relatedSongs && (
+                <Text style={[WorkoutDetailStyles.boxText]}>
+                  {relatedSongs ? t("Related Music") : t("Similar Music")}
+                </Text>
+              )}
               <View style={WorkoutDetailStyles.similarMusicContainer}>
                 {similarTracks.length === 0 && !relatedSongs && (
                   <Text style={{

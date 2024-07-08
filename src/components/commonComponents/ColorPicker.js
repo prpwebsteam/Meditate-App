@@ -1,14 +1,11 @@
-import React, { useState,useMemo } from "react";
-import { View, Text, Image, Pressable, Modal, TouchableOpacity } from 'react-native';
+import React, { useState, useMemo } from "react";
+import { View, Text, Image, Modal, TouchableOpacity } from 'react-native';
 import ColorPicker from 'react-native-wheel-color-picker';
 import { ColorPickerStyle } from '../../styles';
 import { color_picker_set_action } from "../../redux/action/CommonAction";
-import { useDispatch, useSelector } from "react-redux";
-import Button from './Button';
+import { useDispatch } from "react-redux";
 import images from '../../index';
-import { Colors } from "../../utils";
-import { RouteName } from "../../routes";
-import { useNavigation,useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 
 const ColorPickerset = (props) => {
   const { Colors } = useTheme();
@@ -18,9 +15,10 @@ const ColorPickerset = (props) => {
   const dispatch = useDispatch();
   const onColorChange = (selectedColor) => {
     setCurrentColor(selectedColor);
-    dispatch(color_picker_set_action(selectedColor))
+    dispatch(color_picker_set_action(selectedColor));
   };
   const navigation = useNavigation();
+
   return (
     <View>
       <View style={ColorPickerStyles.centeredViewtwo}>
@@ -34,12 +32,11 @@ const ColorPickerset = (props) => {
               <View style={ColorPickerStyles.setheight}>
                 <View
                   style={[
-                    { backgroundColor: currentColor, borderRadius: 7 },
+                    { backgroundColor: currentColor, borderRadius: 7, padding: 10 },
                   ]}
                 >
-                  <Text style={ColorPickerStyles.setcolorwhite}>{currentColor}</Text>
+                  <Text style={[ColorPickerStyles.setcolorwhite, { color: '#000' }]}>{currentColor}</Text>
                   <ColorPicker
-                    // ref={r => { picker = r }}
                     color={currentColor}
                     onColorChange={onColorChange}
                     onColorSelected={'red'}
@@ -55,10 +52,19 @@ const ColorPickerset = (props) => {
                 </View>
               </View>
               <View style={ColorPickerStyles.setbuttonwidth}>
-                <Button title="ok"
-                  buttonStyle={{ backgroundColor: Colors.theme_backgound_second, borderColor: Colors.theme_backgound_second }}
-                  onPress={() => {  setModalVisible(false); navigation.replace(RouteName.HOME_SCREEN) }}
-                />
+                <TouchableOpacity 
+                  style={{
+                    backgroundColor: Colors.theme_backgound_second, 
+                    padding: 10, 
+                    alignItems: 'center', 
+                    borderRadius: 5, 
+                    borderColor: Colors.theme_backgound_second, 
+                    borderWidth: 1
+                  }}
+                  onPress={() => { setModalVisible(false); navigation.replace(RouteName.HOME_SCREEN) }}
+                >
+                  <Text style={{ color: Colors.black }}>ok</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -70,4 +76,5 @@ const ColorPickerset = (props) => {
     </View>
   )
 }
+
 export default ColorPickerset;

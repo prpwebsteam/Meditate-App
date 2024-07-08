@@ -23,7 +23,7 @@ const SplashScreen = () => {
           <Image source={images.slide1} style={styles.logo} resizeMode="contain" />
           <View>
             <Text style={styles.text}>Meditate With Music</Text>
-            <Text style={styles.text2}>Explore Calming Music for your Yoga Journey</Text>
+            <Text style={styles.text2}>Explore Calming Music For Your Yoga Journey</Text>
           </View>
         </View>
       </FastImage>

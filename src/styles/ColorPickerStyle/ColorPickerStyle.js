@@ -53,6 +53,7 @@ export default ColorPickerStyle =(Colors)=> StyleSheet.create({
   setbuttonwidth: {
     paddingTop: 30,
     width: '100%',
+    paddingHorizontal: 10
   },
   setcolorwhite: {
     color: Colors.white,

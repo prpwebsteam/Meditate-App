@@ -75,9 +75,9 @@ const Wishlist = ({ navigation }) => {
     }, [wishlist]);
 
     const onTagPressHandle = (track) => {
-        navigation.navigate(RouteName.WORKOUT_DETAIL_SCREEN, { track });
+        navigation.navigate(RouteName.WORKOUT_DETAIL_SCREEN, { track, disableNavigation: true });
     };
-
+    
     const styles = useMemo(() => StyleSheet.create({
         container: {
             flex: 1,

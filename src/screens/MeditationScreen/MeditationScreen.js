@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useContext, useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, ImageBackground, StyleSheet, Alert } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import ModalSelector from 'react-native-modal-selector';
 import { WorkoutDetailStyle } from '../../styles';
 import { Container, Spacing, BottomTabMenu } from '../../components';
 import images from '../../index';
@@ -221,6 +221,7 @@ const MeditationScreen = (props) => {
         marginBottom: SH(20),
         backgroundColor: Colors.theme_backgound,
         borderRadius: 10,
+        borderWidth: 0,
       },
       dropdownText: {
         color: Colors.white,
@@ -272,6 +273,16 @@ const MeditationScreen = (props) => {
       },
     }), [Colors]);
 
+  const timerOptions = [
+    { key: 0, label: 'Select Time', value: null },
+    { key: 1, label: '5 min', value: 300 },
+    { key: 2, label: '10 min', value: 600 },
+    { key: 3, label: '15 min', value: 900 },
+    { key: 4, label: '20 min', value: 1200 },
+    { key: 5, label: '25 min', value: 1500 },
+    { key: 6, label: '30 min', value: 1800 },
+  ];
+
   return (
     <Container>
       <ImageBackground source={images.background1} style={styles.backgroundImage} >
@@ -282,32 +293,20 @@ const MeditationScreen = (props) => {
           <View style={styles.centerMainView}>
             <Text style={[styles.boxText]}>{t("Select Timer")}</Text>
             <View style={styles.timerContainer}>
-              <View style={styles.dropdown}>
-                <Picker
-                  selectedValue={timerDuration}
-                  onValueChange={(itemValue) => handleTimerSelect(itemValue)}
-                  style={{
-                    height: SH(40),
-                    color: Colors.btn_color,
-                    borderRadius: 10
-                  }}
-                >
-                  <Picker.Item label="Select Time" value={null} enabled={false} />
-                  <Picker.Item label="5 min" value={300} />
-                  <Picker.Item label="10 min" value={600} />
-                  <Picker.Item label="15 min" value={900} />
-                  <Picker.Item label="20 min" value={1200} />
-                  <Picker.Item label="25 min" value={1500} />
-                  <Picker.Item label="30 min" value={1800} />
-                </Picker>
-              </View>
+              <ModalSelector
+                style={{width: 200, marginBottom: 20, marginTop: -10}}
+                data={timerOptions}
+                initValue="Select Time"
+                onChange={(option) => handleTimerSelect(option.value)}
+                selectTextStyle={styles.dropdownText}
+              />
               <AnimatedCircularProgress
                 size={200}
                 width={10}
                 fill={remainingTime ? 100 - (remainingTime / timerDuration) * 100 : 0}
                 tintColor={Colors.theme_backgound}
                 backgroundColor={Colors.black}
-                rotation={-90} 
+                rotation={-90}
               >
                 {
                   () => (
